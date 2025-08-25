@@ -1,0 +1,24 @@
+type: http_request
+model: http_request
+id: rq_z9anKxBVae
+createdAt: 2025-08-25T14:11:31.424950
+updatedAt: 2025-08-25T15:37:30.016079
+workspaceId: wk_94bVhSAcpy
+folderId: fl_GBXwSTx9Sx
+authentication:
+  token: eyJhbGciOiJSUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3QxIiwicm9sZSI6IlVTRVIiLCJzdWIiOiI3ODQyNjMzOC0wY2VjLTRiMjgtYTk2MS04YTg0MzBhZWJmNmYiLCJpYXQiOjE3NTYxMzYyMjksImV4cCI6MTc1NjEzNzEyOX0.j-NE5cK7-UmKgPnom5OI5Zkn2nTdes5qxetTGzkZ4MU9pXJ9pIFyQ5Eh9z9CQD-qQKVvHY_yxsrUuXfgA2RtGZtp63iFzKsq852wghnZS-3Rf2s_CFjnrMbCao84_diHOyw1wN2HsGGCfkdNcLTNVrLfZ6mOGFfo_CCB5WJjjtrFMlANJ90aAccvzrFCb5NBcFFRaYYG__OGPL3TnlCch0lICjGloWx3OHnBBXttgslDJv1dlAC1qmvXSLdR_8kRXmeDZNJN1lbvFOLMjxhgtYAgtJ-4fUtrzXQSVDNU3fV6VCgJKHsE1mfSlOC-dqWeRrxIDrdB6-uw8EKAiCz3iA
+authenticationType: bearer
+body:
+  text: ''
+bodyType: application/json
+description: ''
+headers:
+- enabled: true
+  name: Content-Type
+  value: application/json
+  id: tEGMWGJ0f5
+method: GET
+name: Test Auth
+sortPriority: 6000.0
+url: http://localhost:8090/test
+urlParameters: []

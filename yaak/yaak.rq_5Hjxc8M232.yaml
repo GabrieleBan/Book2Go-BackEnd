@@ -1,0 +1,23 @@
+type: http_request
+model: http_request
+id: rq_5Hjxc8M232
+createdAt: 2025-08-25T12:38:36.514364
+updatedAt: 2025-08-25T15:27:43.134744
+workspaceId: wk_94bVhSAcpy
+folderId: fl_GBXwSTx9Sx
+authentication: {}
+authenticationType: null
+body:
+  text: ''
+bodyType: application/json
+description: ''
+headers:
+- enabled: true
+  name: Content-Type
+  value: application/json
+  id: ma6w6cb8fb
+method: POST
+name: Confirmation
+sortPriority: 1000.0
+url: http://localhost:8090/auth/confirm/78426338-0cec-4b28-a961-8a8430aebf6f
+urlParameters: []

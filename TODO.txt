@@ -1,0 +1,3 @@
+Silent refresh in front-end: e.g., in a SPA, a background task detects token expiry and refreshes automatically.
+HTTP interceptor: intercept 401 responses, trigger refresh, retry original request transparently. [questa è quella che mi piace di più]
+Ensure that there are separated DB instances in the Postgres instance and that each microservice can access only its DB

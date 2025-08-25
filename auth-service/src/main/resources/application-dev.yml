@@ -1,0 +1,51 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: auth-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/b2g_db
+    username: user
+    password: password
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  rabbitmq:
+    host: localhost # Per test locale fuori da Docker
+    port: 5672
+    username: guest
+    password: guest
+
+app:
+  rabbitmq:
+    exchange: fooddelivery.exchange
+    queue:
+      ready-ticket: order.ready-ticket
+    routingkey:
+      prepare-ticket: rk.order.prepare-ticket
+      ready-ticket: rk.kitchen.ready-ticket
+
+
+services:
+  restaurant:
+    url: http://localhost:8091
+  accounting:
+    url: http://localhost:8092
+
+logging:
+  level:
+    root: INFO
+    com.b2g.authservice: DEBUG
+
+jwt:
+  secret: mySecretKey
+  expiration-ms: 3600000

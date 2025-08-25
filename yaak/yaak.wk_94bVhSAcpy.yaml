@@ -1,0 +1,14 @@
+type: workspace
+model: workspace
+id: wk_94bVhSAcpy
+createdAt: 2025-08-24T15:50:52.175935
+updatedAt: 2025-08-24T16:39:46.187482
+authentication: {}
+authenticationType: null
+description: ''
+headers: []
+name: BookToGo
+encryptionKeyChallenge: null
+settingValidateCertificates: true
+settingFollowRedirects: true
+settingRequestTimeout: 0

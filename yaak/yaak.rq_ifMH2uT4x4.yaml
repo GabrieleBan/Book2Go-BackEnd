@@ -1,0 +1,26 @@
+type: http_request
+model: http_request
+id: rq_ifMH2uT4x4
+createdAt: 2025-08-25T15:27:40.814943
+updatedAt: 2025-08-25T15:37:18.831112
+workspaceId: wk_94bVhSAcpy
+folderId: fl_GBXwSTx9Sx
+authentication: {}
+authenticationType: none
+body:
+  text: |-
+    {
+      "refreshToken": "5c08902e-ed7c-42a7-8526-fbe9d414606a"
+    }
+bodyType: application/json
+description: ''
+headers:
+- enabled: true
+  name: Content-Type
+  value: application/json
+  id: tEGMWGJ0f5
+method: POST
+name: Logout
+sortPriority: 5000.0
+url: http://localhost:8090/auth/logout
+urlParameters: []

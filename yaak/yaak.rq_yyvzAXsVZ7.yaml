@@ -1,0 +1,26 @@
+type: http_request
+model: http_request
+id: rq_yyvzAXsVZ7
+createdAt: 2025-08-24T18:26:19.353274
+updatedAt: 2025-08-25T15:37:08.679091
+workspaceId: wk_94bVhSAcpy
+folderId: fl_GBXwSTx9Sx
+authentication: {}
+authenticationType: none
+body:
+  text: |-
+    {
+      "refreshToken": "2ba52bdf-1191-40bb-948d-1af7384bca10"
+    }
+bodyType: application/json
+description: ''
+headers:
+- enabled: true
+  name: Content-Type
+  value: application/json
+  id: tEGMWGJ0f5
+method: POST
+name: Refresh
+sortPriority: 3000.0
+url: http://localhost:8090/auth/refresh
+urlParameters: []
