@@ -30,12 +30,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
+
+        // Per gli endpoint protetti, verifico che ci sia un header Authorization valido
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
         jwt = authHeader.substring(7);
+
+        // Verifico che il token non sia vuoto
+        if (jwt.trim().isEmpty()) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+
         try {
             Claims claims = jwtService.validateToken(jwt);
             String userId = claims.getSubject();
