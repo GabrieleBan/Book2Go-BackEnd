@@ -5,6 +5,25 @@ spring:
   application:
     name: auth-service
 
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            clientId: REDACTED
+            clientSecret: REDACTED
+            scope:
+              - user
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+          google:
+            clientId: REDACTED
+            clientSecret: REDACTED
+            scope:
+              - openid
+              - profile
+              - email
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+
   datasource:
     url: jdbc:postgresql://localhost:5432/b2g_db
     username: user
@@ -24,15 +43,6 @@ spring:
     port: 5672
     username: guest
     password: guest
-
-app:
-  rabbitmq:
-    exchange: fooddelivery.exchange
-    queue:
-      ready-ticket: order.ready-ticket
-    routingkey:
-      prepare-ticket: rk.order.prepare-ticket
-      ready-ticket: rk.kitchen.ready-ticket
 
 
 services:

@@ -8,9 +8,14 @@ import com.b2g.authservice.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.UUID;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /*
@@ -55,5 +60,19 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@Valid @RequestBody RefreshRequest request) {
         return authService.logout(request.getRefreshToken());
+    }
+
+    @GetMapping("/oauth2/callback")
+    public ResponseEntity<?> oauth2Callback(OAuth2AuthenticationToken authentication) {
+        Map<String, Object> userInfo = authentication.getPrincipal().getAttributes();
+        return ResponseEntity.ok(userInfo);
+    }
+
+
+
+    @GetMapping("/oauth2/error")
+    public ResponseEntity<?> oauth2Error() {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body("OAuth2 authentication failed");
     }
 }

@@ -21,11 +21,22 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/oauth2/**").permitAll() // Altrimenti Spring Security non funziona
+                        .requestMatchers("/login/oauth2/**").permitAll() // Endpoint per OAuth2 login
                         .anyRequest().authenticated()
-                ).addFilterBefore(jwtAuthenticationFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
+                )
+                .oauth2Login(oauth2 -> oauth2
+                        .successHandler((request, response, authentication) -> {
+                            response.sendRedirect("/auth/oauth2/callback");
+                        })
+                        .failureHandler((request, response, exception) -> {
+                            response.sendRedirect("/auth/oauth2/error");
+                        })
+                )
+                .addFilterBefore(jwtAuthenticationFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
