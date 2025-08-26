@@ -7,14 +7,11 @@ import com.b2g.authservice.dto.TokenResponse;
 import com.b2g.authservice.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.validator.constraints.UUID;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
-import java.util.HashMap;
 import java.util.Map;
 
 
@@ -63,9 +60,21 @@ public class AuthController {
     }
 
     @GetMapping("/oauth2/callback")
-    public ResponseEntity<?> oauth2Callback(OAuth2AuthenticationToken authentication) {
+    public ResponseEntity<TokenResponse> oauth2Callback(OAuth2AuthenticationToken authentication) {
         Map<String, Object> userInfo = authentication.getPrincipal().getAttributes();
-        return ResponseEntity.ok(userInfo);
+
+        // Estraggo le informazioni necessarie dall'authentication token
+        String email = (String) userInfo.get("email");
+//        String name = (String) userInfo.get("name");
+//        String googleId = (String) userInfo.get("sub"); // Google ID univoco
+
+        // Controllo che l'email sia presente
+        if (email == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        // Utilizzo il metodo loginOauth2 del service
+        return authService.loginOauth2(email);
     }
 
 

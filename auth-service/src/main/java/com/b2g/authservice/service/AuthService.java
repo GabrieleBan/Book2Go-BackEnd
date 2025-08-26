@@ -9,7 +9,6 @@ import com.b2g.authservice.model.User;
 import com.b2g.authservice.model.UserRole;
 import com.b2g.authservice.repository.RefreshTokenRepository;
 import com.b2g.authservice.repository.UserRepository;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,8 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -75,6 +74,90 @@ public class AuthService {
         userRepository.save(user);
 
         return ResponseEntity.ok("Email confirmed successfully");
+    }
+
+    @Transactional
+    public ResponseEntity<TokenResponse> loginOauth2(String email) {
+        // Controllo se l'utente con questa email esiste già nel DB
+        Optional<User> existingUser = userRepository.findByEmail(email);
+
+        User user;
+        if (existingUser.isPresent()) {
+            // Se esiste, lo loggo direttamente
+            user = existingUser.get();
+
+            // Se l'utente esiste ma non è abilitato, lo abilito direttamente
+            if (!user.isEnabled()) {
+                user.setEnabled(true);
+            }
+
+            // Se l'utente esiste ma il provider è NONE, lo aggiorno a GOOGLE
+            if (user.getAuthProvider() == OAuthProvider.NONE) {
+                user.setAuthProvider(OAuthProvider.GOOGLE);
+            }
+
+            user.setUpdatedAt(LocalDateTime.now());
+            userRepository.save(user);
+        } else {
+            // Se non esiste, lo registro come utente con ruolo USER e provider GOOGLE
+            // Lo imposto però come abilitato direttamente, senza conferma email
+            user = User.builder()
+                    .username(generateUsernameFromEmail(email))
+                    .email(email)
+                    .passwordHash(passwordEncoder.encode(UUID.randomUUID().toString())) // Password casuale per OAuth2
+                    .enabled(true) // Abilitato direttamente
+                    .authProvider(OAuthProvider.GOOGLE)
+                    .role(UserRole.USER)
+                    .createdAt(LocalDateTime.now())
+                    .updatedAt(LocalDateTime.now())
+                    .build();
+
+            userRepository.save(user);
+        }
+
+        // In tutti i casi, procedo come nel login standard, generando access e refresh token
+        return generateTokensForUser(user);
+    }
+
+    private String generateUsernameFromEmail(String email) {
+        String baseUsername = email.substring(0, email.indexOf('@'));
+        String username = baseUsername;
+        int counter = 1;
+
+        // Assicuriamoci che l'username sia unico
+        while (userRepository.findByUsername(username).isPresent()) {
+            username = baseUsername + counter;
+            counter++;
+        }
+
+        return username;
+    }
+
+    private ResponseEntity<TokenResponse> generateTokensForUser(User user) {
+        // Generiamo il token JWT
+        Map<String, Object> claims = Map.of(
+                "role", user.getRole().name(),
+                "username", user.getUsername()
+        );
+        String jwtToken = jwtService.generateToken(user.getId().toString(), claims, 1000 * 60 * 15);
+
+        RefreshToken refreshToken = RefreshToken.builder()
+                .token(UUID.randomUUID().toString())
+                .user(user)
+                .expiryDate(LocalDateTime.ofInstant(
+                        Instant.ofEpochMilli(System.currentTimeMillis() + 1000L * 60L * 60L * 24L * 7L),
+                        ZoneId.systemDefault()
+                ))
+                .build();
+
+        refreshTokenRepository.save(refreshToken);
+
+        TokenResponse response = TokenResponse.builder()
+                .accessToken(jwtToken)
+                .refreshToken(refreshToken.getToken())
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 
     public ResponseEntity<TokenResponse> login(LoginRequest request) {
