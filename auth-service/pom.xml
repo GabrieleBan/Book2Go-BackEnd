@@ -94,6 +94,12 @@
 			<artifactId>jjwt</artifactId>
 			<version>0.13.0</version>
 		</dependency>
+		<!-- Webflux client-->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webflux</artifactId>
+			<version>6.2.10</version>
+		</dependency>
 	</dependencies>
 
 	<build>
