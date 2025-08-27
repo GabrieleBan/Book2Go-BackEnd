@@ -42,11 +42,11 @@ public class BookFormat {
     private Integer stockQuantity; // For PHYSICAL books
 
     @Column(nullable = false)
-    private boolean isAvailableForPurchase = false;
+    private boolean isAvailableForPurchase;
 
     @Column(nullable = false)
-    private boolean isAvailableForRental = false;
+    private boolean isAvailableForRental;
 
     @Column(nullable = false)
-    private boolean isAvailableOnSubscription = false;
+    private boolean isAvailableOnSubscription;
 }
