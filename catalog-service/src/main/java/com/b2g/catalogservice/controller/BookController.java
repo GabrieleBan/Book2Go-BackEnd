@@ -1,33 +1,115 @@
 package com.b2g.catalogservice.controller;
 
-import com.b2g.catalogservice.dto.BookSummaryDTO;
-import com.b2g.catalogservice.service.BookService;
+import com.b2g.catalogservice.dto.*;
+import com.b2g.catalogservice.model.*;
+import com.b2g.catalogservice.repository.BookRepository;
+import com.b2g.catalogservice.repository.CategoryRepository;
+import com.b2g.catalogservice.repository.BookFormatRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.web.PagedModel;
-import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.*;
 
-import java.util.Collections;
-import java.util.Set;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/books")
 @RequiredArgsConstructor
 public class BookController {
 
-    private final BookService bookService;
+    private final BookRepository bookRepository;
+    private final CategoryRepository categoryRepository;
+    private final BookFormatRepository bookFormatRepository;
 
     @GetMapping({"", "/"})
     public ResponseEntity<?> getAllBooks(
             @RequestParam(required = false) Set<UUID> categoryIds,
             Pageable pageable) {
         return ResponseEntity.ok(Collections.emptyList());
+    }
+
+    @PostMapping
+    public ResponseEntity<BookDetailDTO> createBook(@RequestBody /* @Valid */ BookCreateRequestDTO request) {
+        // Fetch categories if provided
+        Set<Category> categories = new HashSet<>();
+        if (request.categoryIds() != null && !request.categoryIds().isEmpty()) {
+            categories = new HashSet<>(categoryRepository.findAllById(request.categoryIds()));
+        }
+
+        // Create Book entity from request
+        Book book = Book.builder()
+                .title(request.title())
+                .author(request.author())
+                .isbn(request.isbn())
+                .description(request.description())
+                .publisher(request.publisher())
+                .publicationDate(request.publicationDate())
+                .categories(categories)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .availableFormats(new ArrayList<>())
+                .build();
+
+        // Save the book first to get the ID
+        Book savedBook = bookRepository.save(book);
+
+        // Create and save book formats if provided
+        List<BookFormat> bookFormats = new ArrayList<>();
+        if (request.formats() != null && !request.formats().isEmpty()) {
+            for (BookFormatCreateDTO formatDto : request.formats()) {
+                BookFormat bookFormat = BookFormat.builder()
+                        .book(savedBook)
+                        .formatType(FormatType.valueOf(formatDto.formatType().toUpperCase()))
+                        .purchasePrice(formatDto.purchasePrice())
+                        .stockQuantity(formatDto.stockQuantity())
+                        .isAvailableForPurchase(formatDto.isAvailableForPurchase())
+                        .isAvailableForRental(formatDto.isAvailableForRental())
+                        .isAvailableOnSubscription(formatDto.isAvailableOnSubscription())
+                        .rentalOptions(new ArrayList<>()) // For now, empty rental options
+                        .build();
+
+                bookFormats.add(bookFormatRepository.save(bookFormat));
+            }
+        }
+
+        // Update the book with the formats
+        savedBook.setAvailableFormats(bookFormats);
+
+        // Convert to DTOs
+        List<CategoryDTO> categoryDTOs = savedBook.getCategories().stream()
+                .map(category -> new CategoryDTO(category.getId(), category.getName(), category.getDescription()))
+                .collect(Collectors.toList());
+
+        List<BookFormatDTO> formatDTOs = bookFormats.stream()
+                .map(format -> new BookFormatDTO(
+                        format.getId(),
+                        format.getFormatType().name(),
+                        format.getPurchasePrice(),
+                        format.isAvailableForPurchase(),
+                        format.isAvailableForRental(),
+                        format.isAvailableOnSubscription(),
+                        new ArrayList<>() // Empty rental options for now
+                ))
+                .collect(Collectors.toList());
+
+        // Convert to BookDetailDTO
+        BookDetailDTO bookDetailDTO = new BookDetailDTO(
+                savedBook.getId(),
+                savedBook.getTitle(),
+                savedBook.getAuthor(),
+                savedBook.getIsbn(),
+                savedBook.getDescription(),
+                savedBook.getPublisher(),
+                savedBook.getPublicationDate(),
+                savedBook.getCoverImageUrl(),
+                categoryDTOs,
+                formatDTOs
+        );
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(bookDetailDTO);
     }
 
 }
