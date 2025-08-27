@@ -5,6 +5,8 @@ import com.b2g.authservice.dto.RefreshRequest;
 import com.b2g.authservice.dto.SignupRequest;
 import com.b2g.authservice.dto.TokenResponse;
 import com.b2g.authservice.service.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -60,8 +62,13 @@ public class AuthController {
     }
 
     @GetMapping("/oauth2/callback")
-    public ResponseEntity<TokenResponse> oauth2Callback(OAuth2AuthenticationToken authentication) {
+    public ResponseEntity<TokenResponse> oauth2Callback(OAuth2AuthenticationToken authentication, HttpServletRequest request) {
         Map<String, Object> userInfo = authentication.getPrincipal().getAttributes();
+        // Checks that the authentication is from Google or GitHub using the registrationId
+        if (!authentication.getAuthorizedClientRegistrationId().equals("google") &&
+                !authentication.getAuthorizedClientRegistrationId().equals("github")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
         // Estraggo le informazioni necessarie dall'authentication token
         String email = (String) userInfo.get("email");
@@ -71,6 +78,13 @@ public class AuthController {
         // Controllo che l'email sia presente
         if (email == null) {
             return ResponseEntity.badRequest().build();
+        }
+
+        // La nostra architettura è stateless, ma Spring Security ha creato una sessione per gestire l'OAuth2
+        // Questa permette di evitare attacchi di replay, quindi la invalidiamo subito
+        HttpSession oauth2Session = request.getSession(false);
+        if(oauth2Session != null) {
+            oauth2Session.invalidate(); // Invalida la sessione OAuth2 per evitare replay
         }
 
         // Utilizzo il metodo loginOauth2 del service
