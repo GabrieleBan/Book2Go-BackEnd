@@ -1,0 +1,1 @@
+CREATE DATABASE b2g_catalog;
