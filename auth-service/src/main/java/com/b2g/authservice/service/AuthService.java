@@ -10,14 +10,22 @@ import com.b2g.authservice.model.UserRole;
 import com.b2g.authservice.repository.RefreshTokenRepository;
 import com.b2g.authservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -29,6 +37,7 @@ public class AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final OAuth2AuthorizedClientService clientService;
 
 
     @Transactional
@@ -77,7 +86,49 @@ public class AuthService {
     }
 
     @Transactional
-    public ResponseEntity<TokenResponse> loginOauth2(String email) {
+    public ResponseEntity<TokenResponse> loginOauth2(OAuth2AuthenticationToken authentication) {
+        Map<String, Object> userInfo = authentication.getPrincipal().getAttributes();
+        // Checks that the authentication is from Google or GitHub using the registrationId
+        if (!authentication.getAuthorizedClientRegistrationId().equals("google") &&
+                !authentication.getAuthorizedClientRegistrationId().equals("github")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        // Estraggo le informazioni necessarie dall'authentication token
+        String email = (String) userInfo.get("email");
+        // If email is missing (GitHub case), fetch it via /user/emails
+        if (email == null && authentication.getAuthorizedClientRegistrationId().equals("github")) {
+            OAuth2AuthorizedClient client = clientService.loadAuthorizedClient(
+                    authentication.getAuthorizedClientRegistrationId(),
+                    authentication.getName()
+            );
+
+            WebClient webClient = WebClient.builder()
+                    .baseUrl("https://api.github.com")
+                    .defaultHeader(HttpHeaders.AUTHORIZATION,
+                            "Bearer " + client.getAccessToken().getTokenValue())
+                    .build();
+
+            List<Map<String, Object>> emails = webClient.get()
+                    .uri("/user/emails")
+                    .retrieve()
+                    .bodyToMono(new ParameterizedTypeReference<List<Map<String, Object>>>() {})
+                    .block();
+
+            // Find primary verified email
+            email = emails.stream()
+                    .filter(e -> Boolean.TRUE.equals(e.get("primary")))
+                    .map(e -> (String) e.get("email"))
+                    .findFirst()
+                    .orElse(null);
+        }
+
+        // Controllo che l'email sia presente
+        if (email == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+
         // Controllo se l'utente con questa email esiste già nel DB
         Optional<User> existingUser = userRepository.findByEmail(email);
 
