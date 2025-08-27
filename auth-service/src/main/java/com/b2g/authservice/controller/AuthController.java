@@ -9,11 +9,17 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -35,6 +41,7 @@ GET /.well-known/jwks.json → expose public keys for JWT validation (if using a
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
+    private final OAuth2AuthorizedClientService clientService;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody SignupRequest request) {
@@ -74,6 +81,33 @@ public class AuthController {
         String email = (String) userInfo.get("email");
 //        String name = (String) userInfo.get("name");
 //        String googleId = (String) userInfo.get("sub"); // Google ID univoco
+
+        // If email is missing (GitHub case), fetch it via /user/emails
+        if (email == null && authentication.getAuthorizedClientRegistrationId().equals("github")) {
+            OAuth2AuthorizedClient client = clientService.loadAuthorizedClient(
+                    authentication.getAuthorizedClientRegistrationId(),
+                    authentication.getName()
+            );
+
+            WebClient webClient = WebClient.builder()
+                    .baseUrl("https://api.github.com")
+                    .defaultHeader(HttpHeaders.AUTHORIZATION,
+                            "Bearer " + client.getAccessToken().getTokenValue())
+                    .build();
+
+            List<Map<String, Object>> emails = webClient.get()
+                    .uri("/user/emails")
+                    .retrieve()
+                    .bodyToMono(new ParameterizedTypeReference<List<Map<String, Object>>>() {})
+                    .block();
+
+            // Find primary verified email
+            email = emails.stream()
+                    .filter(e -> Boolean.TRUE.equals(e.get("primary")))
+                    .map(e -> (String) e.get("email"))
+                    .findFirst()
+                    .orElse(null);
+        }
 
         // Controllo che l'email sia presente
         if (email == null) {
