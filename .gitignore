@@ -1,0 +1,3 @@
+# Ignore auth-service RSA Keys
+keys/
+dev-keys/

@@ -10,6 +10,7 @@ import com.b2g.authservice.model.UserRole;
 import com.b2g.authservice.repository.RefreshTokenRepository;
 import com.b2g.authservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -33,11 +34,15 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
+    @Value("${jwt.expiration.refresh-token:2592000000}")
+    private long refreshTokenExpiration;
+
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final OAuth2AuthorizedClientService clientService;
+
 
 
     @Transactional
@@ -190,13 +195,13 @@ public class AuthService {
                 "role", user.getRole().name(),
                 "username", user.getUsername()
         );
-        String jwtToken = jwtService.generateToken(user.getId().toString(), claims, 1000 * 60 * 15);
+        String jwtToken = jwtService.generateToken(user.getId().toString(), claims);
 
         RefreshToken refreshToken = RefreshToken.builder()
                 .token(UUID.randomUUID().toString())
                 .user(user)
                 .expiryDate(LocalDateTime.ofInstant(
-                        Instant.ofEpochMilli(System.currentTimeMillis() + 1000L * 60L * 60L * 24L * 7L),
+                        Instant.ofEpochMilli(System.currentTimeMillis() + refreshTokenExpiration),
                         ZoneId.systemDefault()
                 ))
                 .build();
@@ -231,13 +236,13 @@ public class AuthService {
                 "role", user.getRole().name(),
                 "username", user.getUsername()
         );
-        String jwtToken = jwtService.generateToken(user.getId().toString(), claims, 1000 * 60 * 15);
+        String jwtToken = jwtService.generateToken(user.getId().toString(), claims);
 
         RefreshToken refreshToken = RefreshToken.builder()
                 .token(UUID.randomUUID().toString())
                 .user(user)
                 .expiryDate( LocalDateTime.ofInstant(
-                        Instant.ofEpochMilli(System.currentTimeMillis() + 1000L * 60L * 60L * 24L * 7L),
+                        Instant.ofEpochMilli(System.currentTimeMillis() + refreshTokenExpiration),
                         ZoneId.systemDefault()
                 ))
                 .build();
@@ -270,13 +275,13 @@ public class AuthService {
                 "role", user.getRole().name(),
                 "username", user.getUsername()
         );
-        String jwtToken = jwtService.generateToken(user.getId().toString(), claims, 1000 * 60 * 15);
+        String jwtToken = jwtService.generateToken(user.getId().toString(), claims);
 
         RefreshToken newRefreshToken = RefreshToken.builder()
                 .token(UUID.randomUUID().toString())
                 .user(user)
                 .expiryDate( LocalDateTime.ofInstant(
-                        Instant.ofEpochMilli(System.currentTimeMillis() + 1000L * 60L * 60L * 24L * 7L),
+                        Instant.ofEpochMilli(System.currentTimeMillis() + refreshTokenExpiration),
                         ZoneId.systemDefault()
                 ))
                 .build();

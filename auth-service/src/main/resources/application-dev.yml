@@ -57,5 +57,18 @@ logging:
     com.b2g.authservice: DEBUG
 
 jwt:
-  secret: mySecretKey
-  expiration-ms: 3600000
+  keys:
+    # Directory where RSA key pairs will be stored/loaded from
+    # For development, using a local directory is fine
+    directory: ./dev-keys
+
+  # Token expiration settings (in milliseconds)
+  expiration:
+    access-token: 900000      # 15 minutes
+    refresh-token: 2592000000 # 30 days
+
+  # Optional: JWT issuer claim
+  issuer: "b2g-auth-service"
+
+  # Optional: JWT audience claim
+  audience: "b2g-microservices"
