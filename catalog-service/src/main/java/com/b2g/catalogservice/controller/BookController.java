@@ -31,7 +31,7 @@ public class BookController {
         return ResponseEntity.ok(Collections.emptyList());
     }
 
-    @PostMapping
+    @PostMapping({"", "/"})
     public ResponseEntity<BookDetailDTO> createBook(@RequestBody /* @Valid */ BookCreateRequestDTO request) {
         // Fetch categories if provided
         Set<Category> categories = new HashSet<>();
