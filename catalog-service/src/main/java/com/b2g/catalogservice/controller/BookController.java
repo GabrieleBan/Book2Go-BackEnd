@@ -62,7 +62,7 @@ public class BookController {
         List<BookFormat> bookFormats = new ArrayList<>();
         if (request.formats() != null && !request.formats().isEmpty()) {
             for (BookFormatCreateDTO formatDto : request.formats()) {
-                // First save the BookFormat without rental options
+                // Create BookFormat without saving first
                 BookFormat bookFormat = BookFormat.builder()
                         .book(savedBook)
                         .formatType(FormatType.valueOf(formatDto.formatType().toUpperCase()))
@@ -74,25 +74,22 @@ public class BookController {
                         .rentalOptions(new ArrayList<>())
                         .build();
 
-                BookFormat savedBookFormat = bookFormatRepository.save(bookFormat);
-
-                // Now create and save rental options if provided
-                List<RentalOption> rentalOptions = new ArrayList<>();
+                // Add rental options to the collection if provided
                 if (formatDto.rentalOptions() != null && !formatDto.rentalOptions().isEmpty()) {
                     for (RentalOptionCreateDTO rentalOptionDto : formatDto.rentalOptions()) {
                         RentalOption rentalOption = RentalOption.builder()
-                                .bookFormat(savedBookFormat)
+                                .bookFormat(bookFormat)
                                 .durationDays(rentalOptionDto.durationDays())
                                 .price(rentalOptionDto.price())
                                 .description(rentalOptionDto.description())
                                 .build();
 
-                        rentalOptions.add(rentalOptionRepository.save(rentalOption));
+                        bookFormat.getRentalOptions().add(rentalOption);
                     }
                 }
 
-                // Update the BookFormat with the saved rental options
-                savedBookFormat.setRentalOptions(rentalOptions);
+                // Now save the BookFormat with all rental options
+                BookFormat savedBookFormat = bookFormatRepository.save(bookFormat);
                 bookFormats.add(savedBookFormat);
             }
         }
