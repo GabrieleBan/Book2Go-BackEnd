@@ -19,7 +19,7 @@ public class CategoryController {
 
     private final CategoryRepository categoryRepository;
 
-    @GetMapping
+    @GetMapping({"", "/"})
     public ResponseEntity<List<CategoryDTO>> getAllCategories() {
         // Fetch all categories from database
         List<Category> categories = categoryRepository.findAll();
@@ -36,8 +36,9 @@ public class CategoryController {
         return ResponseEntity.ok(categoryDTOs);
     }
 
-    @PostMapping
+    @PostMapping({"", "/"})
     public ResponseEntity<CategoryDTO> createCategory(@RequestBody /* @Valid */ CategoryCreateRequestDTO request) {
+
         // Create Category entity from request
         Category category = new Category();
         category.setName(request.name());
