@@ -5,6 +5,7 @@ import com.b2g.catalogservice.model.*;
 import com.b2g.catalogservice.repository.BookRepository;
 import com.b2g.catalogservice.repository.CategoryRepository;
 import com.b2g.catalogservice.repository.BookFormatRepository;
+import com.b2g.catalogservice.repository.RentalOptionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ public class BookController {
     private final BookRepository bookRepository;
     private final CategoryRepository categoryRepository;
     private final BookFormatRepository bookFormatRepository;
+    private final RentalOptionRepository rentalOptionRepository;
 
     @GetMapping({"", "/"})
     public ResponseEntity<?> getAllBooks(
@@ -60,6 +62,7 @@ public class BookController {
         List<BookFormat> bookFormats = new ArrayList<>();
         if (request.formats() != null && !request.formats().isEmpty()) {
             for (BookFormatCreateDTO formatDto : request.formats()) {
+                // First save the BookFormat without rental options
                 BookFormat bookFormat = BookFormat.builder()
                         .book(savedBook)
                         .formatType(FormatType.valueOf(formatDto.formatType().toUpperCase()))
@@ -68,10 +71,29 @@ public class BookController {
                         .isAvailableForPurchase(formatDto.isAvailableForPurchase())
                         .isAvailableForRental(formatDto.isAvailableForRental())
                         .isAvailableOnSubscription(formatDto.isAvailableOnSubscription())
-                        .rentalOptions(new ArrayList<>()) // For now, empty rental options
+                        .rentalOptions(new ArrayList<>())
                         .build();
 
-                bookFormats.add(bookFormatRepository.save(bookFormat));
+                BookFormat savedBookFormat = bookFormatRepository.save(bookFormat);
+
+                // Now create and save rental options if provided
+                List<RentalOption> rentalOptions = new ArrayList<>();
+                if (formatDto.rentalOptions() != null && !formatDto.rentalOptions().isEmpty()) {
+                    for (RentalOptionCreateDTO rentalOptionDto : formatDto.rentalOptions()) {
+                        RentalOption rentalOption = RentalOption.builder()
+                                .bookFormat(savedBookFormat)
+                                .durationDays(rentalOptionDto.durationDays())
+                                .price(rentalOptionDto.price())
+                                .description(rentalOptionDto.description())
+                                .build();
+
+                        rentalOptions.add(rentalOptionRepository.save(rentalOption));
+                    }
+                }
+
+                // Update the BookFormat with the saved rental options
+                savedBookFormat.setRentalOptions(rentalOptions);
+                bookFormats.add(savedBookFormat);
             }
         }
 
@@ -91,7 +113,14 @@ public class BookController {
                         format.isAvailableForPurchase(),
                         format.isAvailableForRental(),
                         format.isAvailableOnSubscription(),
-                        new ArrayList<>() // Empty rental options for now
+                        format.getRentalOptions().stream()
+                                .map(rentalOption -> new RentalOptionDTO(
+                                        rentalOption.getId(),
+                                        rentalOption.getDurationDays(),
+                                        rentalOption.getPrice(),
+                                        rentalOption.getDescription()
+                                ))
+                                .collect(Collectors.toList())
                 ))
                 .collect(Collectors.toList());
 
