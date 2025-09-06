@@ -1,10 +1,10 @@
 type: http_request
 model: http_request
-id: rq_z9anKxBVae
-createdAt: 2025-08-25T14:11:31.424950
-updatedAt: 2025-08-27T23:02:34.922795
+id: rq_mzwZP2RHzU
+createdAt: 2025-08-27T22:31:57.473817
+updatedAt: 2025-08-27T23:02:38.121552
 workspaceId: wk_94bVhSAcpy
-folderId: fl_GBXwSTx9Sx
+folderId: fl_gQ2VqcuSam
 authentication:
   disabled: false
   token: eyJhbGciOiJSUzI1NiJ9.eyJyb2xlIjoiVVNFUiIsInVzZXJuYW1lIjoidGVzdDEiLCJzdWIiOiJlMTdhM2JmOC1jMjZiLTQyMDItOTQ0Yy1lNzk0YzFhOGZmNWIiLCJpYXQiOjE3NTYzMzU3MzYsImV4cCI6MTc1NjMzNjYzNiwiaXNzIjoiYjJnLWF1dGgtc2VydmljZSIsImF1ZCI6WyJiMmctbWljcm9zZXJ2aWNlcyJdfQ.IXn8Yb2yG6BUwg9qBNo9iytXsKhPDaZlPZHqdbw2TxMuouX2klHCigRpqVvK6z2H77P1L9wLb80mphcrFH7UfoUwqcQ3SZoMmIFdSRbGz0Zw9uOXUwcPOvrRg6C4Vh2aO_lj9FMFeVfe_5SF_RXfV3XL7vmTR8q6hBAJ-Dcte1XV-2dvnWEwYaL-IDs0Jf8V0qFQsGyxUBCCMUFug_YOy22cfhjiFYnI7gwsjmeXuP5qwGNdl1q-N_uJjovDlWG3SQN62rLs4UguWmLLsiXo4MTH1m2XzISFuw4S9-z6VbDCwR24OfETCiHxV7Mi9ZQ0nZI13JLy7eInceGdoQ0e3Q
@@ -20,6 +20,6 @@ headers:
   id: tEGMWGJ0f5
 method: GET
 name: Test Auth
-sortPriority: 6000.0
-url: http://localhost:8090/test
+sortPriority: 1000.0
+url: http://localhost:8091/test
 urlParameters: []

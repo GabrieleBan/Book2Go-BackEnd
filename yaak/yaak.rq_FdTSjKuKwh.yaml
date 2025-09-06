@@ -1,0 +1,82 @@
+type: http_request
+model: http_request
+id: rq_FdTSjKuKwh
+createdAt: 2025-08-27T23:53:08.177205
+updatedAt: 2025-08-28T00:27:07.888587
+workspaceId: wk_94bVhSAcpy
+folderId: fl_gQ2VqcuSam
+authentication: {}
+authenticationType: null
+body:
+  text: |+
+    {
+      "title": "Il Nome della Rosa",
+      "author": "Umberto Eco",
+      "isbn": "9788845919328",
+      "description": "Un romanzo storico ambientato in un monastero benedettino nel XIV secolo, dove il frate francescano Guglielmo da Baskerville indaga su una serie di misteriosi omicidi.",
+      "publisher": "Bompiani",
+      "publicationDate": "1980-10-28",
+      "categoryIds": [
+        "297538fd-dfd6-466b-bf40-0332005cb710",
+        "4fe717d1-6208-464c-8afa-7c6f7c39a030"
+      ],
+      "formats": [
+        {
+          "formatType": "PHYSICAL",
+          "purchasePrice": 22.50,
+          "stockQuantity": 50,
+          "isAvailableForPurchase": true,
+          "isAvailableForRental": true,
+          "isAvailableOnSubscription": false,
+          "rentalOptions": [
+            {
+              "durationDays": 7,
+              "price": 3.99,
+              "description": "Noleggio settimanale"
+            },
+            {
+              "durationDays": 30,
+              "price": 9.99,
+              "description": "Noleggio mensile"
+            }
+          ]
+        },
+        {
+          "formatType": "EBOOK",
+          "purchasePrice": 12.99,
+          "stockQuantity": null,
+          "isAvailableForPurchase": true,
+          "isAvailableForRental": true,
+          "isAvailableOnSubscription": true,
+          "rentalOptions": [
+            {
+              "durationDays": 14,
+              "price": 2.99,
+              "description": "Noleggio digitale 2 settimane"
+            }
+          ]
+        },
+        {
+          "formatType": "AUDIOBOOK",
+          "purchasePrice": 18.99,
+          "stockQuantity": null,
+          "isAvailableForPurchase": true,
+          "isAvailableForRental": false,
+          "isAvailableOnSubscription": true,
+          "rentalOptions": []
+        }
+      ]
+    }
+
+bodyType: application/json
+description: ''
+headers:
+- enabled: true
+  name: Content-Type
+  value: application/json
+  id: UkACCQyhmx
+method: POST
+name: Create Book
+sortPriority: 0.001
+url: http://localhost:8091/books/
+urlParameters: []

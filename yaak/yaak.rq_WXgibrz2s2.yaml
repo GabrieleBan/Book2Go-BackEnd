@@ -1,0 +1,27 @@
+type: http_request
+model: http_request
+id: rq_WXgibrz2s2
+createdAt: 2025-08-28T00:05:57.485124
+updatedAt: 2025-08-28T00:23:26.682107
+workspaceId: wk_94bVhSAcpy
+folderId: fl_gQ2VqcuSam
+authentication: {}
+authenticationType: null
+body:
+  text: |-
+    {
+      "name": "Romanzo Storico",
+      "description": "Esiste anche il contrario eh"
+    }
+bodyType: application/json
+description: ''
+headers:
+- enabled: true
+  name: Content-Type
+  value: application/json
+  id: QgaJRmKHBM
+method: POST
+name: Create Category
+sortPriority: 0.002
+url: http://localhost:8091/categories/
+urlParameters: []

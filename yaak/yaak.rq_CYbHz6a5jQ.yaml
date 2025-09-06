@@ -1,0 +1,25 @@
+type: http_request
+model: http_request
+id: rq_CYbHz6a5jQ
+createdAt: 2025-08-27T12:53:21.206067
+updatedAt: 2025-08-27T22:31:44.415154
+workspaceId: wk_94bVhSAcpy
+folderId: fl_GBXwSTx9Sx
+authentication:
+  disabled: true
+  token: eyJhbGciOiJSUzI1NiJ9.eyJyb2xlIjoiVVNFUiIsInVzZXJuYW1lIjoidGVzdDEiLCJzdWIiOiJlNTg3ZTM2MS1jMjgzLTQwMDAtOTFjOC0wNjE1ZjVlZDQ5YjgiLCJpYXQiOjE3NTYyOTkyMTksImV4cCI6MTc1NjMwMDExOX0.IdUdoDDD7nl7OoDHcxLWrrSTcmc-Kln6946es_9MMEdWeT_Yy8PtDHiFunol2S7LRnHiW_x5vuf2BliLbpSKsPp5BaWHgApp0H1LZJckjSIyLURgwY2aZ5mYGAuFC4wf7_2Atm6HfmT6wctSoEuV2TkjFyWJjJ-zXSBjFKMOiE5ZcG41EutiqKtqJgK_-25GVV2sUL5oYTk9ohcGod797zvGmlqM2WWGIZu2tQ6DWuvXI1YYmlH8XuFBx4_1hoiUuX8eLewhgnCjIBtag3R-VY9XLd4o5oMSNxWX9aKDX8kTl8t_saZfcGWBbyCv31CoWdPDfkBjeTzR4qO5FJm6pw
+authenticationType: bearer
+body:
+  text: ''
+bodyType: application/json
+description: ''
+headers:
+- enabled: true
+  name: Content-Type
+  value: application/json
+  id: tEGMWGJ0f5
+method: GET
+name: Jwks?
+sortPriority: 6000.001
+url: http://localhost:8090/auth/.well-known/jwks.json
+urlParameters: []
