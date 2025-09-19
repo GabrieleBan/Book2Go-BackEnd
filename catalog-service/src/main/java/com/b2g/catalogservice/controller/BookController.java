@@ -1,5 +1,6 @@
 package com.b2g.catalogservice.controller;
 
+import com.b2g.catalogservice.annotation.RequireRole;
 import com.b2g.catalogservice.dto.*;
 import com.b2g.catalogservice.service.BookService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class BookController {
     }
 
     @PostMapping({"", "/"})
+    @RequireRole("ADMIN")
     public ResponseEntity<BookDetailDTO> createBook(@RequestBody /* @Valid */ BookCreateRequestDTO request) {
         BookDetailDTO createdBook = bookService.createBook(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdBook);
