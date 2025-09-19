@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class BookService {
 
     private final BookRepository bookRepository;
@@ -26,6 +25,7 @@ public class BookService {
     private final BookFormatRepository bookFormatRepository;
     private final RentalOptionRepository rentalOptionRepository;
 
+    @Transactional(readOnly = true)
     public List<BookSummaryDTO> getAllBooks(Set<UUID> categoryIds, Pageable pageable) {
         Page<Book> booksPage;
 
@@ -42,6 +42,7 @@ public class BookService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public BookDetailDTO createBook(BookCreateRequestDTO request) {
         // Fetch categories if provided
         Set<Category> categories = new HashSet<>();
@@ -167,6 +168,7 @@ public class BookService {
         );
     }
 
+    @Transactional(readOnly = true)
     public Optional<BookDetailDTO> getBookById(UUID id) {
         Optional<Book> bookOptional = bookRepository.findById(id);
 
