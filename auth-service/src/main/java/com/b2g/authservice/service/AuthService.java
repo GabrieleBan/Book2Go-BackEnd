@@ -3,6 +3,7 @@ package com.b2g.authservice.service;
 import com.b2g.authservice.dto.LoginRequest;
 import com.b2g.authservice.dto.SignupRequest;
 import com.b2g.authservice.dto.TokenResponse;
+import com.b2g.authservice.dto.UserRegistrationMessage;
 import com.b2g.authservice.model.OAuthProvider;
 import com.b2g.authservice.model.RefreshToken;
 import com.b2g.authservice.model.User;
@@ -10,6 +11,8 @@ import com.b2g.authservice.model.UserRole;
 import com.b2g.authservice.repository.RefreshTokenRepository;
 import com.b2g.authservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
@@ -33,6 +36,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
 
     // Constants
@@ -53,11 +57,18 @@ public class AuthService {
     @Value("${jwt.expiration.refresh-token:2592000000}")
     private long refreshTokenExpiration;
 
+    @Value("${app.rabbitmq.exchange}")
+    private String exchangeName;
+
+    @Value("${app.rabbitmq.routing-key.signup-ticket}")
+    private String userRegisteredRoutingKey;
+
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final OAuth2AuthorizedClientService clientService;
+    private final RabbitTemplate rabbitTemplate;
 
     @Transactional
     public ResponseEntity<?> registerUser(SignupRequest request) {
@@ -68,7 +79,30 @@ public class AuthService {
         User user = createUnconfirmedUser(request);
         userRepository.save(user);
 
-        // TODO: implement email sending (the token is the user UUID)
+        // Configurazione per la conferma di consegna dei messaggi
+        rabbitTemplate.setMandatory(true);          // notifica se non c'è una route
+        rabbitTemplate.setReturnsCallback(ret ->    // logga eventuali drop
+                log.error("Messaggio UNROUTED: {}", ret));
+        rabbitTemplate.setConfirmCallback((cd,ack,c) ->
+                log.info("Broker ack? {}  cause: {}", ack, c));
+
+        // Invio del messaggio di registrazione con username e UUID
+        try {
+            UserRegistrationMessage registrationMessage = UserRegistrationMessage.builder()
+                    .username(user.getUsername())
+                    .uuid(user.getId())
+                    .email(user.getEmail())
+                    .build();
+
+            rabbitTemplate.convertAndSend(exchangeName, userRegisteredRoutingKey, registrationMessage);
+            log.info("Messaggio di registrazione inviato per utente: {} con UUID: {}",
+                    user.getUsername(), user.getId());
+        } catch (Exception e) {
+            log.error("Errore nell'invio del messaggio di registrazione per utente: {}",
+                    user.getUsername(), e);
+            // Il messaggio non è critico, quindi non interrompiamo il flusso di registrazione
+        }
+
         return ResponseEntity.ok(REGISTRATION_SUCCESS);
     }
 
@@ -309,3 +343,4 @@ public class AuthService {
         return refreshTokenRepository.save(refreshToken);
     }
 }
+
