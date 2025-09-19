@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.*;
+import jakarta.validation.Valid;
 
 import java.util.*;
 
@@ -28,7 +29,7 @@ public class BookController {
 
     @PostMapping({"", "/"})
     @RequireRole("ADMIN")
-    public ResponseEntity<BookDetailDTO> createBook(@RequestBody /* @Valid */ BookCreateRequestDTO request) {
+    public ResponseEntity<BookDetailDTO> createBook(@RequestBody @Valid BookCreateRequestDTO request) {
         BookDetailDTO createdBook = bookService.createBook(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdBook);
     }

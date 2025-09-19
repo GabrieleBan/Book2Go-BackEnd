@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,7 +38,7 @@ public class CategoryController {
     }
 
     @PostMapping({"", "/"})
-    public ResponseEntity<CategoryDTO> createCategory(@RequestBody /* @Valid */ CategoryCreateRequestDTO request) {
+    public ResponseEntity<CategoryDTO> createCategory(@RequestBody @Valid CategoryCreateRequestDTO request) {
 
         // Create Category entity from request
         Category category = new Category();
