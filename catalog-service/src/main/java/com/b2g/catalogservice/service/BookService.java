@@ -7,6 +7,7 @@ import com.b2g.catalogservice.repository.CategoryRepository;
 import com.b2g.catalogservice.repository.BookFormatRepository;
 import com.b2g.catalogservice.repository.RentalOptionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,9 +26,20 @@ public class BookService {
     private final BookFormatRepository bookFormatRepository;
     private final RentalOptionRepository rentalOptionRepository;
 
-    public List<BookDetailDTO> getAllBooks(Set<UUID> categoryIds, Pageable pageable) {
-        // TODO: Implement actual filtering and pagination logic
-        return Collections.emptyList();
+    public List<BookSummaryDTO> getAllBooks(Set<UUID> categoryIds, Pageable pageable) {
+        Page<Book> booksPage;
+
+        // Se non ci sono filtri per categoria, prendi tutti i libri con paginazione
+        if (categoryIds == null || categoryIds.isEmpty()) {
+            booksPage = bookRepository.findAll(pageable);
+        } else {
+            // Filtra i libri per le categorie specificate
+            booksPage = bookRepository.findByCategoriesIdIn(categoryIds, pageable);
+        }
+
+        return booksPage.getContent().stream()
+                .map(this::convertToBookSummaryDTO)
+                .collect(Collectors.toList());
     }
 
     public BookDetailDTO createBook(BookCreateRequestDTO request) {
@@ -138,6 +150,20 @@ public class BookService {
                 book.getCoverImageUrl(),
                 categoryDTOs,
                 formatDTOs
+        );
+    }
+
+    private BookSummaryDTO convertToBookSummaryDTO(Book book) {
+        List<CategoryDTO> categoryDTOs = book.getCategories().stream()
+                .map(category -> new CategoryDTO(category.getId(), category.getName(), category.getDescription()))
+                .collect(Collectors.toList());
+
+        return new BookSummaryDTO(
+                book.getId(),
+                book.getTitle(),
+                book.getAuthor(),
+                book.getCoverImageUrl(),
+                categoryDTOs
         );
     }
 }

@@ -2,7 +2,7 @@ type: http_request
 model: http_request
 id: rq_RFuRdfaZNn
 createdAt: 2025-08-27T17:56:31.900481
-updatedAt: 2025-08-28T00:03:22.718573
+updatedAt: 2025-09-19T13:12:23.112783500
 workspaceId: wk_94bVhSAcpy
 folderId: fl_gQ2VqcuSam
 authentication: {}
@@ -15,4 +15,12 @@ method: GET
 name: Get Books
 sortPriority: 0.0
 url: http://localhost:8091/books/
-urlParameters: []
+urlParameters:
+- enabled: true
+  name: categoryIds
+  value: c0bffd84-f379-4a96-9c48-c487d53611ab
+  id: x9KPJMZzt6
+- enabled: true
+  name: ''
+  value: ''
+  id: qD7Hu0ztNF

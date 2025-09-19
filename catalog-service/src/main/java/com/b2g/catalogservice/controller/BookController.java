@@ -18,10 +18,10 @@ public class BookController {
     private final BookService bookService;
 
     @GetMapping({"", "/"})
-    public ResponseEntity<List<BookDetailDTO>> getAllBooks(
+    public ResponseEntity<List<BookSummaryDTO>> getAllBooks(
             @RequestParam(required = false) Set<UUID> categoryIds,
             Pageable pageable) {
-        List<BookDetailDTO> books = bookService.getAllBooks(categoryIds, pageable);
+        List<BookSummaryDTO> books = bookService.getAllBooks(categoryIds, pageable);
         return ResponseEntity.ok(books);
     }
 
