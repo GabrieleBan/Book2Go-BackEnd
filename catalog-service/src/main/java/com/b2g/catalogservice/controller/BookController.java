@@ -31,4 +31,11 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdBook);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<BookDetailDTO> getBookById(@PathVariable UUID id) {
+        Optional<BookDetailDTO> book = bookService.getBookById(id);
+
+        return book.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
 }

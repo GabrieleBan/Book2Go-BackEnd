@@ -1,8 +1,8 @@
 type: http_request
 model: http_request
-id: rq_RFuRdfaZNn
-createdAt: 2025-08-27T17:56:31.900481
-updatedAt: 2025-09-19T13:17:07.320279800
+id: rq_t93SLSjBCs
+createdAt: 2025-09-19T13:16:30.780442800
+updatedAt: 2025-09-19T13:17:39.256619800
 workspaceId: wk_94bVhSAcpy
 folderId: fl_gQ2VqcuSam
 authentication: {}
@@ -12,15 +12,11 @@ bodyType: null
 description: ''
 headers: []
 method: GET
-name: Get Books
-sortPriority: 0.0
-url: http://localhost:8091/books/
+name: Get Book
+sortPriority: 2500.0
+url: http://localhost:8091/books/765d72ee-e386-4272-a1ef-174f93c644d8
 urlParameters:
-- enabled: true
-  name: categoryIds
-  value: ''
-  id: x9KPJMZzt6
 - enabled: true
   name: ''
   value: ''
-  id: tYhTeK6dUg
+  id: AEqZJWdG8f

@@ -166,4 +166,15 @@ public class BookService {
                 categoryDTOs
         );
     }
+
+    public Optional<BookDetailDTO> getBookById(UUID id) {
+        Optional<Book> bookOptional = bookRepository.findById(id);
+
+        if (bookOptional.isPresent()) {
+            Book book = bookOptional.get();
+            return Optional.of(convertToBookDetailDTO(book, book.getAvailableFormats()));
+        }
+
+        return Optional.empty();
+    }
 }

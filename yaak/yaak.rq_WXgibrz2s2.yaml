@@ -2,7 +2,7 @@ type: http_request
 model: http_request
 id: rq_WXgibrz2s2
 createdAt: 2025-08-28T00:05:57.485124
-updatedAt: 2025-08-28T00:23:26.682107
+updatedAt: 2025-09-19T13:16:32.674910900
 workspaceId: wk_94bVhSAcpy
 folderId: fl_gQ2VqcuSam
 authentication: {}
@@ -22,6 +22,6 @@ headers:
   id: QgaJRmKHBM
 method: POST
 name: Create Category
-sortPriority: 0.002
+sortPriority: 4000.0
 url: http://localhost:8091/categories/
 urlParameters: []

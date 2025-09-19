@@ -2,7 +2,7 @@ type: http_request
 model: http_request
 id: rq_mzwZP2RHzU
 createdAt: 2025-08-27T22:31:57.473817
-updatedAt: 2025-08-27T23:02:38.121552
+updatedAt: 2025-09-19T13:16:32.680669800
 workspaceId: wk_94bVhSAcpy
 folderId: fl_gQ2VqcuSam
 authentication:
@@ -20,6 +20,6 @@ headers:
   id: tEGMWGJ0f5
 method: GET
 name: Test Auth
-sortPriority: 1000.0
+sortPriority: 5000.0
 url: http://localhost:8091/test
 urlParameters: []

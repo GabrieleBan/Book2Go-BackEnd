@@ -2,7 +2,7 @@ type: http_request
 model: http_request
 id: rq_FdTSjKuKwh
 createdAt: 2025-08-27T23:53:08.177205
-updatedAt: 2025-08-28T00:27:07.888587
+updatedAt: 2025-09-19T13:16:32.670209700
 workspaceId: wk_94bVhSAcpy
 folderId: fl_gQ2VqcuSam
 authentication: {}
@@ -77,6 +77,6 @@ headers:
   id: UkACCQyhmx
 method: POST
 name: Create Book
-sortPriority: 0.001
+sortPriority: 3000.0
 url: http://localhost:8091/books/
 urlParameters: []
