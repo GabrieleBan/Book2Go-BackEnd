@@ -1,1 +1,2 @@
 CREATE DATABASE b2g_catalog;
+CREATE DATABASE b2g_order;
