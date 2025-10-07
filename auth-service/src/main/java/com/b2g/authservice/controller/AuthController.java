@@ -37,7 +37,7 @@ public class AuthController {
         return authService.registerUser(request);
     }
 
-    @PostMapping("/confirm/{token}")
+    @GetMapping("/confirm/{token}")
     public ResponseEntity<?> confirmEmail(@PathVariable String token) {
         return authService.confirmEmail(token);
     }
