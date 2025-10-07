@@ -1,7 +1,8 @@
 import { expect } from 'chai';
-import { fakerIT as faker } from '@faker-js/faker';
 import axios, { AxiosInstance } from 'axios';
 import { randomPerson } from '../utils';
+
+//TODO refactor
 
 const BASE_URL = 'http://localhost:8090';
 const MAILHOG_URL = 'http://localhost:8025';
@@ -65,7 +66,6 @@ async function clearEmails(): Promise<void> {
 
 describe('Auth Flow', () => {
     let person: ReturnType<typeof randomPerson>;
-    let password: string;
     let confirmationUuid: string | null;
     let accessToken: string;
     let refreshToken: string;
@@ -86,6 +86,7 @@ describe('Auth Flow', () => {
         });
 
         expect(response.status).to.equal(200);
+        expect(response.data).to.be.equal("User registered successfully");
     });
 
     it('should receive confirmation email', async () => {
@@ -117,6 +118,8 @@ describe('Auth Flow', () => {
 
         const response = await api.get(`/auth/confirm/${confirmationUuid}`);
         expect(response.status).to.equal(200);
+
+        expect(response.data).to.be.equal("Email confirmed successfully");
     });
 
     it('should login with confirmed user', async () => {
@@ -132,9 +135,11 @@ describe('Auth Flow', () => {
         await api.get(`/auth/confirm/${confirmationUuid}`);
 
         const response = await api.post<AuthTokens>('/auth/login', {
-            email: person.email,
-            password: password
+            username: person.username,
+            password: person.password
         });
+
+
 
         expect(response.status).to.equal(200);
         expect(response.data).to.have.property('accessToken');
@@ -157,8 +162,8 @@ describe('Auth Flow', () => {
         await api.get(`/auth/confirm/${confirmationUuid}`);
 
         const loginResponse = await api.post<AuthTokens>('/auth/login', {
-            email: person.email,
-            password: password
+            username: person.username,
+            password: person.password
         });
         refreshToken = loginResponse.data.refreshToken;
 
@@ -185,8 +190,8 @@ describe('Auth Flow', () => {
         await api.get(`/auth/confirm/${confirmationUuid}`);
 
         const loginResponse = await api.post<AuthTokens>('/auth/login', {
-            email: person.email,
-            password: password
+            username: person.username,
+            password: person.password
         });
         refreshToken = loginResponse.data.refreshToken;
 
@@ -201,7 +206,7 @@ describe('Auth Flow', () => {
             });
             expect.fail('Should have thrown error');
         } catch (error: any) {
-            expect(error.response.status).to.be.oneOf([401, 403]);
+            expect(error.response.data).to.deep.equal({ error: 'Invalid refresh token' });
         }
     });
 
@@ -219,8 +224,8 @@ describe('Auth Flow', () => {
         await api.get(`/auth/confirm/${confirmationUuid}`);
 
         const loginResponse = await api.post<AuthTokens>('/auth/login', {
-            email: person.email,
-            password: password
+            username: person.username,
+            password: person.password
         });
         refreshToken = loginResponse.data.refreshToken;
 
@@ -239,7 +244,7 @@ describe('Auth Flow', () => {
             });
             expect.fail('Should have thrown error');
         } catch (error: any) {
-            expect(error.response.status).to.be.oneOf([401, 403]);
+            expect(error.response.data).to.deep.equal({ error: 'Invalid refresh token' });
         }
     });
 });
