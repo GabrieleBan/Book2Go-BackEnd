@@ -4,6 +4,9 @@ import com.b2g.authservice.dto.LoginRequest;
 import com.b2g.authservice.dto.SignupRequest;
 import com.b2g.authservice.dto.TokenResponse;
 import com.b2g.authservice.dto.UserRegistrationMessage;
+import com.b2g.authservice.exception.AccountNotEnabledException;
+import com.b2g.authservice.exception.InvalidCredentialsException;
+import com.b2g.authservice.exception.InvalidTokenException;
 import com.b2g.authservice.model.OAuthProvider;
 import com.b2g.authservice.model.RefreshToken;
 import com.b2g.authservice.model.User;
@@ -176,7 +179,7 @@ public class AuthService {
 
     private User findUserByToken(String token) {
         return userRepository.findById(UUID.fromString(token))
-                .orElseThrow(() -> new RuntimeException(INVALID_TOKEN_ERROR));
+                .orElseThrow(() -> new InvalidTokenException(INVALID_TOKEN_ERROR));
     }
 
     private boolean isValidOAuthProvider(String registrationId) {
@@ -285,14 +288,14 @@ public class AuthService {
 
     private User validateUserCredentials(LoginRequest request) {
         User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new RuntimeException(INVALID_CREDENTIALS_ERROR));
+                .orElseThrow(() -> new InvalidCredentialsException(INVALID_CREDENTIALS_ERROR));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
-            throw new RuntimeException(INVALID_CREDENTIALS_ERROR);
+            throw new InvalidCredentialsException(INVALID_CREDENTIALS_ERROR);
         }
 
         if (!user.isEnabled()) {
-            throw new RuntimeException("Account not enabled");
+            throw new AccountNotEnabledException("Account not enabled");
         }
 
         return user;
@@ -300,11 +303,11 @@ public class AuthService {
 
     private RefreshToken validateRefreshToken(String refreshTokenValue) {
         RefreshToken token = refreshTokenRepository.findByToken(refreshTokenValue)
-                .orElseThrow(() -> new RuntimeException(INVALID_REFRESH_TOKEN_ERROR));
+                .orElseThrow(() -> new InvalidTokenException(INVALID_REFRESH_TOKEN_ERROR));
 
         if (token.getExpiryDate().isBefore(LocalDateTime.now())) {
             refreshTokenRepository.delete(token);
-            throw new RuntimeException("Refresh token expired");
+            throw new InvalidTokenException("Refresh token expired");
         }
 
         return token;
@@ -343,4 +346,3 @@ public class AuthService {
         return refreshTokenRepository.save(refreshToken);
     }
 }
-
