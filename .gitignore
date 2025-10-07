@@ -1,3 +1,4 @@
 # Ignore auth-service RSA Keys
 keys/
 dev-keys/
+.DS_Store
