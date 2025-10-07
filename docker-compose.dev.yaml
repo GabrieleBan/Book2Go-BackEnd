@@ -28,6 +28,15 @@ services:
     networks:
       - b2g-net
 
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: mailhog_container
+    ports:
+      - "1025:1025"     # SMTP server (per Spring Boot)
+      - "8025:8025"     # Web UI (visita http://localhost:8025)
+    networks:
+      - b2g-net
+
 volumes:
   pg_data:
   rabbitmq_data:
