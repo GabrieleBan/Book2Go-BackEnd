@@ -27,7 +27,7 @@ public class UserRegistrationListener {
 
     private void sendConfirmationEmail(UserRegistrationMessage message) {
         String subject = "Conferma la tua registrazione";
-        String confirmationLink = confirmationBaseUrl + "/confirm/" + message.getUuid();
+        String confirmationLink = confirmationBaseUrl + "/auth/confirm/" + message.getUuid();
         String text = String.format("Ciao %s,\n\nGrazie per la registrazione! Conferma la tua email cliccando sul link: %s\n\nSe non hai richiesto la registrazione, ignora questa email.",
                 message.getUsername(), confirmationLink);
 
