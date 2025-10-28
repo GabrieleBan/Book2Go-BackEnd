@@ -1,0 +1,30 @@
+type: http_request
+model: http_request
+id: rq_gPZDKCUao2
+createdAt: 2025-10-28T14:39:14.714111900
+updatedAt: 2025-10-28T16:43:10.063761600
+workspaceId: wk_94bVhSAcpy
+folderId: fl_cCZgPgtyUM
+authentication: {}
+authenticationType: null
+body: {}
+bodyType: null
+description: ''
+headers:
+- enabled: true
+  name: ''
+  value: ''
+  id: YahbGaE5gn
+method: GET
+name: Get Generic Recommendation
+sortPriority: 1999.9998
+url: http://localhost:8095/recommendation/
+urlParameters:
+- enabled: true
+  name: categoryIds
+  value: ''
+  id: Q0bJVTmFsC
+- enabled: true
+  name: ''
+  value: ''
+  id: i9dEVCK4Ei
