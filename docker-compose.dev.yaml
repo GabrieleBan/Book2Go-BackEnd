@@ -37,9 +37,29 @@ services:
     networks:
       - b2g-net
 
+
+
+  neo4j:
+    build: ./neo4j
+    container_name: n4j-b2gdb
+    environment:
+      NEO4J_AUTH: "neo4j/guest"
+      GUEST_USER: guest
+      GUEST_PASSWORD: guest
+      DB_NAME: b2g_graph
+      NEO4J_AUTH_PASSWORD: guest
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neo4j_data:/data
+    networks:
+      - b2g-net
+
 volumes:
   pg_data:
   rabbitmq_data:
+  neo4j_data:
 
 networks:
   b2g-net:
