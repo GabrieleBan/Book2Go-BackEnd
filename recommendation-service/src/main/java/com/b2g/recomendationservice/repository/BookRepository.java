@@ -8,4 +8,6 @@ import java.util.UUID;
 @Repository
 public interface BookRepository  extends Neo4jRepository<Book, UUID> {
 
+
+
 }

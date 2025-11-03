@@ -1,10 +1,13 @@
 package com.b2g.recomendationservice.service;
 
 import com.b2g.recomendationservice.dto.BookSummaryDTO;
-import com.b2g.recomendationservice.repository.BookRepository;
-import com.b2g.recomendationservice.repository.PublisherRepository;
-import com.b2g.recomendationservice.repository.ReaderRepository;
-import com.b2g.recomendationservice.repository.WriterRepository;
+import com.b2g.recomendationservice.dto.ReviewDTO;
+import com.b2g.recomendationservice.model.nodes.Book;
+import com.b2g.recomendationservice.model.nodes.Publisher;
+import com.b2g.recomendationservice.model.nodes.Reader;
+import com.b2g.recomendationservice.model.nodes.Writer;
+import com.b2g.recomendationservice.model.relationships.Reviews;
+import com.b2g.recomendationservice.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +23,31 @@ public class RecommendationService {
     private final RecommendationService recommendationService;
     private final WriterRepository writerRepository;
     public  final ReaderRepository readerRepository;
+    private final ReviewRepository reviewRepository;
+
+
+    public Reader addReaderNode(Reader reader) {
+        return readerRepository.save(reader);
+    }
+
+    public Publisher addPublisherNode(Publisher publisher) {
+        return publisherRepository.save(publisher);
+    }
+
+    public Book addBookNode(Book book) {
+        return bookRepository.save(book);
+    }
+
+    public Writer addWriterNode(Writer writer) {
+        return writerRepository.save(writer);
+    }
+
+    public ReviewDTO addReview(ReviewDTO review)  {
+        if(review.rating()>5 || review.rating()<0) {
+            throw new IllegalArgumentException("Rating must be between 0 and 5");
+        }
+        return reviewRepository.createReview(review.readerId(), review.bookId(), review.rating());
+    }
 
 
 
