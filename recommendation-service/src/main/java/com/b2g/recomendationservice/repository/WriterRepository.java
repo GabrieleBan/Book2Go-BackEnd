@@ -1,6 +1,6 @@
 package com.b2g.recomendationservice.repository;
 
-import com.b2g.recomendationservice.model.nodes.Book;
+import com.b2g.recomendationservice.model.nodes.BookNode;
 import com.b2g.recomendationservice.model.nodes.Writer;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
@@ -12,5 +12,5 @@ import java.util.UUID;
 @Repository
 public interface WriterRepository extends Neo4jRepository<Writer, UUID> {
     @Query("MATCH (w:Writer {id: $writerId})<-[:WRITTEN_BY]-(b:Book) RETURN b")
-    public List<Book> findAllWrittenBooksBy(@Param("writerId") UUID writerId);
+    public List<BookNode> findAllWrittenBooksBy(@Param("writerId") UUID writerId);
 }

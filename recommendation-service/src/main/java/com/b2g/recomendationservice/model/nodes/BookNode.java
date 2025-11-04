@@ -4,6 +4,7 @@ import com.b2g.recomendationservice.model.relationships.PublishedBy;
 import com.b2g.recomendationservice.model.relationships.WrittenBy;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
@@ -13,7 +14,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @Node
-public class Book {
+@ToString
+public class BookNode {
     @Id
     private UUID id;
     private String title;
@@ -21,5 +23,7 @@ public class Book {
     private List<WrittenBy> authors;
     @Relationship(type = "PUBLISHED_BY", direction = Relationship.Direction.OUTGOING)
     private PublishedBy publisher;
+
+
 
 }

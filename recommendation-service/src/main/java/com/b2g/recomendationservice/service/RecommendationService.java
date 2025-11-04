@@ -1,12 +1,10 @@
 package com.b2g.recomendationservice.service;
 
-import com.b2g.recomendationservice.dto.BookSummaryDTO;
 import com.b2g.recomendationservice.dto.ReviewDTO;
-import com.b2g.recomendationservice.model.nodes.Book;
+import com.b2g.recomendationservice.model.nodes.BookNode;
 import com.b2g.recomendationservice.model.nodes.Publisher;
 import com.b2g.recomendationservice.model.nodes.Reader;
 import com.b2g.recomendationservice.model.nodes.Writer;
-import com.b2g.recomendationservice.model.relationships.Reviews;
 import com.b2g.recomendationservice.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,7 +31,7 @@ public class RecommendationService {
         return publisherRepository.save(publisher);
     }
 
-    public Book addBookNode(Book book) {
+    public BookNode addBookNode(BookNode book) {
         return bookRepository.save(book);
     }
 
@@ -50,11 +48,11 @@ public class RecommendationService {
 
 
 
-    public List<BookSummaryDTO> getGenericReccomendation(Set<UUID> categoryIds) {
+    public List<BookNode> getGenericReccomendation(Set<UUID> categoryIds) {
         return List.of();
     }
 
-    public List<BookSummaryDTO> getPersonalizedReccomendation(UUID userId, Set<UUID> categoryIds) {
+    public List<BookNode> getPersonalizedReccomendation(UUID userId, Set<UUID> categoryIds) {
         return List.of();
     }
 }
