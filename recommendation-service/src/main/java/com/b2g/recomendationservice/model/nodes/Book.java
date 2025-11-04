@@ -15,7 +15,7 @@ import java.util.UUID;
 @Setter
 @Node
 @ToString
-public class BookNode {
+public class Book {
     @Id
     private UUID id;
     private String title;

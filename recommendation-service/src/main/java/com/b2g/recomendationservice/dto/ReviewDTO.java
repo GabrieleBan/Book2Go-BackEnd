@@ -8,10 +8,11 @@ import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 
 import java.util.UUID;
-@Builder
+
 @Getter
 @Setter
 @ToString
+@Builder
 public class ReviewDTO{
     @Id
     @GeneratedValue

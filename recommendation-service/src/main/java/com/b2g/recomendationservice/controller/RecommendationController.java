@@ -2,7 +2,7 @@ package com.b2g.recomendationservice.controller;
 
 import com.b2g.recomendationservice.annotations.RequireUserUUID;
 import com.b2g.recomendationservice.dto.ReviewDTO;
-import com.b2g.recomendationservice.model.nodes.BookNode;
+import com.b2g.recomendationservice.model.nodes.Book;
 import com.b2g.recomendationservice.model.nodes.Publisher;
 import com.b2g.recomendationservice.model.nodes.Reader;
 import com.b2g.recomendationservice.model.nodes.Writer;
@@ -13,14 +13,33 @@ import com.b2g.recomendationservice.service.RecommendationService;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.MessagingException;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+
+@Service
+class ReviewPublisher {
+    @Value("${app.rabbitmq.exchange}")
+    private  String topicExchange;
+    private final RabbitTemplate rabbitTemplate;
+
+    public ReviewPublisher(RabbitTemplate rabbitTemplate) {
+        this.rabbitTemplate = rabbitTemplate;
+    }
+
+    public void sendReview(ReviewDTO review) {
+        rabbitTemplate.convertAndSend(topicExchange, "review.created", review);
+    }
+}
 
 @Slf4j
 @RestController
@@ -29,10 +48,13 @@ import java.util.UUID;
 public class RecommendationController {
     private final JwtService jwtService;
     private final RecommendationService recommService;
+
+    private final ReviewPublisher testService;
+
     @GetMapping({"", "/"})
     public ResponseEntity<?> genericRecommendation(
             @RequestParam(required = false) Set<UUID> categoryIds) {
-        List<BookNode> recommendationList = recommService.getGenericReccomendation(categoryIds);
+        List<Book> recommendationList = recommService.getGenericReccomendation(categoryIds);
         return ResponseEntity.status(HttpStatus.OK).body(recommendationList);
     }
     @GetMapping("/personalized")
@@ -51,11 +73,11 @@ public class RecommendationController {
         // Validate JWT and extract claims
         Claims claims = jwtService.validateToken(jwt);
         UUID userId= jwtService.extractUserUUID(claims);
-        List<BookNode> recommendationList = recommService.getPersonalizedReccomendation(userId, categoryIds);
+        List<Book> recommendationList = recommService.getPersonalizedReccomendation(userId, categoryIds);
         return ResponseEntity.status(HttpStatus.OK).body(recommendationList);
     }
     @GetMapping({"/test/creation/","/test/creation"})
-    public ResponseEntity<String> testRecommendation() {
+    public ResponseEntity<String> graphTest() {
         StringBuilder log = new StringBuilder();
 
         try {
@@ -77,7 +99,7 @@ public class RecommendationController {
 
 
             UUID bookId = UUID.randomUUID();
-            BookNode book = new BookNode();
+            Book book = new Book();
             book.setId(bookId);
             book.setTitle("Test Book " + bookId.toString().substring(0, 8));
 
@@ -110,7 +132,7 @@ public class RecommendationController {
                     .build();
             log.append("Created ReviewDTO: ").append(reviewDTO).append("\n");
 
-
+            log.append("review da salvare ").append(reviewDTO.toString()).append("\n");
             ReviewDTO savedReview = recommService.addReview(reviewDTO);
             log.append("Saved review in graph: ").append(savedReview.toString()).append("\n");
 
@@ -123,6 +145,22 @@ public class RecommendationController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(log.toString());
         }
+    }
+
+    @GetMapping("/test/creation/{routingKey}")
+    public ResponseEntity<String> queueTests(@PathVariable String routingKey) {
+        try {
+            testService.sendReview(ReviewDTO.builder()
+                    .readerId(UUID.randomUUID())
+                    .rating(4.5f)
+                    .build());
+            return ResponseEntity.status(HttpStatus.OK).body("RabbitMQ sent the message, control the logs and the gui");
+
+        }catch (MessagingException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("RabbitMQ failed to send message");
+        }
+
+
     }
 
 }

@@ -1,6 +1,8 @@
 package com.b2g.recomendationservice.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,36 +20,54 @@ public class RabbitMQConfig {
     @Value("${app.rabbitmq.exchange}")
     private String exchangeName;
 
+    @Value("${app.rabbitmq.queue.name}")
+    private String servicePrefix;
+
     @Value("#{'${app.rabbitmq.routing-keys}'.split(',')}")
     private List<String> patternBindingKeys;
 
-    @Value("${app.rabbitmq.queue.name}")
-    private String queueName;
+
+    @Bean
+    public TopicExchange b2gExchange() {
+        return new TopicExchange(exchangeName, true, false);
+    }
 
 
     @Bean
-    public Exchange b2gExchange() {
-        return new DirectExchange(exchangeName, true, false);
+    public Queue bookQueue() {
+        return new Queue("recommendation.book.queue", true, false, false);
     }
 
     @Bean
-    Queue recommendationQueue() {
-        return new Queue(queueName, true);
+    public Queue userQueue() {
+        return new Queue("recommendation.user.queue", true, false, false);
     }
 
     @Bean
-    public List<Binding> booksBinding(Queue recommendationQueue, Exchange b2gExchange) {
-        List<Binding> bindings = new ArrayList<>();
-        for (String key : patternBindingKeys)
-        {
-            bindings.add(BindingBuilder.bind(recommendationQueue)
-                    .to(b2gExchange)
-                    .with(key)
-                    .noargs());
-        }
-        return bindings;
+    public Queue reviewQueue() {
+        return new Queue("recommendation.review.queue", true, false, false);
     }
 
+    @Bean
+    public Binding bookBinding(TopicExchange b2gExchange, Queue bookQueue) {
+        return BindingBuilder.bind(bookQueue)
+                .to(b2gExchange)
+                .with("book.#");
+    }
+
+    @Bean
+    public Binding userBinding(TopicExchange b2gExchange, Queue userQueue) {
+        return BindingBuilder.bind(userQueue)
+                .to(b2gExchange)
+                .with("user.#");
+    }
+
+    @Bean
+    public Binding reviewBinding(TopicExchange b2gExchange, Queue reviewQueue) {
+        return BindingBuilder.bind(reviewQueue)
+                .to(b2gExchange)
+                .with("review.#");
+    }
     @Bean
     public MessageConverter jsonMessageConverter(ObjectMapper objectMapper) {
         return new Jackson2JsonMessageConverter(objectMapper);
