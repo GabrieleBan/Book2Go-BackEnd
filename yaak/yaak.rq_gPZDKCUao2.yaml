@@ -2,7 +2,7 @@ type: http_request
 model: http_request
 id: rq_gPZDKCUao2
 createdAt: 2025-10-28T14:39:14.714111900
-updatedAt: 2025-10-28T16:43:10.063761600
+updatedAt: 2025-11-04T00:14:58.863613200
 workspaceId: wk_94bVhSAcpy
 folderId: fl_cCZgPgtyUM
 authentication: {}
@@ -18,7 +18,7 @@ headers:
 method: GET
 name: Get Generic Recommendation
 sortPriority: 1999.9998
-url: http://localhost:8095/recommendation/
+url: http://localhost:8095/recommendations/test
 urlParameters:
 - enabled: true
   name: categoryIds

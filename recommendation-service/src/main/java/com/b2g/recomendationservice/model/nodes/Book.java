@@ -2,13 +2,16 @@ package com.b2g.recomendationservice.model.nodes;
 
 import com.b2g.recomendationservice.model.relationships.PublishedBy;
 import com.b2g.recomendationservice.model.relationships.WrittenBy;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
 import java.util.List;
 import java.util.UUID;
-
+@Getter
+@Setter
 @Node
 public class Book {
     @Id

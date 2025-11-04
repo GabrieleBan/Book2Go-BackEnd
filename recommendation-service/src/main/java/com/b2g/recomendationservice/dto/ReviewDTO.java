@@ -1,9 +1,20 @@
 package com.b2g.recomendationservice.dto;
 
-import java.util.UUID;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.neo4j.core.schema.GeneratedValue;
+import org.springframework.data.neo4j.core.schema.Id;
 
-public record ReviewDTO(
-        UUID readerId,
-        UUID bookId,
-        float rating
-) {}
+import java.util.UUID;
+@Builder
+@Getter
+@Setter
+public class ReviewDTO{
+    @Id
+    @GeneratedValue
+    Long id;
+    UUID readerId;
+    UUID bookId;
+    float rating;
+}

@@ -20,7 +20,6 @@ import java.util.UUID;
 public class RecommendationService {
     private final BookRepository bookRepository;
     private final PublisherRepository publisherRepository;
-    private final RecommendationService recommendationService;
     private final WriterRepository writerRepository;
     public  final ReaderRepository readerRepository;
     private final ReviewRepository reviewRepository;
@@ -43,10 +42,10 @@ public class RecommendationService {
     }
 
     public ReviewDTO addReview(ReviewDTO review)  {
-        if(review.rating()>5 || review.rating()<0) {
+        if(review.getRating()>5 || review.getRating()<0) {
             throw new IllegalArgumentException("Rating must be between 0 and 5");
         }
-        return reviewRepository.createReview(review.readerId(), review.bookId(), review.rating());
+        return reviewRepository.createReview(review.getReaderId(), review.getBookId(), review.getRating());
     }
 
 

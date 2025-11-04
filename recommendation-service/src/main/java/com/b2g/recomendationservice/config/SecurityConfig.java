@@ -21,10 +21,11 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/recommendation").permitAll()
-                        .requestMatchers("/recommendation/").permitAll()
+                        .requestMatchers("/recommendations").permitAll()
+                        .requestMatchers("/recommendations/").permitAll()
+                        .requestMatchers("/recommendations/test").permitAll()
 
-//                        .anyRequest().authenticated()
+                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
 

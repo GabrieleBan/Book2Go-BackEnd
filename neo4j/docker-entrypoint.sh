@@ -1,28 +1,71 @@
 #!/bin/bash
 set -e
-echo "Avvio Neo4j..."
-neo4j start &
-echo "Attendo Neo4j..."
-until cypher-shell -u neo4j -p "$NEO4J_AUTH_PASSWORD" "RETURN 1;" >/dev/null 2>&1; do
-  sleep 1
+
+DB_LOG="/var/lib/neo4j/logs/neo4j.log"
+SEC_LOG="/var/lib/neo4j/logs/security.log"
+
+# Leggi variabili d’ambiente
+NEO4J_PASSWORD=${NEO4JAUTHPASSWORD:-guest}
+DB_NAME=${DB_NAME-neo4j}
+
+echo "Configurazione:"
+echo "NEO4J_PASSWORD: $NEO4J_PASSWORD"
+echo ""
+
+echo "Avvio Neo4j in background..."
+neo4j console > "$DB_LOG" 2>&1 &
+NEO4J_PID=$!
+
+echo "Attendo che Neo4j sia pronto (leggendo il log)..."
+( tail -f "$DB_LOG" & ) | while read -r line; do
+    echo "$line"
+    if [[ "$line" == *"Started."* ]]; then
+        echo "✅ Server pronto!"
+        break
+    fi
 done
-DB_NAME=${DB_NAME:-b2g_graph}
-GUEST_USER=${GUEST_USER:-guest}
-GUEST_PASSWORD=${GUEST_PASSWORD:-guest}
-echo "Creazione database $DB_NAME..."
-cypher-shell -u neo4j -p "$NEO4J_AUTH_PASSWORD" "CREATE DATABASE $DB_NAME IF NOT EXISTS;"
-echo "Creazione utente $GUEST_USER..."
-cypher-shell -u neo4j -p "$NEO4J_AUTH_PASSWORD" <<EOF
-CREATE USER $GUEST_USER SET PASSWORD '$GUEST_PASSWORD' CHANGE NOT REQUIRED IF NOT EXISTS;
-GRANT ROLE admin TO $GUEST_USER;
-GRANT ALL ON DATABASE $DB_NAME TO $GUEST_USER;
+
+# Aggiungi un piccolo margine per sicurezza
+sleep 5
+#echo "Cambio password predefinita (se ancora 'neo4j')..."
+if cypher-shell -a bolt://localhost:7687 -u neo4j -p neo4j --change-password "$NEO4J_PASSWORD"; then
+    echo "✅ Password cambiata con successo!"
+else
+    echo "⚠️  Tentativo di cambio password fallito — probabilmente già aggiornata."
+    tail -n 50 /var/lib/neo4j/logs/neo4j.log
+    tail -n 50 /var/lib/neo4j/logs/security.log
+fi
+echo "showdb"
+cypher-shell -a bolt://localhost:7687 -u neo4j -p guest "SHOW DATABASES;"
+
+echo "▶️ Eseguo test-node.sh — creazione nodo di test..."
+
+cypher-shell -u neo4j -p "$NEO4JAUTHPASSWORD" <<EOF
+CREATE (:TestNode {name: "hello", createdAt: datetime()});
 EOF
-echo "Esecuzione script iniziali..."
-for f in /docker-entrypoint-initdb.d/*.cypher; do
-  if [ -f "$f" ]; then
-    echo "Eseguo $f..."
-    cypher-shell -u neo4j -p "$NEO4J_AUTH_PASSWORD" -d "$DB_NAME" < "$f"
-  fi
-done
-echo " Setup completato ✅ — Neo4j in esecuzione..."
-exec neo4j console
+
+echo "✅ Nodo di test creato!"
+# Esegui tutti gli script nella cartella /init-neo4j
+INIT_DIR="/init-neo4j"
+if [ -d "$INIT_DIR" ]; then
+    echo "Eseguo script in $INIT_DIR..."
+    find "$INIT_DIR" -type f | sort | while read -r f; do
+        echo "➡️  Eseguo $f..."
+        case "$f" in
+            *.cypher)
+                cypher-shell -u neo4j -p "$NEO4J_PASSWORD" < "$f" || echo "❌ Errore in $f"
+                ;;
+            *.sh)
+                bash "$f" || echo "❌ Errore in $f"
+                ;;
+            *)
+                echo "⚠️  Ignorato $f (estensione non riconosciuta)"
+                ;;
+        esac
+    done
+else
+    echo "ℹ️  Nessuna directory /init-neo4j trovata, skip."
+fi
+
+echo "✅ Setup completato, Neo4j in esecuzione."
+wait $NEO4J_PID

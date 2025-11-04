@@ -40,19 +40,20 @@ services:
 
 
   neo4j:
-    build: ./neo4j
+    image: neo4j:latest
     container_name: n4j-b2gdb
     environment:
-      NEO4J_AUTH: "neo4j/guest"
-      GUEST_USER: guest
-      GUEST_PASSWORD: guest
-      DB_NAME: b2g_graph
-      NEO4J_AUTH_PASSWORD: guest
+      NEO4J_AUTH: "neo4j/guest12345"
+      NEO4J_server_bolt_enabled: "true"
+      NEO4J_server_bolt_listen__address: "0.0.0.0:7687"
+      NEO4J_server_http_enabled: "true"
+      NEO4J_server_http_listen__address: "0.0.0.0:7474"
     ports:
       - "7474:7474"
       - "7687:7687"
     volumes:
       - neo4j_data:/data
+      - neo4j_logs:/logs
     networks:
       - b2g-net
 
@@ -60,6 +61,7 @@ volumes:
   pg_data:
   rabbitmq_data:
   neo4j_data:
+  neo4j_logs:
 
 networks:
   b2g-net:
