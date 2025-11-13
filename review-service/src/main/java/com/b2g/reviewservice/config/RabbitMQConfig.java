@@ -1,14 +1,17 @@
-package com.b2g.recomendationservice.config;
+package com.b2g.reviewservice.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.amqp.core.*;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
@@ -32,18 +35,15 @@ public class RabbitMQConfig {
 
     @Bean
     public Queue bookQueue() {
-        return new Queue("recommendation.book.queue", true, false, false);
+        return new Queue("review.book.queue", true, false, false);
     }
 
     @Bean
     public Queue userQueue() {
-        return new Queue("recommendation.user.queue", true, false, false);
+//        per confermare review valida
+        return new Queue("review.user.queue", true, false, false);
     }
 
-    @Bean
-    public Queue reviewQueue() {
-        return new Queue("recommendation.review.queue", true, false, false);
-    }
 
     @Bean
     public Binding bookBinding(TopicExchange b2gExchange, Queue bookQueue) {
@@ -59,12 +59,7 @@ public class RabbitMQConfig {
                 .with("user.#");
     }
 
-    @Bean
-    public Binding reviewBinding(TopicExchange b2gExchange, Queue reviewQueue) {
-        return BindingBuilder.bind(reviewQueue)
-                .to(b2gExchange)
-                .with("review.#");
-    }
+
     @Bean
     public MessageConverter jsonMessageConverter(ObjectMapper objectMapper) {
         return new Jackson2JsonMessageConverter(objectMapper);
