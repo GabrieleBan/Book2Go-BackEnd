@@ -31,7 +31,7 @@ public class ReviewService {
 
 
     public List<Review> getAllBookReviews(UUID bookId) {
-        return reviewRepository.findReviewsByBookIdAndCanBeShown(bookId,true);
+        return reviewRepository.findReviewsByBookIdAndCanBeShownOrdered(bookId,true);
     }
 
     public boolean createBookReview(@Valid RequestCreateReviewDTO reviewDTO, UUID reviewerId) {
