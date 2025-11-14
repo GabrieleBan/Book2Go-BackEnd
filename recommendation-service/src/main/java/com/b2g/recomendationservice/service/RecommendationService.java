@@ -43,7 +43,6 @@ public class RecommendationService {
                 System.out.println("Ricevuto messaggio dimodifica review: {}"+ review);
                 addReview(review);
             }
-            default -> throw new IllegalStateException("Unexpected value: " + routingKey);
         }
 
     }

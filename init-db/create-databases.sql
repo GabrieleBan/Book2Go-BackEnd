@@ -2,3 +2,4 @@ CREATE DATABASE b2g_catalog;
 CREATE DATABASE b2g_order;
 CREATE DATABASE b2g_payment;
 CREATE DATABASE b2g_library;
+CREATE DATABASE b2g_reviews;

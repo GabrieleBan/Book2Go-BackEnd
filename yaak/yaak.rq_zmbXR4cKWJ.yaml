@@ -1,0 +1,26 @@
+type: http_request
+model: http_request
+id: rq_zmbXR4cKWJ
+createdAt: 2025-11-14T13:40:40.128270200
+updatedAt: 2025-11-14T13:42:47.568760200
+workspaceId: wk_94bVhSAcpy
+folderId: fl_S3VUKLqvEu
+authentication: {}
+authenticationType: null
+body: {}
+bodyType: null
+description: ''
+headers: []
+method: GET
+name: Retrieve Book Reviews
+sortPriority: 2000.0006
+url: http://localhost:8096/reviews/123e4567-e89b-12d3-a456-426614174000
+urlParameters:
+- enabled: false
+  name: ''
+  value: ''
+  id: A4ViSaBmZM
+- enabled: true
+  name: ''
+  value: ''
+  id: VKFuK5aasF

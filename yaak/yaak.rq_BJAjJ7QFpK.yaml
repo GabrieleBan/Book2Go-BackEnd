@@ -1,0 +1,43 @@
+type: http_request
+model: http_request
+id: rq_BJAjJ7QFpK
+createdAt: 2025-11-14T13:35:10.058026800
+updatedAt: 2025-11-14T13:39:37.735171700
+workspaceId: wk_94bVhSAcpy
+folderId: fl_S3VUKLqvEu
+authentication: {}
+authenticationType: null
+body:
+  text: |-
+    {
+      "bookId": "123e4567-e89b-12d3-a456-426614174000",
+      "overallScore": 4.5,
+      "title": "Titolo della recensione",
+      "text": "Testo della recensione"
+    }
+bodyType: application/json
+description: |-
+  {
+    "bookId": "123e4567-e89b-12d3-a456-426614174000",
+    "overallScore": 4.5,
+    "title": "Titolo della recensione",
+    "text": "Testo della recensione"
+  }
+headers:
+- enabled: true
+  name: Content-Type
+  value: application/json
+  id: nxcPGwQZ7q
+method: POST
+name: Create Review
+sortPriority: 2000.0007
+url: http://localhost:8096/reviews/
+urlParameters:
+- enabled: true
+  name: Content-Type
+  value: application/json
+  id: ctE7ttBTDK
+- enabled: true
+  name: ''
+  value: ''
+  id: RkC9dgw4G0

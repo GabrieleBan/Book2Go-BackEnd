@@ -1,0 +1,26 @@
+type: http_request
+model: http_request
+id: rq_eY2EwrjtmH
+createdAt: 2025-11-04T17:40:58.300086700
+updatedAt: 2025-11-04T17:58:26.831537800
+workspaceId: wk_94bVhSAcpy
+folderId: fl_cCZgPgtyUM
+authentication: {}
+authenticationType: null
+body: {}
+bodyType: null
+description: ''
+headers:
+- enabled: true
+  name: ''
+  value: ''
+  id: YahbGaE5gn
+method: GET
+name: graph_creation_test
+sortPriority: 2000.0008
+url: http://localhost:8095/recommendations/test/creation/e
+urlParameters:
+- enabled: true
+  name: ''
+  value: ''
+  id: FXp7A7xYfb

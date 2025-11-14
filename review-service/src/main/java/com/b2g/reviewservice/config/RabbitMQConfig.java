@@ -20,11 +20,11 @@ public class RabbitMQConfig {
     @Value("${app.rabbitmq.exchange}")
     private String exchangeName;
 
-    @Value("${app.rabbitmq.queue.name}")
-    private String servicePrefix;
-
-    @Value("#{'${app.rabbitmq.routing-keys}'.split(',')}")
-    private List<String> patternBindingKeys;
+//    @Value("${app.rabbitmq.queue.name}")
+//    private String servicePrefix;
+//
+//    @Value("#{'${app.rabbitmq.routing-keys}'.split(',')}")
+//    private List<String> patternBindingKeys;
 
 
     @Bean
@@ -39,10 +39,23 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue reviewQueue() {
+        return new Queue("review.authorization.queue", true, false, false);
+    }
+
+    @Bean
     public Queue userQueue() {
 //        per confermare review valida
         return new Queue("review.user.queue", true, false, false);
     }
+
+    @Bean
+    public Binding reviewBinding(TopicExchange b2gExchange, Queue reviewQueue) {
+        return BindingBuilder.bind(reviewQueue)
+                .to(b2gExchange)
+                .with("review.confirmed");
+    }
+
 
 
     @Bean

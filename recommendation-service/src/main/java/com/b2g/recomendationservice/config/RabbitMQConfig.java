@@ -60,10 +60,24 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Binding reviewBinding(TopicExchange b2gExchange, Queue reviewQueue) {
+    public Binding reviewCreatedBinding(TopicExchange b2gExchange, Queue reviewQueue) {
         return BindingBuilder.bind(reviewQueue)
                 .to(b2gExchange)
-                .with("review.#");
+                .with("review.created");
+    }
+
+    @Bean
+    public Binding reviewUpdatedBinding(TopicExchange b2gExchange, Queue reviewQueue) {
+        return BindingBuilder.bind(reviewQueue)
+                .to(b2gExchange)
+                .with("review.updated");
+    }
+
+    @Bean
+    public Binding reviewDeletedBinding(TopicExchange b2gExchange, Queue reviewQueue) {
+        return BindingBuilder.bind(reviewQueue)
+                .to(b2gExchange)
+                .with("review.deleted");
     }
     @Bean
     public MessageConverter jsonMessageConverter(ObjectMapper objectMapper) {
