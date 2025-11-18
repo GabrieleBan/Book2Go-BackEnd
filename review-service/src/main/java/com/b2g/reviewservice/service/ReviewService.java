@@ -12,6 +12,8 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 
@@ -30,8 +32,8 @@ public class ReviewService {
 
 
 
-    public List<Review> getAllBookReviews(UUID bookId) {
-        return reviewRepository.findReviewsByBookIdAndCanBeShownOrdered(bookId,true);
+    public Page<Review> getAllBookReviews(UUID bookId, Pageable pageable) {
+        return reviewRepository.findReviewsByBookIdAndCanBeShown(bookId, true, pageable);
     }
 
     public boolean createBookReview(@Valid RequestCreateReviewDTO reviewDTO, UUID reviewerId) {
@@ -112,6 +114,7 @@ public class ReviewService {
             if (confirmedReview.isConfirmed()) {
                 review.setCanBeShown(true);
                 reviewRepository.save(review);
+                notifyReviewAction(review,"created");
             } else {
                 reviewRepository.delete(review);
             }

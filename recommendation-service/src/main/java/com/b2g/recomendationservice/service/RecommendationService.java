@@ -11,12 +11,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.*;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.lang.management.MemoryUsage;
+import java.util.*;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -72,11 +74,43 @@ public class RecommendationService {
 
 
 
-    public List<Book> getGenericReccomendation(Set<UUID> categoryIds) {
-        return List.of();
+    public Page<Book> getGenericRecommendation(Set<UUID> categoryIds, int page, int size, boolean mustHaveAll) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("title").ascending());
+        System.out.println("must all: " + mustHaveAll);
+        if (mustHaveAll)
+            return bookRepository.findByAllTags(categoryIds,categoryIds.size(),pageable);
+        else
+            return bookRepository.findByTagsIdIn(categoryIds,pageable);
     }
 
-    public List<Book> getPersonalizedReccomendation(UUID userId, Set<UUID> categoryIds) {
-        return List.of();
+    public Page<Book> getPersonalizedReccomendation(UUID userId, Set<UUID> categoryIds, Pageable pageable) {
+
+
+        List<Book> byAuthorOrPublisher = bookRepository.recommendByAuthorOrPublisher(userId);
+        List<Book> bySimilarReaders = bookRepository.recommendBySimilarReaders(userId);
+
+
+        Set<Book> combined = new LinkedHashSet<>();
+        combined.addAll(byAuthorOrPublisher);
+        combined.addAll(bySimilarReaders);
+
+
+        if (categoryIds != null && !categoryIds.isEmpty()) {
+            combined = combined.stream()
+                    .filter(b -> b.getTags().stream().anyMatch(t -> categoryIds.contains(t.getId())))
+                    .collect(Collectors.toCollection(LinkedHashSet::new));
+        }
+
+
+        List<Book> filteredList = new ArrayList<>(combined);
+
+
+        int total = filteredList.size();
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), total);
+        List<Book> pageContent = start <= end ? filteredList.subList(start, end) : Collections.emptyList();
+
+
+        return new PageImpl<>(pageContent, pageable, total);
     }
 }

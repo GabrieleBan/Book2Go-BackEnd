@@ -1,0 +1,26 @@
+type: http_request
+model: http_request
+id: rq_kicpzqd6oc
+createdAt: 2025-11-18T18:28:09.170530100
+updatedAt: 2025-11-18T20:50:03.601811400
+workspaceId: wk_94bVhSAcpy
+folderId: fl_cCZgPgtyUM
+authentication: {}
+authenticationType: null
+body: {}
+bodyType: null
+description: ''
+headers:
+- enabled: true
+  name: Authorization
+  value: ''
+  id: fQFJYXmNyR
+- enabled: true
+  name: ''
+  value: ''
+  id: 9mf7ItmrVQ
+method: GET
+name: GetPersonalizedReccomendation
+sortPriority: -1763488006333.0
+url: http://localhost:8095/recommendations/personalized
+urlParameters: []

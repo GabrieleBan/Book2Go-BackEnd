@@ -1,6 +1,7 @@
 package com.b2g.recomendationservice.model.relationships;
 
 import com.b2g.recomendationservice.model.nodes.Writer;
+import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
@@ -14,6 +15,7 @@ public class WrittenBy {
     @GeneratedValue
     Long id;
     @Setter
+    @Getter
     @TargetNode
     private Writer writer;
 

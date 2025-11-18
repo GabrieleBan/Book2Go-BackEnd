@@ -23,6 +23,8 @@ public class Book {
     private List<WrittenBy> authors;
     @Relationship(type = "PUBLISHED_BY", direction = Relationship.Direction.OUTGOING)
     private PublishedBy publisher;
+    @Relationship(type="Tag",direction = Relationship.Direction.OUTGOING)
+    private List<Tag> tags;
 
 
 

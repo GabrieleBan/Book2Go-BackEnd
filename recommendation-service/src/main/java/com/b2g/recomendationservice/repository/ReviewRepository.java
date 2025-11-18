@@ -15,14 +15,14 @@ public interface ReviewRepository extends Neo4jRepository<ReviewDTO, Long> {
     // Tutte le recensioni di un libro
     @Query("""
         MATCH (r:Reader)-[rel:REVIEWS]->(b:Book {id:$bookId})
-        RETURN r.id AS readerId, b.id AS bookId, rel.rating AS rating
+        RETURN rel.id as id,r.id AS readerId, b.id AS bookId, rel.rating AS rating
     """)
     List<ReviewDTO> findAllBookReviews(@Param("bookId") UUID bookId);
 
     // Tutte le recensioni scritte da un lettore
     @Query("""
         MATCH (r:Reader {id:$readerId})-[rel:REVIEWS]->(b:Book)
-        RETURN r.id AS readerId, b.id AS bookId, rel.rating AS rating
+        RETURN rel.id as id,r.id AS readerId, b.id AS bookId, rel.rating AS rating
     """)
     List<ReviewDTO> findAllReviewsWrittenByReader(@Param("readerId") UUID readerId);
 
@@ -31,7 +31,7 @@ public interface ReviewRepository extends Neo4jRepository<ReviewDTO, Long> {
         MATCH (r:Reader {id:$readerId}), (b:Book {id:$bookId})
         MERGE (r)-[rel:REVIEWS]->(b)
         SET rel.rating = $rating
-        RETURN r.id AS readerId, b.id AS bookId, rel.rating AS rating
+        RETURN rel.id as id, r.id AS readerId, b.id AS bookId, rel.rating AS rating
     """)
     ReviewDTO createReview(@Param("readerId") UUID readerId,
                            @Param("bookId") UUID bookId,

@@ -1,13 +1,96 @@
 package com.b2g.recomendationservice.repository;
 
 import com.b2g.recomendationservice.model.nodes.Book;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
+import org.springframework.data.neo4j.repository.query.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 @Repository
 public interface BookRepository  extends Neo4jRepository<Book, UUID> {
 
+    Page<Book> findByTagsIdIn(Set<UUID> tagIds, Pageable pageable);
+    @Query(
+            value = """
+        MATCH (b:Book)-[:Tag]->(t:Tag)
+        WHERE t.id IN $tagIds
+        WITH b, collect(DISTINCT t.id) AS matchedTags
+        WHERE size(matchedTags) = $tagCount
+        RETURN b
+        """,
+            countQuery = """
+        MATCH (b:Book)-[:Tag]->(t:Tag)
+        WHERE t.id IN $tagIds
+        WITH b, collect(DISTINCT t.id) AS matchedTags
+        WHERE size(matchedTags) = $tagCount
+        RETURN count(DISTINCT b)
+        """
+    )
+    Page<Book> findByAllTags(@Param("tagIds") Set<UUID> tagIds,
+                             @Param("tagCount") long tagCount,
+                             Pageable pageable);
+
+    // Raccomandazione per autore o publisher con paginazione
+    @Query(
+            value = """
+            MATCH (u:Reader {id: $userId})-[:REVIEWED]->(b:Book)
+            OPTIONAL MATCH (b)-[:WRITTEN_BY]->(:Writer)<-[:WRITTEN_BY]-(rec:Book)
+            OPTIONAL MATCH (b)-[:PUBLISHED_BY]->(:Publisher)<-[:PUBLISHED_BY]-(pub:Book)
+            WITH collect(DISTINCT rec) + collect(DISTINCT pub) AS candidateBooks
+            UNWIND candidateBooks AS c
+            OPTIONAL MATCH (c)<-[:REVIEWED]-(r:Reader)
+            RETURN c, count(r) AS reviewCount
+            ORDER BY reviewCount DESC
+            """,
+            countQuery = """
+            MATCH (u:Reader {id: $userId})-[:REVIEWED]->(b:Book)
+            OPTIONAL MATCH (b)-[:WRITTEN_BY]->(:Writer)<-[:WRITTEN_BY]-(rec:Book)
+            OPTIONAL MATCH (b)-[:PUBLISHED_BY]->(:Publisher)<-[:PUBLISHED_BY]-(pub:Book)
+            WITH collect(DISTINCT rec) + collect(DISTINCT pub) AS candidateBooks
+            UNWIND candidateBooks AS c
+            RETURN count(DISTINCT c)
+            """
+    )
+    Page<Book> recommendByAuthorOrPublisher(@Param("userId") UUID userId, Pageable pageable);
 
 
+    // Raccomandazione lettori simili con paginazione
+    @Query(
+            value = """
+            MATCH (u:Reader {id: $userId})-[:REVIEWED]->(b:Book)<-[:REVIEWED]-(other:Reader)-[:REVIEWED]->(rec:Book)
+            WHERE NOT (u)-[:REVIEWED]->(rec)
+            RETURN rec, count(other) AS score
+            ORDER BY score DESC
+            """,
+            countQuery = """
+            MATCH (u:Reader {id: $userId})-[:REVIEWED]->(b:Book)<-[:REVIEWED]-(other:Reader)-[:REVIEWED]->(rec:Book)
+            WHERE NOT (u)-[:REVIEWED]->(rec)
+            RETURN count(DISTINCT rec)
+            """
+    )
+    Page<Book> recommendBySimilarReaders(@Param("userId") UUID userId, Pageable pageable);
+    @Query("""
+    MATCH (u:Reader {id: $userId})-[:REVIEWED]->(b:Book)
+    OPTIONAL MATCH (b)-[:WRITTEN_BY]->(:Writer)<-[:WRITTEN_BY]-(rec:Book)
+    OPTIONAL MATCH (b)-[:PUBLISHED_BY]->(:Publisher)<-[:PUBLISHED_BY]-(pub:Book)
+    WITH collect(DISTINCT rec) + collect(DISTINCT pub) AS candidateBooks
+    UNWIND candidateBooks AS c
+    OPTIONAL MATCH (c)<-[:REVIEWED]-(r:Reader)
+    RETURN c, count(r) AS reviewCount
+    ORDER BY reviewCount DESC
+    """)
+    List<Book> recommendByAuthorOrPublisher(@Param("userId") UUID userId);
+
+    @Query("""
+    MATCH (u:Reader {id: $userId})-[:REVIEWED]->(b:Book)<-[:REVIEWED]-(other:Reader)-[:REVIEWED]->(rec:Book)
+    WHERE NOT (u)-[:REVIEWED]->(rec)
+    RETURN rec, count(other) AS score
+    ORDER BY score DESC
+    """)
+    List<Book> recommendBySimilarReaders(@Param("userId") UUID userId);
 }
