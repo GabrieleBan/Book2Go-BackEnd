@@ -328,7 +328,8 @@ public class AuthService {
     private String createAccessToken(User user) {
         Map<String, Object> claims = Map.of(
                 "role", user.getRole().name(),
-                "username", user.getUsername()
+                "username", user.getUsername(),
+                "userUUID", user.getId()
         );
         return jwtService.generateToken(user.getId().toString(), claims);
     }

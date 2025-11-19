@@ -23,6 +23,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/recommendations").permitAll()
                         .requestMatchers("/recommendations/").permitAll()
+                        .requestMatchers("/recommendations/personalized").permitAll()
                         .requestMatchers("/recommendations/test/**").permitAll()
 
                         .anyRequest().authenticated()

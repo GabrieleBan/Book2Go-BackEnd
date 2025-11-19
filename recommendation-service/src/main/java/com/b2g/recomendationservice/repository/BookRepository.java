@@ -38,17 +38,17 @@ public interface BookRepository  extends Neo4jRepository<Book, UUID> {
     // Raccomandazione per autore o publisher con paginazione
     @Query(
             value = """
-            MATCH (u:Reader {id: $userId})-[:REVIEWED]->(b:Book)
+            MATCH (u:Reader {id: $userId})-[:REVIEWS]->(b:Book)
             OPTIONAL MATCH (b)-[:WRITTEN_BY]->(:Writer)<-[:WRITTEN_BY]-(rec:Book)
             OPTIONAL MATCH (b)-[:PUBLISHED_BY]->(:Publisher)<-[:PUBLISHED_BY]-(pub:Book)
             WITH collect(DISTINCT rec) + collect(DISTINCT pub) AS candidateBooks
             UNWIND candidateBooks AS c
-            OPTIONAL MATCH (c)<-[:REVIEWED]-(r:Reader)
+            OPTIONAL MATCH (c)<-[:REVIEWS]-(r:Reader)
             RETURN c, count(r) AS reviewCount
             ORDER BY reviewCount DESC
             """,
             countQuery = """
-            MATCH (u:Reader {id: $userId})-[:REVIEWED]->(b:Book)
+            MATCH (u:Reader {id: $userId})-[:REVIEWS]->(b:Book)
             OPTIONAL MATCH (b)-[:WRITTEN_BY]->(:Writer)<-[:WRITTEN_BY]-(rec:Book)
             OPTIONAL MATCH (b)-[:PUBLISHED_BY]->(:Publisher)<-[:PUBLISHED_BY]-(pub:Book)
             WITH collect(DISTINCT rec) + collect(DISTINCT pub) AS candidateBooks
@@ -62,33 +62,33 @@ public interface BookRepository  extends Neo4jRepository<Book, UUID> {
     // Raccomandazione lettori simili con paginazione
     @Query(
             value = """
-            MATCH (u:Reader {id: $userId})-[:REVIEWED]->(b:Book)<-[:REVIEWED]-(other:Reader)-[:REVIEWED]->(rec:Book)
-            WHERE NOT (u)-[:REVIEWED]->(rec)
+            MATCH (u:Reader {id: $userId})-[:REVIEWS]->(b:Book)<-[:REVIEWS]-(other:Reader)-[:REVIEWS]->(rec:Book)
+            WHERE NOT (u)-[:REVIEWS]->(rec)
             RETURN rec, count(other) AS score
             ORDER BY score DESC
             """,
             countQuery = """
-            MATCH (u:Reader {id: $userId})-[:REVIEWED]->(b:Book)<-[:REVIEWED]-(other:Reader)-[:REVIEWED]->(rec:Book)
-            WHERE NOT (u)-[:REVIEWED]->(rec)
+            MATCH (u:Reader {id: $userId})-[:REVIEWS]->(b:Book)<-[:REVIEWS]-(other:Reader)-[:REVIEWS]->(rec:Book)
+            WHERE NOT (u)-[:REVIEWS]->(rec)
             RETURN count(DISTINCT rec)
             """
     )
     Page<Book> recommendBySimilarReaders(@Param("userId") UUID userId, Pageable pageable);
     @Query("""
-    MATCH (u:Reader {id: $userId})-[:REVIEWED]->(b:Book)
+    MATCH (u:Reader {id: $userId})-[:REVIEWS]->(b:Book)
     OPTIONAL MATCH (b)-[:WRITTEN_BY]->(:Writer)<-[:WRITTEN_BY]-(rec:Book)
     OPTIONAL MATCH (b)-[:PUBLISHED_BY]->(:Publisher)<-[:PUBLISHED_BY]-(pub:Book)
     WITH collect(DISTINCT rec) + collect(DISTINCT pub) AS candidateBooks
     UNWIND candidateBooks AS c
-    OPTIONAL MATCH (c)<-[:REVIEWED]-(r:Reader)
+    OPTIONAL MATCH (c)<-[:REVIEWS]-(r:Reader)
     RETURN c, count(r) AS reviewCount
     ORDER BY reviewCount DESC
     """)
     List<Book> recommendByAuthorOrPublisher(@Param("userId") UUID userId);
 
     @Query("""
-    MATCH (u:Reader {id: $userId})-[:REVIEWED]->(b:Book)<-[:REVIEWED]-(other:Reader)-[:REVIEWED]->(rec:Book)
-    WHERE NOT (u)-[:REVIEWED]->(rec)
+    MATCH (u:Reader {id: $userId})-[:REVIEWS]->(b:Book)<-[:REVIEWS]-(other:Reader)-[:REVIEWS]->(rec:Book)
+    WHERE NOT (u)-[:REVIEWS]->(rec)
     RETURN rec, count(other) AS score
     ORDER BY score DESC
     """)

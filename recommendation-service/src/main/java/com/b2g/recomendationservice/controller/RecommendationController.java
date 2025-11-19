@@ -63,7 +63,7 @@ public class RecommendationController {
     }
 
     @GetMapping("/personalized")
-    @RequireUserUUID
+//    @RequireUserUUID
     public ResponseEntity<?> personalizedRecommendation(
             @RequestParam(required = false) Set<UUID> categoryIds,
             @RequestParam(defaultValue = "0") int page,
@@ -74,7 +74,7 @@ public class RecommendationController {
         if (jwt.trim().isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
         }
-
+        System.out.println("jwt: " + jwt);
         Claims claims = jwtService.validateToken(jwt);
         UUID userId = jwtService.extractUserUUID(claims);
 
@@ -98,7 +98,7 @@ public class RecommendationController {
             UUID[] readerIds = {
                     UUID.fromString("00000000-0000-0000-0000-000000000001"),
                     UUID.fromString("00000000-0000-0000-0000-000000000002"),
-                    UUID.fromString("00000000-0000-0000-0000-000000000003")
+                    UUID.fromString("08222645-e172-4096-bd2e-fe2286f107cb")
             };
             String[] readerNames = {"Mario Rossi", "Giulia Bianchi", "Luca Ferrari"};
 

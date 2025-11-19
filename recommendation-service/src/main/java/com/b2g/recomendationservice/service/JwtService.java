@@ -152,7 +152,8 @@ public class JwtService {
     }
 
     public UUID extractUserUUID(Claims claims){
-//        System.out.println(claims);
-        return (UUID) claims.get("userUUID");
+//        System.out.println(claims.get("userUUID"));
+
+        return (UUID) UUID.fromString(claims.get("userUUID").toString());
     }
 }
