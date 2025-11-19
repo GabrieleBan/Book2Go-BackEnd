@@ -2,7 +2,7 @@ type: http_request
 model: http_request
 id: rq_eY2EwrjtmH
 createdAt: 2025-11-04T17:40:58.300086700
-updatedAt: 2025-11-18T16:45:50.761320800
+updatedAt: 2025-11-19T13:34:03.182660500
 workspaceId: wk_94bVhSAcpy
 folderId: fl_cCZgPgtyUM
 authentication: {}
@@ -18,7 +18,7 @@ headers:
 method: GET
 name: graph_creation_test
 sortPriority: 2000.0008
-url: http://localhost:8095/recommendations/test/creation/created
+url: http://localhost:8096/recommendations/test/creation/created
 urlParameters:
 - enabled: true
   name: ''

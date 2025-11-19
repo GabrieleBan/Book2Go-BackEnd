@@ -2,7 +2,7 @@ type: http_request
 model: http_request
 id: rq_gPZDKCUao2
 createdAt: 2025-10-28T14:39:14.714111900
-updatedAt: 2025-11-04T14:41:10.058653800
+updatedAt: 2025-11-19T13:33:59.911951400
 workspaceId: wk_94bVhSAcpy
 folderId: fl_cCZgPgtyUM
 authentication: {}
@@ -18,7 +18,7 @@ headers:
 method: GET
 name: graph_creation_test
 sortPriority: 1999.9998
-url: http://localhost:8095/recommendations/test/creation
+url: http://localhost:8096/recommendations/test/creation
 urlParameters:
 - enabled: true
   name: categoryIds

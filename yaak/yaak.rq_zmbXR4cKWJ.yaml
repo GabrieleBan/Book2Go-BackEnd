@@ -2,7 +2,7 @@ type: http_request
 model: http_request
 id: rq_zmbXR4cKWJ
 createdAt: 2025-11-14T13:40:40.128270200
-updatedAt: 2025-11-18T17:45:04.868069800
+updatedAt: 2025-11-19T13:34:13.354922400
 workspaceId: wk_94bVhSAcpy
 folderId: fl_S3VUKLqvEu
 authentication: {}
@@ -14,7 +14,7 @@ headers: []
 method: GET
 name: Retrieve Book Reviews
 sortPriority: 2000.0006
-url: http://localhost:8096/reviews/123e4567-e89b-12d3-a456-426614174000
+url: http://localhost:8097/reviews/123e4567-e89b-12d3-a456-426614174000
 urlParameters:
 - enabled: true
   name: size

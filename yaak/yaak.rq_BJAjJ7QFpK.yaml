@@ -2,7 +2,7 @@ type: http_request
 model: http_request
 id: rq_BJAjJ7QFpK
 createdAt: 2025-11-14T13:35:10.058026800
-updatedAt: 2025-11-14T13:39:37.735171700
+updatedAt: 2025-11-19T13:34:09.979213900
 workspaceId: wk_94bVhSAcpy
 folderId: fl_S3VUKLqvEu
 authentication: {}
@@ -31,7 +31,7 @@ headers:
 method: POST
 name: Create Review
 sortPriority: 2000.0007
-url: http://localhost:8096/reviews/
+url: http://localhost:8097/reviews/
 urlParameters:
 - enabled: true
   name: Content-Type

@@ -2,25 +2,26 @@ type: http_request
 model: http_request
 id: rq_kicpzqd6oc
 createdAt: 2025-11-18T18:28:09.170530100
-updatedAt: 2025-11-18T20:50:03.601811400
+updatedAt: 2025-11-19T13:40:19.330736900
 workspaceId: wk_94bVhSAcpy
 folderId: fl_cCZgPgtyUM
-authentication: {}
-authenticationType: null
+authentication:
+  token: eyJhbGciOiJSUzI1NiJ9.eyJyb2xlIjoiVVNFUiIsInVzZXJuYW1lIjoidGVzdDEiLCJzdWIiOiIwODIyMjY0NS1lMTcyLTQwOTYtYmQyZS1mZTIyODZmMTA3Y2IiLCJpYXQiOjE3NjM1NTkzNzAsImV4cCI6MTc2MzU2MDI3MCwiaXNzIjoiYjJnLWF1dGgtc2VydmljZSIsImF1ZCI6WyJiMmctbWljcm9zZXJ2aWNlcyJdfQ.eEB0hyhRc87w0UV_0EOISiDtsLUTTAl21MBg3RtT02wi0ac7MSw40u4MZgakzjS-vjKKCGJApFWWsp9kQq73RXWrY5Gp5FJzwkqkUNe0oxxjig0YubRbciPvA16YvrDNy6YpjqBWqNsaclkxjYiP8spOZeAwAVM5BmlR-lg0Abp6sAr4XuPxXVAF7L74wFpdGPy0KrsPrhqB4mep5QKvsCA2gkBg_0Yeqy1mAI814OboRSuYghBlyv0uDcQ_TUBnaLO1dQjNIrkpsxRoBnD2lOtEQ_hmNlw5E7VS3BuVSmAyR0gAE-mdzlJElAGSkQ0IaUfc67eJCNVq9TT92WxKlg
+authenticationType: bearer
 body: {}
 bodyType: null
 description: ''
 headers:
-- enabled: true
+- enabled: false
   name: Authorization
   value: ''
   id: fQFJYXmNyR
 - enabled: true
   name: ''
   value: ''
-  id: 9mf7ItmrVQ
+  id: k2J02cADem
 method: GET
 name: GetPersonalizedReccomendation
 sortPriority: -1763488006333.0
-url: http://localhost:8095/recommendations/personalized
+url: http://localhost:8096/recommendations/personalized
 urlParameters: []
