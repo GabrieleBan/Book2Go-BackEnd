@@ -28,6 +28,7 @@ GET /.well-known/jwks.json → expose public keys for JWT validation (if using a
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin("http://localhost:5173/")
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;

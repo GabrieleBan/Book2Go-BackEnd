@@ -57,6 +57,7 @@ public class ReviewService {
                     .title(reviewDTO.title())
                     .postedDate(new Date(System.currentTimeMillis())) // data attuale
                     .build();
+            System.out.println(review);
             reviewRepository.save(review);
             action = "requiresConfirmation";
         } else {
@@ -64,7 +65,6 @@ public class ReviewService {
             existingReview.setOverallScore(overall);
             existingReview.setText(reviewDTO.text());
             existingReview.setTitle(reviewDTO.title());
-            existingReview.setCanBeShown(false);
             existingReview.setPostedDate(new Date(System.currentTimeMillis())); // aggiorna la data , ha senso?
             reviewRepository.save(existingReview);
             review = existingReview;

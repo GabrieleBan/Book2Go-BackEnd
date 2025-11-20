@@ -13,4 +13,6 @@ import java.util.UUID;
 public interface WriterRepository extends Neo4jRepository<Writer, UUID> {
     @Query("MATCH (w:Writer {id: $writerId})<-[:WRITTEN_BY]-(b:Book) RETURN b")
     public List<Book> findAllWrittenBooksBy(@Param("writerId") UUID writerId);
+
+    List<Writer> findWriterById(UUID id);
 }

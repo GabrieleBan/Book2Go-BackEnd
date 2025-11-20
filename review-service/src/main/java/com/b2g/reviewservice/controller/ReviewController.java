@@ -6,6 +6,7 @@ import com.b2g.reviewservice.model.Review;
 import com.b2g.reviewservice.service.JwtService;
 
 import com.b2g.reviewservice.service.ReviewService;
+import io.jsonwebtoken.Claims;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/reviews")
 @RequiredArgsConstructor
+@CrossOrigin("http://localhost:5173/")
 public class ReviewController {
     private final JwtService jwtService;
     private final ReviewService reviewService;
@@ -42,9 +44,16 @@ public class ReviewController {
 
     @PostMapping({"/"})
     public ResponseEntity<?> postBookReview(
-            @RequestBody(required = true) @Valid RequestCreateReviewDTO review) {
+            @RequestBody(required = true) @Valid RequestCreateReviewDTO review,@RequestHeader("Authorization") String authHeader) {
 //        modificare prendendo dai claims
-        UUID userId=UUID.randomUUID();
+        String jwt = authHeader.substring(7);
+        if (jwt.trim().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+        System.out.println("jwt: " + jwt);
+        Claims claims = jwtService.validateToken(jwt);
+        UUID userId = jwtService.extractUserUUID(claims);
+
 
         boolean review_created = reviewService.createBookReview(review,userId);
         return ResponseEntity.status(HttpStatus.OK).body(review_created);

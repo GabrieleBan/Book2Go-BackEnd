@@ -14,6 +14,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/books")
+@CrossOrigin("http://localhost:5173")
 @RequiredArgsConstructor
 public class BookController {
 

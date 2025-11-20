@@ -153,6 +153,6 @@ public class JwtService {
 
     public UUID extractUserUUID(Claims claims){
 //        System.out.println(claims);
-        return (UUID) claims.get("userUUID");
+        return UUID.fromString(claims.get("userUUID").toString());
     }
 }

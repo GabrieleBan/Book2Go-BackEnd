@@ -50,18 +50,34 @@ public class RecommendationService {
     }
 
     public Reader addReaderNode(Reader reader) {
+        if (reader.getId() != null) {
+            return readerRepository.findById(reader.getId())
+                    .orElseGet(() -> readerRepository.save(reader));
+        }
         return readerRepository.save(reader);
     }
 
     public Publisher addPublisherNode(Publisher publisher) {
+        if (publisher.getId() != null) {
+            return publisherRepository.findById(publisher.getId())
+                    .orElseGet(() -> publisherRepository.save(publisher));
+        }
         return publisherRepository.save(publisher);
     }
 
     public Book addBookNode(Book book) {
+        if (book.getId() != null) {
+            return bookRepository.findById(book.getId())
+                    .orElseGet(() -> bookRepository.save(book));
+        }
         return bookRepository.save(book);
     }
 
     public Writer addWriterNode(Writer writer) {
+        if (writer.getId() != null) {
+            return writerRepository.findById(writer.getId())
+                    .orElseGet(() -> writerRepository.save(writer));
+        }
         return writerRepository.save(writer);
     }
 

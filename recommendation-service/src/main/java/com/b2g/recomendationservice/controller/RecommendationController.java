@@ -98,7 +98,7 @@ public class RecommendationController {
             UUID[] readerIds = {
                     UUID.fromString("00000000-0000-0000-0000-000000000001"),
                     UUID.fromString("00000000-0000-0000-0000-000000000002"),
-                    UUID.fromString("08222645-e172-4096-bd2e-fe2286f107cb")
+                    UUID.fromString("9bfb7c46-7ddd-4aed-a89f-07a9bbbc13cc")
             };
             String[] readerNames = {"Mario Rossi", "Giulia Bianchi", "Luca Ferrari"};
 
