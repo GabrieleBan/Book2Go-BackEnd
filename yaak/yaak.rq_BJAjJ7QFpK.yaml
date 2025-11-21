@@ -2,17 +2,18 @@ type: http_request
 model: http_request
 id: rq_BJAjJ7QFpK
 createdAt: 2025-11-14T13:35:10.058026800
-updatedAt: 2025-11-19T13:34:09.979213900
+updatedAt: 2025-11-20T16:17:27.746095800
 workspaceId: wk_94bVhSAcpy
 folderId: fl_S3VUKLqvEu
-authentication: {}
-authenticationType: null
+authentication:
+  token: eyJhbGciOiJSUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3QxIiwicm9sZSI6IkFETUlOIiwidXNlclVVSUQiOiI5YmZiN2M0Ni03ZGRkLTRhZWQtYTg5Zi0wN2E5YmJiYzEzY2MiLCJzdWIiOiI5YmZiN2M0Ni03ZGRkLTRhZWQtYTg5Zi0wN2E5YmJiYzEzY2MiLCJpYXQiOjE3NjM2NTU0MjksImV4cCI6MTc2MzY1NjMyOSwiaXNzIjoiYjJnLWF1dGgtc2VydmljZSIsImF1ZCI6WyJiMmctbWljcm9zZXJ2aWNlcyJdfQ.K8z7SrQBnbQBohiOsxIETG7IBhqeorj__QT2NrUPT1VV1qp9qVQj754QpP7m1vMWyCxHINJKMSJriJbu23hat4eN_uzSIr6952oNp9FmcuPuR95iSowDkJR0frElMjjSCHx8Prhg7td2DxUAK9x5NZ2fDHyRZ37-gd3-lPU8KPYyAUWqssVBxdC3u8mgxXBaSYfWBTFi3QKrwJy1BZ8UVmt7Slp_Q-4tOAriaf-BHqyekWgYzZYxiLkLWDi3SbMnWZdv0eKVGBmOneMU6RyTu21zqgz3VKGOUujkvqsCU4gPSAk6Dqe4WrGNoqVKDc3o6XPAhqnWsFZBJA8SzwDvGA
+authenticationType: bearer
 body:
   text: |-
     {
-      "bookId": "123e4567-e89b-12d3-a456-426614174000",
+      "bookId": "fd2808f6-599c-4353-b98f-c09e417471ad",
       "overallScore": 4.5,
-      "title": "Titolo della recensione",
+      "title": "Titolo della recensione3",
       "text": "Testo della recensione"
     }
 bodyType: application/json

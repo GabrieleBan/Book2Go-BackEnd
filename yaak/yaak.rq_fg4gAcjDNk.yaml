@@ -2,7 +2,7 @@ type: http_request
 model: http_request
 id: rq_fg4gAcjDNk
 createdAt: 2025-11-18T17:46:46.335086200
-updatedAt: 2025-11-19T13:39:32.909333700
+updatedAt: 2025-11-20T17:57:37.612981800
 workspaceId: wk_94bVhSAcpy
 folderId: fl_cCZgPgtyUM
 authentication: {}
@@ -20,7 +20,7 @@ urlParameters:
   name: categoryIds
   value: 00000000-0000-0000-0000-000000000402
   id: XtAMD9kYRE
-- enabled: true
+- enabled: false
   name: categoryIds
   value: 00000000-0000-0000-0000-000000000401
   id: pI5jVj7ZXZ
@@ -31,4 +31,4 @@ urlParameters:
 - enabled: true
   name: ''
   value: ''
-  id: 2gtNshpksu
+  id: iQVbJuzwvz

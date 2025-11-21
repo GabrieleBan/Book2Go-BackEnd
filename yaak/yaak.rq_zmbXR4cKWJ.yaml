@@ -2,7 +2,7 @@ type: http_request
 model: http_request
 id: rq_zmbXR4cKWJ
 createdAt: 2025-11-14T13:40:40.128270200
-updatedAt: 2025-11-19T13:34:13.354922400
+updatedAt: 2025-11-19T15:02:12.864860100
 workspaceId: wk_94bVhSAcpy
 folderId: fl_S3VUKLqvEu
 authentication: {}
@@ -18,13 +18,13 @@ url: http://localhost:8097/reviews/123e4567-e89b-12d3-a456-426614174000
 urlParameters:
 - enabled: true
   name: size
-  value: '1'
+  value: '10'
   id: RUu7Snkru3
 - enabled: true
   name: page
-  value: '1'
+  value: '0'
   id: yNQT5Xvks5
 - enabled: true
   name: ''
   value: ''
-  id: hCBChcgHAs
+  id: 80YtmmRrJ6

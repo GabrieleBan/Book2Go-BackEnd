@@ -2,24 +2,24 @@ type: http_request
 model: http_request
 id: rq_FdTSjKuKwh
 createdAt: 2025-08-27T23:53:08.177205
-updatedAt: 2025-09-19T13:34:05.422949
+updatedAt: 2025-11-19T16:17:58.604761400
 workspaceId: wk_94bVhSAcpy
 folderId: fl_gQ2VqcuSam
 authentication:
-  token: eyJhbGciOiJSUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VybmFtZSI6InRlc3QxIiwic3ViIjoiNjkxYmQzZGEtNDFkNi00NjlkLTlkMDgtMmQwOTU0YzFhNGVmIiwiaWF0IjoxNzU4Mjg4NjQyLCJleHAiOjE3NTgyODk1NDIsImlzcyI6ImIyZy1hdXRoLXNlcnZpY2UiLCJhdWQiOlsiYjJnLW1pY3Jvc2VydmljZXMiXX0.XlFttj8-lYo8qdEzRW7iP8eEbXKX6ZkXsW_tNA2MVSGxFDieINq2ZXQwx2dWCFvn5ufVH0i2iXf_TNlOfIUpxE-Em9MJ_noAQxsKuqIrCmwzd7vOwA3tsLV3Tu-_6f2Ui1SH8jdgTDpu7_vU-5lZb8VriUQyi9VgzgifZ5Y5akrVs6rxYfMoP2QUsAKdI3RStJCwNa-oozSMmFFwox8jV8drQ3w84_ayu9T3bIo-FEzJTLQH6PmXo32w-AbNP2wwaCyO-CLgThLH6sMv2JQhoXDslFuxPX5PO4-XpN6xw0UVWq3JO2Z9M_Y6BL6kreoFRAJMqPcr7cjFQj-bycCBnA
+  token: eyJhbGciOiJSUzI1NiJ9.eyJ1c2VyVVVJRCI6IjliZmI3YzQ2LTdkZGQtNGFlZC1hODlmLTA3YTliYmJjMTNjYyIsInJvbGUiOiJBRE1JTiIsInVzZXJuYW1lIjoidGVzdDEiLCJzdWIiOiI5YmZiN2M0Ni03ZGRkLTRhZWQtYTg5Zi0wN2E5YmJiYzEzY2MiLCJpYXQiOjE3NjM1NjkwMDYsImV4cCI6MTc2MzU2OTkwNiwiaXNzIjoiYjJnLWF1dGgtc2VydmljZSIsImF1ZCI6WyJiMmctbWljcm9zZXJ2aWNlcyJdfQ.W4vXgpSzbGJAijrRoyDSqbsVSgJRkBCt4EJyzT1YqYWbaM1003jLBfD8njyFG4rb7BH4LAlndGfdqPWESKLm1maaVn_2-FhhsTtYcDy1gHd_m9ZPFklrJ4_H_GoEOidCWRjxdji2Su_uAtqvnl6SBLaJ-a8LwxcVbB37mf9HbKwMNE6N4rF4cl8C1gTLaYjSCYdyXtFOVQBlE3l1Qf45bmiBP4I3Wo6nP0D8kCkevYmqSP0uSUSUrlksGihwMTSfKegT2GrmAQ1E_OaM-2wwdsh-3sXbAd71dRDZKzF-PzcEW_KR9dEG8ENvuZc04Wkxq2Lx3h7DV8i6gEfsdIxeKg
 authenticationType: bearer
 body:
   text: |-
     {
-      "title": "1984",
+      "title": "194",
       "author": "George Orwell",
-      "isbn": "9780451524935",
+      "isbn": "9780451524735",
       "description": "Un romanzo distopico ambientato in una società totalitaria dove il Grande Fratello controlla ogni aspetto della vita dei cittadini e la libertà individuale è completamente soppressa.",
       "publisher": "Secker & Warburg",
       "publicationDate": "1949-06-08",
       "categoryIds": [
-        "297538fd-dfd6-466b-bf40-0332005cb710",
-        "4fe717d1-6208-464c-8afa-7c6f7c39a030"
+        "caa9b003-af00-4fe2-abc9-85fcddd578c7",
+        "f6c65df9-8dc6-461b-8f5d-b453bc45f496"
       ],
       "formats": [
         {
