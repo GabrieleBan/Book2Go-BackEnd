@@ -1,23 +1,22 @@
-FROM maven:3.9.3-eclipse-temurin-17 AS build
+
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
 
-
+# Copia solo i file necessari per scaricare le dipendenze in anticipo (per caching efficace)
 COPY pom.xml .
-RUN mvn dependency:go-offline -B
+COPY .mvn/ .mvn
+COPY mvnw .
+RUN ./mvnw dependency:go-offline
 
-
+# Copia tutto il resto del progetto e compila
 COPY src ./src
-RUN mvn clean package -DskipTests
+RUN ./mvnw clean package -DskipTests
 
-
-FROM eclipse-temurin:17-jdk-alpine
+# Stage 2: Runtime con JRE Java 21
+FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
-
 
 COPY --from=build /app/target/*.jar app.jar
 
-
 EXPOSE 8090
-
-
-ENTRYPOINT ["java","-jar","app.jar"]
+CMD ["java", "-jar", "app.jar"]

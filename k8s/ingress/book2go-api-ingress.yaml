@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: book2go-api-ingress
+  namespace: book2go
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    # Riscrive /api/<servizio>/qualcosa -> /<servizio>/qualcosa
+    nginx.ingress.kubernetes.io/rewrite-target: /$1$2
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: localhost
+      http:
+        paths:
+          - path: /api/(auth)(/.*|$)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: auth-service
+                port:
+                  number: 8090

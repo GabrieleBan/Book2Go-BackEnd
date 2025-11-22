@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-service      # Nome DNS interno al cluster
+  namespace: book2go        # Adatta al tuo namespace, es. b2g o default
+spec:
+  selector:
+    app: auth-service     # Deve corrispondere alla label del Pod/Deployment
+  ports:
+    - protocol: TCP
+      port: 8090          # Porta interna al cluster che altri Pod useranno
+      targetPort: 8090    # Porta del container dell’auth service
+  type: ClusterIP
