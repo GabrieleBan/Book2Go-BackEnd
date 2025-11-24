@@ -1,4 +1,4 @@
-package com.b2g.authservice.dto;
+package com.b2g.commons;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

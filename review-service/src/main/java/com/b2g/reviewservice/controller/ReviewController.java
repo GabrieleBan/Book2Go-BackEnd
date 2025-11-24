@@ -3,7 +3,7 @@ package com.b2g.reviewservice.controller;
 
 import com.b2g.reviewservice.dto.RequestCreateReviewDTO;
 import com.b2g.reviewservice.model.Review;
-import com.b2g.reviewservice.service.JwtService;
+import com.b2g.reviewservice.service.remoteJwtService;
 
 import com.b2g.reviewservice.service.ReviewService;
 import io.jsonwebtoken.Claims;
@@ -16,9 +16,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -27,7 +28,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @CrossOrigin("http://localhost:5173/")
 public class ReviewController {
-    private final JwtService jwtService;
+    private final remoteJwtService remoteJwtService;
     private final ReviewService reviewService;
 
     @GetMapping("/{bookId}")
@@ -43,20 +44,18 @@ public class ReviewController {
     }
 
     @PostMapping({"/"})
-    public ResponseEntity<?> postBookReview(
-            @RequestBody(required = true) @Valid RequestCreateReviewDTO review,@RequestHeader("Authorization") String authHeader) {
-//        modificare prendendo dai claims
-        String jwt = authHeader.substring(7);
-        if (jwt.trim().isEmpty()) {
+    public ResponseEntity<?> postBookReview(@RequestBody @Valid RequestCreateReviewDTO review) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || auth.getDetails() == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
         }
-        System.out.println("jwt: " + jwt);
-        Claims claims = jwtService.validateToken(jwt);
-        UUID userId = jwtService.extractUserUUID(claims);
 
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        Claims claims = (Claims) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UUID userId = remoteJwtService.extractUserUUID(claims);
 
-        boolean review_created = reviewService.createBookReview(review,userId);
-        return ResponseEntity.status(HttpStatus.OK).body(review_created);
+        boolean reviewCreated = reviewService.createBookReview(review, userId);
+        return ResponseEntity.ok(reviewCreated);
     }
 
 //    @GetMapping({"/"})

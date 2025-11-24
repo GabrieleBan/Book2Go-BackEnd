@@ -24,7 +24,7 @@ public class RabbitMQConfig {
 
     @Bean
     public Exchange foodDeliveryExchange() {
-        return new DirectExchange(exchangeName, true, false);
+        return new TopicExchange(exchangeName, true, false);
     }
 
     @Bean

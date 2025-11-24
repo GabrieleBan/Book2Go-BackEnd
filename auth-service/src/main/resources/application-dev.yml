@@ -51,6 +51,7 @@ app:
       user-signup: user.signup
     routing-key:
       signup-ticket: rk.user.registration
+      user-confirmation: rk.user.created
 
 services:
   restaurant:

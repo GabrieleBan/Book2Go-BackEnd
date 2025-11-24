@@ -7,6 +7,13 @@ metadata:
     nginx.ingress.kubernetes.io/use-regex: "true"
     # Riscrive /api/<servizio>/qualcosa -> /<servizio>/qualcosa
     nginx.ingress.kubernetes.io/rewrite-target: /$1$2
+
+    #protegge chiamate interne dedicate ai servizi
+    nginx.ingress.kubernetes.io/server-snippet: |
+      location ^~ /internal {
+        deny all;
+        return 403;
+      }
 spec:
   ingressClassName: nginx
   rules:

@@ -1,12 +1,11 @@
 package com.b2g.recomendationservice.controller;
 
-import com.b2g.recomendationservice.annotations.RequireUserUUID;
 import com.b2g.recomendationservice.dto.ReviewDTO;
 import com.b2g.recomendationservice.model.nodes.*;
 import com.b2g.recomendationservice.model.relationships.PublishedBy;
 import com.b2g.recomendationservice.model.relationships.WrittenBy;
-import com.b2g.recomendationservice.service.JwtService;
 import com.b2g.recomendationservice.service.RecommendationService;
+import com.b2g.recomendationservice.service.RemoteJwtService;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.MessagingException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +44,7 @@ class ReviewPublisher {
 @RequestMapping("/recommendations")
 @RequiredArgsConstructor
 public class RecommendationController {
-    private final JwtService jwtService;
+    private final RemoteJwtService remoteJwtService;
     private final RecommendationService recommService;
 
     private final ReviewPublisher testService;
@@ -67,16 +68,16 @@ public class RecommendationController {
     public ResponseEntity<?> personalizedRecommendation(
             @RequestParam(required = false) Set<UUID> categoryIds,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestHeader("Authorization") String authHeader) {
+            @RequestParam(defaultValue = "10") int size) {
 
-        String jwt = authHeader.substring(7);
-        if (jwt.trim().isEmpty()) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || auth.getDetails() == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
         }
-        System.out.println("jwt: " + jwt);
-        Claims claims = jwtService.validateToken(jwt);
-        UUID userId = jwtService.extractUserUUID(claims);
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
+        Claims claims = (Claims) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UUID userId = remoteJwtService.extractUserUUID(claims);
 
         Pageable pageable = PageRequest.of(page, size);
         Page<Book> recommendationPage = recommService.getPersonalizedReccomendation(userId, categoryIds, pageable);
