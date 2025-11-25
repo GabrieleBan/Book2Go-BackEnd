@@ -18,7 +18,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class remoteJwtService {
     @Value("${authService.internal.url}")
-    private String authServiceUrl;
+    private  String authServiceUrl;
 
     private final RestTemplate restTemplate=new RestTemplate();
 

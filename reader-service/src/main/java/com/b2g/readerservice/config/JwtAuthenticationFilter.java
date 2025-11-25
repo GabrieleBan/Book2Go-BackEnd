@@ -1,6 +1,5 @@
-package com.b2g.authservice.config;
-
-import com.b2g.authservice.service.JwtService;
+package com.b2g.readerservice.config;
+import com.b2g.readerservice.service.remoteJwtService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -21,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtService jwtService;
+    private final remoteJwtService remoteJwtService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -31,7 +30,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
-
+        System.out.println("Internal Authorization header: " + authHeader);
         // Per gli endpoint protetti, verifico che ci sia un header Authorization valido
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -39,7 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         jwt = authHeader.substring(7);
-
+        System.out.println(jwt);
         // Verifico che il token non sia vuoto
         if (jwt.trim().isEmpty()) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -47,18 +46,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         try {
-            Claims claims = jwtService.validateToken(jwt);
+
+            Claims claims = remoteJwtService.remoteValidateToken(jwt);
             String userId = claims.getSubject();
             System.out.println(userId);
             System.out.println(claims);
             if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UsernamePasswordAuthenticationToken authToken =
-                        new UsernamePasswordAuthenticationToken(userId, null, Collections.emptyList());
+                        new UsernamePasswordAuthenticationToken(claims, null, Collections.emptyList());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            String errorJson = String.format("{\"error\": \"%s\"}", e.getMessage().replace("\"", "'"));
+            response.getWriter().write(errorJson);
+            response.getWriter().flush();
             return;
         }
 
@@ -69,20 +73,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
 
-        List<String> publicPaths = List.of(
-                "/auth/",
-                "/auth/**",
-                "/auth/confirm/**",
-                "/oauth2/",
-                "/oauth2/**",
-                "/login",
-                "/login/**",
-                "/internal/",
-                "/internal/**"
+        List<String> privatePaths = List.of(
+                "/readers/me/**"
         );
-
-        return publicPaths.stream().anyMatch(publicPath -> pathMatches(publicPath, path));
+        boolean b = privatePaths.stream().noneMatch(privatePath -> pathMatches(privatePath, path));
+        System.out.println(b);
+        return b;
     }
+
+
 
     private boolean pathMatches(String pattern, String path) {
 
@@ -103,4 +102,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // Exact match: "/login"
         return path.equals(pattern);
     }
+
+
 }

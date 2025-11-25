@@ -39,6 +39,7 @@ public class ReaderController {
 
         }
         List<ReaderSummary> summaries=readerService.retrieveReadersSummary(readersIds);
+        System.out.println(summaries.toString());
         return ResponseEntity.ok(summaries);
     }
 
@@ -52,11 +53,12 @@ public class ReaderController {
     @GetMapping("/me/info")
     public ResponseEntity<?> getMyReaderInfo() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         if (auth == null || auth.getDetails() == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
         }
 
-        System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
         Claims claims = (Claims) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UUID userId = remoteJwtService.extractUserUUID(claims);
         Reader info=readerService.retrieveReaderById(userId);

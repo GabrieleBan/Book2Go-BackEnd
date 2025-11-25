@@ -1,15 +1,13 @@
 package com.b2g.readerservice.dto;
 
 import com.b2g.readerservice.model.Reader;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
+@Data
 @Setter
 public class ReaderSummary {
     private UUID id;

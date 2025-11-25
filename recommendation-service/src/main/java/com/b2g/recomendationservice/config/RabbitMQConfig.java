@@ -20,8 +20,8 @@ public class RabbitMQConfig {
     @Value("${app.rabbitmq.queue.name}")
     private String servicePrefix;
 
-    @Value("#{'${app.rabbitmq.routing-keys}'.split(',')}")
-    private List<String> patternBindingKeys;
+//    @Value("#{'${app.rabbitmq.routing-keys}'.split(',')}")
+//    private List<String> patternBindingKeys;
 
 
     @Bean

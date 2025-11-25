@@ -4,8 +4,10 @@ import com.b2g.readerservice.model.Reader;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import lombok.Builder;
+import lombok.Data;
 
 import java.util.UUID;
+@Data
 @Builder
 public class ReaderPublicInfo {
 

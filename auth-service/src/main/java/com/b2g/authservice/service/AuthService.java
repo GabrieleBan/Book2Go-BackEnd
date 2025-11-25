@@ -16,6 +16,8 @@ import com.b2g.commons.UserRegistrationMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
@@ -65,6 +67,8 @@ public class AuthService {
 
     @Value("${app.rabbitmq.routing-key.signup-ticket}")
     private String userRegisteredRoutingKey;
+    @Value("${app.rabbitmq.routing-key.user-confirmed}")
+    private String userConfirmedRoutingKey;
 
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -72,6 +76,10 @@ public class AuthService {
     private final JwtService jwtService;
     private final OAuth2AuthorizedClientService clientService;
     private final RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    @Qualifier("safeRabbitTemplate")
+    private RabbitTemplate safeRabbitTemplate;
 
     @Transactional
     public ResponseEntity<?> registerUser(SignupRequest request) {
@@ -82,30 +90,28 @@ public class AuthService {
         User user = createUnconfirmedUser(request);
         userRepository.save(user);
 
-        // Configurazione per la conferma di consegna dei messaggi
-        rabbitTemplate.setMandatory(true);          // notifica se non c'è una route
-        rabbitTemplate.setReturnsCallback(ret ->    // logga eventuali drop
-                log.error("Messaggio UNROUTED: {}", ret));
-        rabbitTemplate.setConfirmCallback((cd,ack,c) ->
-                log.info("Broker ack? {}  cause: {}", ack, c));
-
         // Invio del messaggio di registrazione con username e UUID
         try {
-            UserRegistrationMessage registrationMessage = UserRegistrationMessage.builder()
+            UserRegistrationMessage message = UserRegistrationMessage.builder()
                     .username(user.getUsername())
                     .uuid(user.getId())
                     .email(user.getEmail())
                     .build();
 
-            rabbitTemplate.convertAndSend(exchangeName, userRegisteredRoutingKey, registrationMessage);
-            log.info("Messaggio di registrazione inviato per utente: {} con UUID: {}",
-                    user.getUsername(), user.getId());
-        } catch (Exception e) {
-            log.error("Errore nell'invio del messaggio di registrazione per utente: {}",
-                    user.getUsername(), e);
-            // Il messaggio non è critico, quindi non interrompiamo il flusso di registrazione
-        }
+            safeRabbitTemplate.invoke(operations -> {
+                operations.convertAndSend(exchangeName, userRegisteredRoutingKey, message);
 
+                // attende conferma dal broker
+                operations.waitForConfirmsOrDie(3000);
+
+                return null;
+            });
+
+        } catch (Exception e) {
+            log.error("❌ Errore nella consegna del messaggio: abort della registrazione", e);
+            userRepository.delete(user);
+            return ResponseEntity.status(500).body("Registrazione fallita: MQ non disponibile");
+        }
         return ResponseEntity.ok(REGISTRATION_SUCCESS);
     }
 
@@ -119,6 +125,13 @@ public class AuthService {
 
         user.setEnabled(true);
         userRepository.save(user);
+        UserRegistrationMessage msg = UserRegistrationMessage.builder()
+                .username(user.getUsername())
+                .uuid(user.getId())
+                .email(user.getEmail())
+                .build();
+
+        rabbitTemplate.convertAndSend(exchangeName, userConfirmedRoutingKey, msg);
 
         return ResponseEntity.ok(EMAIL_CONFIRMED_SUCCESS);
     }
@@ -266,7 +279,15 @@ public class AuthService {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        return userRepository.save(user);
+        user= userRepository.save(user);
+        UserRegistrationMessage msg = UserRegistrationMessage.builder()
+                .username(user.getUsername())
+                .uuid(user.getId())
+                .email(user.getEmail())
+                .build();
+
+        rabbitTemplate.convertAndSend(exchangeName, userConfirmedRoutingKey, msg);
+        return user;
     }
 
     private OAuthProvider getOAuthProvider(String registrationId) {

@@ -1,6 +1,6 @@
 package com.b2g.notificationservice.service;
 
-import com.b2g.notificationservice.dto.UserRegistrationMessage;
+import com.b2g.commons.UserRegistrationMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;

@@ -1,9 +1,13 @@
-package com.b2g.notificationservice.config;
+package com.b2g.readerservice.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.amqp.core.*;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,29 +18,32 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
     @Value("${app.rabbitmq.exchange}")
     private String exchangeName;
+    @Value("${app.rabbitmq.routing-key.user.confirmed}")
+    private String userConfirmedRoutingKey;
+    @Value("${app.rabbitmq.service.prefix}")
+    private String servicePrefix;
 
-    @Value("${app.rabbitmq.routing-key.signup-ticket}")
-    private String userRegisteredRoutingKey;
 
-    @Value("${app.rabbitmq.queue.user-signup}")
-    private String userRegistrationQueue;
 
     @Bean
-    public Exchange foodDeliveryExchange() {
+    public TopicExchange b2gExchange() {
         return new TopicExchange(exchangeName, true, false);
     }
 
     @Bean
-    Queue readyTicketQueue() {
-        return new Queue(userRegistrationQueue, true);
+    public Queue userQueue() {
+//        per ottenere i dati degli utenti confermati
+        String queueName=servicePrefix+ ".user.queue";
+        return new Queue(queueName, true, false, false);
     }
+
     @Bean
-    public Binding readyTicketBinding(Queue readyTicketQueue, Exchange foodDeliveryExchange) {
-        return BindingBuilder.bind(readyTicketQueue)
-                .to(foodDeliveryExchange)
-                .with(userRegisteredRoutingKey)
-                .noargs();
+    public Binding userBinding(TopicExchange b2gExchange, Queue userQueue) {
+        return BindingBuilder.bind(userQueue)
+                .to(b2gExchange)
+                .with(userConfirmedRoutingKey);
     }
+
 
     @Bean
     public MessageConverter jsonMessageConverter(ObjectMapper objectMapper) {
@@ -50,4 +57,5 @@ public class RabbitMQConfig {
         template.setMessageConverter(jsonMessageConverter);
         return template;
     }
+
 }

@@ -39,6 +39,8 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
   rabbitmq:
+    publisher-confirm-type: correlated
+    publisher-returns: true
     host: localhost # Per test locale fuori da Docker
     port: 5672
     username: guest
@@ -46,12 +48,12 @@ spring:
 
 app:
   rabbitmq:
-    exchange: b2g.exchange
-    queue:
-      user-signup: user.signup
+    exchange: b2g.topic.exchange
+#    queue:
+#      user-signup: user.signup
     routing-key:
       signup-ticket: rk.user.registration
-      user-confirmation: rk.user.created
+      user-confirmed: rk.user.confirmed
 
 services:
   restaurant:
