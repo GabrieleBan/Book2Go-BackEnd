@@ -1,11 +1,13 @@
 package com.b2g.readerservice.controller;
 
+import com.b2g.readerservice.dto.ReaderForm;
 import com.b2g.readerservice.dto.ReaderPublicInfo;
 import com.b2g.readerservice.dto.ReaderSummary;
 import com.b2g.readerservice.model.Reader;
 import com.b2g.readerservice.service.ReaderService;
 import com.b2g.readerservice.service.remoteJwtService;
 import io.jsonwebtoken.Claims;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.management.InstanceAlreadyExistsException;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -64,4 +67,49 @@ public class ReaderController {
         Reader info=readerService.retrieveReaderById(userId);
         return ResponseEntity.ok(info);
     }
+
+    @PutMapping("/me/fill-form-info")
+    public ResponseEntity<?> putMyReaderInfo(@RequestBody @Valid ReaderForm readerForm) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        if (auth == null || auth.getDetails() == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+
+
+        Claims claims = (Claims) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UUID userId = remoteJwtService.extractUserUUID(claims);
+
+
+        Reader info= null;
+        try {
+            info = readerService.addReaderOneTimeInfo(userId,readerForm);
+
+        } catch (InstanceAlreadyExistsException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
+        return ResponseEntity.ok(info);
+
+    }
+
+    @PutMapping("/me/description")
+    public ResponseEntity<?> putReaderInfo(@RequestBody String new_description) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        if (auth == null || auth.getDetails() == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+
+        Claims claims = (Claims) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UUID userId = remoteJwtService.extractUserUUID(claims);
+
+        readerService.changeReaderDescription(userId,new_description);
+        return ResponseEntity.ok(new_description);
+
+
+    }
+
+
+
+
 }

@@ -2,7 +2,7 @@ type: http_request
 model: http_request
 id: rq_DdLGy7cLm6
 createdAt: 2025-08-24T15:51:14.321021
-updatedAt: 2025-08-27T22:54:43.311976
+updatedAt: 2025-11-25T18:16:44.587626200
 workspaceId: wk_94bVhSAcpy
 folderId: fl_GBXwSTx9Sx
 authentication: {}
@@ -10,9 +10,9 @@ authenticationType: null
 body:
   text: |-
     {
-      "username": "test1",
+      "username": "test6",
       "password": "P@ssw0rd!",
-      "email": "testuser@example.com"
+      "email": "testuer@example.com"
     }
 bodyType: application/json
 description: ''
