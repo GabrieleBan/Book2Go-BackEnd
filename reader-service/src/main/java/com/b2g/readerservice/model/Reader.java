@@ -1,9 +1,6 @@
 package com.b2g.readerservice.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.UUID;
@@ -28,8 +25,15 @@ public class Reader {
     private String name;
     private String surname;
     private String phone;
+    @Enumerated(EnumType.STRING)
+    private SubscriptionType subscription;
     @Embedded
     private Address address;
     private String description;
-
+    @PrePersist
+    private void prePersist() {
+        if (subscription == null) {
+            subscription = SubscriptionType.UNSUBSCRIBED;
+        }
+    }
 }
