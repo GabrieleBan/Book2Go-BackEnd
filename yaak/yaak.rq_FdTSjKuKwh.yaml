@@ -2,24 +2,24 @@ type: http_request
 model: http_request
 id: rq_FdTSjKuKwh
 createdAt: 2025-08-27T23:53:08.177205
-updatedAt: 2025-11-19T16:17:58.604761400
+updatedAt: 2025-11-26T22:22:44.273785300
 workspaceId: wk_94bVhSAcpy
 folderId: fl_gQ2VqcuSam
 authentication:
-  token: eyJhbGciOiJSUzI1NiJ9.eyJ1c2VyVVVJRCI6IjliZmI3YzQ2LTdkZGQtNGFlZC1hODlmLTA3YTliYmJjMTNjYyIsInJvbGUiOiJBRE1JTiIsInVzZXJuYW1lIjoidGVzdDEiLCJzdWIiOiI5YmZiN2M0Ni03ZGRkLTRhZWQtYTg5Zi0wN2E5YmJiYzEzY2MiLCJpYXQiOjE3NjM1NjkwMDYsImV4cCI6MTc2MzU2OTkwNiwiaXNzIjoiYjJnLWF1dGgtc2VydmljZSIsImF1ZCI6WyJiMmctbWljcm9zZXJ2aWNlcyJdfQ.W4vXgpSzbGJAijrRoyDSqbsVSgJRkBCt4EJyzT1YqYWbaM1003jLBfD8njyFG4rb7BH4LAlndGfdqPWESKLm1maaVn_2-FhhsTtYcDy1gHd_m9ZPFklrJ4_H_GoEOidCWRjxdji2Su_uAtqvnl6SBLaJ-a8LwxcVbB37mf9HbKwMNE6N4rF4cl8C1gTLaYjSCYdyXtFOVQBlE3l1Qf45bmiBP4I3Wo6nP0D8kCkevYmqSP0uSUSUrlksGihwMTSfKegT2GrmAQ1E_OaM-2wwdsh-3sXbAd71dRDZKzF-PzcEW_KR9dEG8ENvuZc04Wkxq2Lx3h7DV8i6gEfsdIxeKg
+  token: eyJhbGciOiJSUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluMSIsInVzZXJVVUlEIjoiZDZjY2NmMzItNmJiMy00OTRiLWExMzktMzJhZDg1Yzc2MzAzIiwicm9sZSI6IkFETUlOIiwic3ViIjoiZDZjY2NmMzItNmJiMy00OTRiLWExMzktMzJhZDg1Yzc2MzAzIiwiaWF0IjoxNzY0MTkzMTg3LCJleHAiOjE3NjQxOTQwODcsImlzcyI6ImIyZy1hdXRoLXNlcnZpY2UiLCJhdWQiOlsiYjJnLW1pY3Jvc2VydmljZXMiXX0.gLksjO8OIziARKvaE61OVlgtoEespTScJirzreFKwHHHdx1TbHd25p4oDC-ROlRcSDtOPjVF9ZHa02TEzud131Tm38rWrp6RmXj7BNiJFJsQjPBEh5DbhXs56EUY5X1mYfuxXtsMNaKWPSXOPPTNzJjLJZg9yPEec6I_NkxhmX699IaWt_doGsuKAKbXXbzLuhcph_f2N74AG3ebR99C8tCMgEyK7kAImcv94BchnVsybzZlk1IBS91CKilJqFClGo_dujpJ2hv2SPjaM6WoK_FLfpbyNDZ7qHn50Ib4CRm8Up20VbBn_KGAljBxLZoGn-2GG6Co1-2LNwKOwKf7Yw
 authenticationType: bearer
 body:
   text: |-
     {
-      "title": "194",
+      "title": "1984",
       "author": "George Orwell",
-      "isbn": "9780451524735",
+      "isbn": "9780451521036",
       "description": "Un romanzo distopico ambientato in una società totalitaria dove il Grande Fratello controlla ogni aspetto della vita dei cittadini e la libertà individuale è completamente soppressa.",
       "publisher": "Secker & Warburg",
       "publicationDate": "1949-06-08",
       "categoryIds": [
-        "caa9b003-af00-4fe2-abc9-85fcddd578c7",
-        "f6c65df9-8dc6-461b-8f5d-b453bc45f496"
+        "ad8b2691-1a8b-431a-a59b-090ce73e38cd",
+        "1d9c0fe6-9791-45e4-b73e-96b9b948dcb9"
       ],
       "formats": [
         {

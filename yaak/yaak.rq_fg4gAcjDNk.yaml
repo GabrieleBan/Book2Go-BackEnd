@@ -2,7 +2,7 @@ type: http_request
 model: http_request
 id: rq_fg4gAcjDNk
 createdAt: 2025-11-18T17:46:46.335086200
-updatedAt: 2025-11-24T22:43:58.143330700
+updatedAt: 2025-11-26T23:50:55.206852200
 workspaceId: wk_94bVhSAcpy
 folderId: fl_cCZgPgtyUM
 authentication: {}
@@ -18,13 +18,13 @@ url: http://localhost:8096/recommendations/
 urlParameters:
 - enabled: true
   name: categoryIds
-  value: 00000000-0000-0000-0000-000000000401
+  value: 02eb26e2-1b25-4cff-bdc3-c2711595d08e
   id: XtAMD9kYRE
-- enabled: true
+- enabled: false
   name: categoryIds
   value: 00000000-0000-0000-0000-000000000107
   id: pI5jVj7ZXZ
-- enabled: false
+- enabled: true
   name: mustHaveAll
   value: 'true'
   id: C5jefeYBuR
@@ -39,4 +39,4 @@ urlParameters:
 - enabled: true
   name: ''
   value: ''
-  id: PS86qeKumS
+  id: XTHtpNsZ2s
