@@ -1,10 +1,10 @@
 package com.b2g.recomendationservice.service;
 
+import com.b2g.commons.BookSummaryDTO;
 import com.b2g.recomendationservice.dto.ReviewDTO;
-import com.b2g.recomendationservice.model.nodes.Book;
-import com.b2g.recomendationservice.model.nodes.Publisher;
-import com.b2g.recomendationservice.model.nodes.Reader;
-import com.b2g.recomendationservice.model.nodes.Writer;
+import com.b2g.recomendationservice.model.nodes.*;
+import com.b2g.recomendationservice.model.relationships.PublishedBy;
+import com.b2g.recomendationservice.model.relationships.WrittenBy;
 import com.b2g.recomendationservice.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +23,9 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class RecommendationService {
-    @Value("${app.rabbitmq.queue.name}")
-    private String queueName;
+    @Value("${app.rabbitmq.service.prefix}")
+    private String queueNamePrefix;
+    private final TagRepository tagRepository;
     private final BookRepository bookRepository;
     private final PublisherRepository publisherRepository;
     private final WriterRepository writerRepository;
@@ -73,6 +74,69 @@ public class RecommendationService {
         return bookRepository.save(book);
     }
 
+    public Book addBookNode(BookSummaryDTO bookSumm) {
+
+        List<Tag> tags=bookSumm.categories().stream().map(categoryDTO ->  {
+                Optional<Tag> tmp = tagRepository.findById(categoryDTO.id().toString());
+            return tmp.orElseGet(() -> tagRepository.save(new Tag(categoryDTO.id().toString(), categoryDTO.name())));
+                }).collect(Collectors.toList()) ;
+        List<String> authors=extractAuthors(bookSumm.authors());
+
+        List<WrittenBy> writtenBy = new ArrayList<>(List.of());
+        for (String author : authors) {
+            Optional<Writer> aut=writerRepository.findByName(author);
+            if (aut.isPresent()) {
+                WrittenBy rel = new WrittenBy();
+                rel.setWriter(aut.get());
+                writtenBy.add(rel);
+            }else
+            {
+                Writer writer=Writer.builder().name(author).build();
+                writer= writerRepository.save(writer);
+                WrittenBy rel = new WrittenBy();
+                rel.setWriter(writer);
+                writtenBy.add(rel);
+            }
+        }
+
+        PublishedBy publishedBy = new PublishedBy();
+        Optional<Publisher> publisher= publisherRepository.findByName(bookSumm.publisher());
+        if (publisher.isPresent()) {
+            publishedBy.setPublisher(publisher.get());
+        }
+        else
+        {
+            Publisher newPublisher = new Publisher();
+            newPublisher.setName(bookSumm.publisher());
+            newPublisher= publisherRepository.save(newPublisher);
+            publishedBy.setPublisher(newPublisher);
+        }
+
+
+        Book bookNode = Book.builder()
+                .id(bookSumm.id().toString())
+                .tags(tags)
+                .title(bookSumm.title())
+                .authors(writtenBy)
+                .publisher(publishedBy)
+                .build();
+
+        if (bookNode.getId() != null) {
+            return bookRepository.findById(bookNode.getId())
+                    .orElseGet(() -> bookRepository.save(bookNode));
+        }
+        return bookRepository.save(bookNode);
+    }
+
+    private List<String> extractAuthors(String authors) {
+        List<String> authorsList = new ArrayList<>();
+        StringTokenizer tokenizer = new StringTokenizer(authors, ",");
+        while (tokenizer.hasMoreTokens()) {
+            authorsList.add(tokenizer.nextToken());
+        }
+        return authorsList;
+    }
+
     public Writer addWriterNode(Writer writer) {
         if (writer.getId() != null) {
             return writerRepository.findById(writer.getId())
@@ -85,12 +149,12 @@ public class RecommendationService {
         if(review.getRating()>5 || review.getRating()<0) {
             throw new IllegalArgumentException("Rating must be between 0 and 5");
         }
-        return reviewRepository.createReview(review.getReaderId(), review.getBookId(), review.getRating());
+        return reviewRepository.createReview(review.getReaderId().toString(), review.getBookId().toString(), review.getRating());
     }
 
 
 
-    public Page<Book> getGenericRecommendation(Set<UUID> categoryIds, int page, int size, boolean mustHaveAll) {
+    public Page<Book> getGenericRecommendation(Set<String> categoryIds, int page, int size, boolean mustHaveAll) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("title").ascending());
         System.out.println("must all: " + mustHaveAll);
         if (mustHaveAll)
@@ -99,7 +163,7 @@ public class RecommendationService {
             return bookRepository.findByTagsIdIn(categoryIds,pageable);
     }
 
-    public Page<Book> getPersonalizedReccomendation(UUID userId, Set<UUID> categoryIds, Pageable pageable) {
+    public Page<Book> getPersonalizedReccomendation(String userId, Set<UUID> categoryIds, Pageable pageable) {
 
 
         List<Book> byAuthorOrPublisher = bookRepository.recommendByAuthorOrPublisher(userId);

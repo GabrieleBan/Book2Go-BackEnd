@@ -3,6 +3,7 @@ package com.b2g.catalogservice.controller;
 import com.b2g.catalogservice.annotation.RequireRole;
 import com.b2g.catalogservice.dto.*;
 import com.b2g.catalogservice.service.BookService;
+import com.b2g.commons.BookSummaryDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +31,16 @@ public class BookController {
 
     @PostMapping({"", "/"})
     @RequireRole("ADMIN")
-    public ResponseEntity<BookDetailDTO> createBook(@RequestBody @Valid BookCreateRequestDTO request) {
-        BookDetailDTO createdBook = bookService.createBook(request);
+    public ResponseEntity<?> createBook(@RequestBody @Valid BookCreateRequestDTO request) {
+        BookDetailDTO createdBook;
+        try {
+            createdBook = bookService.createBook(request);
+        }
+        catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED).body(createdBook);
     }
 

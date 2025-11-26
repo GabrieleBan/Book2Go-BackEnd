@@ -17,11 +17,11 @@ public class RabbitMQConfig {
     @Value("${app.rabbitmq.exchange}")
     private String exchangeName;
 
-    @Value("${app.rabbitmq.queue.name}")
+    @Value("${app.rabbitmq.service.prefix}")
     private String servicePrefix;
 
-//    @Value("#{'${app.rabbitmq.routing-keys}'.split(',')}")
-//    private List<String> patternBindingKeys;
+    @Value("${app.rabbitmq.bindingkey.book.creation}")
+   private String bookCreationBindingKey;
 
 
     @Bean
@@ -46,10 +46,10 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Binding bookBinding(TopicExchange b2gExchange, Queue bookQueue) {
+    public Binding bookCreationBinding(TopicExchange b2gExchange, Queue bookQueue) {
         return BindingBuilder.bind(bookQueue)
                 .to(b2gExchange)
-                .with("book.#");
+                .with(bookCreationBindingKey);
     }
 
     @Bean

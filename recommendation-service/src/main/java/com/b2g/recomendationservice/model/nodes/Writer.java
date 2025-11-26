@@ -1,15 +1,18 @@
 package com.b2g.recomendationservice.model.nodes;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
+import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 
-import java.util.UUID;
 @Builder
 @Node
 @Getter
+@Data
 public class Writer {
     @Id
-    private UUID id;
+    @GeneratedValue(UUIDStringGenerator.class)
+    private String id;
+    private String name;
 }

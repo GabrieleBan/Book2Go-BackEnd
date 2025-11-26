@@ -1,5 +1,7 @@
 package com.b2g.catalogservice.dto;
 
+import com.b2g.commons.CategoryDTO;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;

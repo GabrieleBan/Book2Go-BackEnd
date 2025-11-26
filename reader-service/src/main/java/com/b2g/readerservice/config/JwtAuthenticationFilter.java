@@ -38,7 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         jwt = authHeader.substring(7);
-        System.out.println(jwt);
+
         // Verifico che il token non sia vuoto
         if (jwt.trim().isEmpty()) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -49,8 +49,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             Claims claims = remoteJwtService.remoteValidateToken(jwt);
             String userId = claims.getSubject();
-            System.out.println(userId);
-            System.out.println(claims);
+//            System.out.println(userId);
+//            System.out.println(claims);
             if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(claims, null, Collections.emptyList());

@@ -4,6 +4,7 @@ import com.b2g.commons.UserRegistrationMessage;
 import com.b2g.readerservice.dto.ReaderForm;
 import com.b2g.readerservice.dto.ReaderPublicInfo;
 import com.b2g.readerservice.dto.ReaderSummary;
+import com.b2g.readerservice.repository.ReaderLibraryRepository;
 import com.b2g.readerservice.repository.ReaderRepository;
 import com.b2g.readerservice.model.Reader;
 import jakarta.validation.Valid;
@@ -21,6 +22,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ReaderService {
     private final ReaderRepository readerRepository;
+    private final ReaderLibraryRepository readerLibraryRepository;
 
     public List<ReaderSummary> retrieveReadersSummary(Set<UUID> readersIds) {
         List<Reader> readersList = readerRepository.findReadersById(readersIds);

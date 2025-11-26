@@ -15,6 +15,7 @@ import com.b2g.authservice.repository.UserRepository;
 import com.b2g.commons.UserRegistrationMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -98,11 +99,26 @@ public class AuthService {
                     .email(user.getEmail())
                     .build();
 
-            safeRabbitTemplate.invoke(operations -> {
-                operations.convertAndSend(exchangeName, userRegisteredRoutingKey, message);
+            // Invio sincrono con basicPublish e mandatory=true
+            safeRabbitTemplate.invoke(ops -> {
+                ops.execute(channel -> {
+                    // Converte il DTO in byte[]
+                    byte[] body = safeRabbitTemplate.getMessageConverter()
+                            .toMessage(message, new MessageProperties())
+                            .getBody();
+                    // Pubblica il messaggio con mandatory=true → errori NO_ROUTE arrivano subito
+                    channel.basicPublish(
+                            exchangeName,
+                            userRegisteredRoutingKey,
+                            true, // mandatory
+                            null, // MessageProperties opzionale, il converter gestisce headers
+                            body
+                    );
+                    return null;
+                });
 
-                // attende conferma dal broker
-                operations.waitForConfirmsOrDie(3000);
+                // Attende conferma sincrona dal broker
+                ops.waitForConfirmsOrDie(3000);
 
                 return null;
             });

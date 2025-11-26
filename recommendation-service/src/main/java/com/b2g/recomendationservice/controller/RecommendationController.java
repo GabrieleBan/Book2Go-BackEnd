@@ -51,7 +51,7 @@ public class RecommendationController {
 
     @GetMapping({"", "/"})
     public ResponseEntity<?> genericRecommendation(
-            @RequestParam(required = true) Set<UUID> categoryIds,
+            @RequestParam(required = true) Set<String> categoryIds,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "false") boolean mustHaveAll) {
@@ -80,7 +80,7 @@ public class RecommendationController {
         UUID userId = remoteJwtService.extractUserUUID(claims);
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<Book> recommendationPage = recommService.getPersonalizedReccomendation(userId, categoryIds, pageable);
+        Page<Book> recommendationPage = recommService.getPersonalizedReccomendation(userId.toString(), categoryIds, pageable);
 
         return ResponseEntity.ok(recommendationPage);
     }
@@ -106,7 +106,7 @@ public class RecommendationController {
             List<Reader> readers = new ArrayList<>();
             for (int i = 0; i < readerIds.length; i++) {
                 Reader r = new Reader();
-                r.setId(readerIds[i]);
+                r.setId(readerIds[i].toString());
                 recommService.addReaderNode(r);
                 readers.add(r);
                 log.append("Created Reader: ").append(readerNames[i])
@@ -118,7 +118,7 @@ public class RecommendationController {
             // ==========================
             UUID publisherId = UUID.fromString("00000000-0000-0000-0000-000000000010");
             Publisher publisher = new Publisher();
-            publisher.setId(publisherId);
+            publisher.setId(publisherId.toString());
             publisher.setName("Mondadori");
             recommService.addPublisherNode(publisher);
             log.append("Created Publisher: ").append(publisher.getName())
@@ -163,14 +163,14 @@ public class RecommendationController {
             // ==========================
             for (int i = 0; i < 10; i++) {
                 Book book = new Book();
-                book.setId(bookIds[i]);
+                book.setId(bookIds[i].toString());
                 book.setTitle(bookTitles[i]);
 
                 // AUTHORS
                 List<WrittenBy> authors = new ArrayList<>();
                 for (int j = 0; j < authorsNames[i].length; j++) {
                     Writer w = Writer.builder()
-                            .id(UUID.fromString(String.format("00000000-0000-0000-0000-0000000002%02d", i*2+j+1)))
+                            .id(UUID.fromString(String.format("00000000-0000-0000-0000-0000000002%02d", i*2+j+1)).toString())
                             .build();
                     WrittenBy rel = new WrittenBy();
                     rel.setWriter(w);
@@ -188,7 +188,7 @@ public class RecommendationController {
                 List<Tag> tags = new ArrayList<>();
                 for (int t = 0; t < tagsNames[i].length; t++) {
                     tags.add(new Tag(
-                            UUID.fromString(String.format("00000000-0000-0000-0000-0000000004%02d", i*2+t+1)),
+                            UUID.fromString(String.format("00000000-0000-0000-0000-0000000004%02d", i*2+t+1)).toString(),
                             tagsNames[i][t]
                     ));
                 }

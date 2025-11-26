@@ -1,7 +1,6 @@
 package com.b2g.catalogservice.aspect;
 
 import com.b2g.catalogservice.annotation.RequireRole;
-import com.b2g.catalogservice.service.JwtService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import com.b2g.catalogservice.service.remoteJwtService;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,7 +24,7 @@ import java.util.List;
 @Slf4j
 public class RoleValidationAspect {
 
-    private final JwtService jwtService;
+    private final remoteJwtService remoteJwtService;
 
     @Around("@annotation(requireRole)")
     public Object validateRole(ProceedingJoinPoint joinPoint, RequireRole requireRole) throws Throwable {
@@ -49,10 +49,10 @@ public class RoleValidationAspect {
             }
 
             // Validate JWT and extract claims
-            Claims claims = jwtService.validateToken(jwt);
+            Claims claims = remoteJwtService.remoteValidateToken(jwt);
 
             // Extract roles from JWT claims
-            List<String> userRoles = jwtService.extractRoles(claims);
+            List<String> userRoles = remoteJwtService.extractRoles(claims);
 
             // Check if user has required roles
             String[] requiredRoles = requireRole.value();

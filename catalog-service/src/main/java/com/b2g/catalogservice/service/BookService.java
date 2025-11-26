@@ -6,16 +6,25 @@ import com.b2g.catalogservice.repository.BookRepository;
 import com.b2g.catalogservice.repository.CategoryRepository;
 import com.b2g.catalogservice.repository.BookFormatRepository;
 import com.b2g.catalogservice.repository.RentalOptionRepository;
+import com.b2g.commons.BookSummaryDTO;
+import com.b2g.commons.CategoryDTO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.MessageProperties;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BookService {
@@ -24,6 +33,17 @@ public class BookService {
     private final CategoryRepository categoryRepository;
     private final BookFormatRepository bookFormatRepository;
     private final RentalOptionRepository rentalOptionRepository;
+    private final RabbitTemplate rabbitTemplate;
+    @Value("${app.rabbitmq.exchange}")
+    private  String exchangeName;
+    @Value("${app.rabbitmq.queue.name}")
+    private String queueNamePrefix;
+    @Value("${app.rabbitmq.routingkey.book.creation}")
+    private String routingKeyParentBookCreated;
+
+    @Autowired
+    @Qualifier("safeRabbitTemplate")
+    private final RabbitTemplate safeRabbitTemplate;
 
     @Transactional(readOnly = true)
     public List<BookSummaryDTO> getAllBooks(Set<UUID> categoryIds, Pageable pageable) {
@@ -43,11 +63,14 @@ public class BookService {
     }
 
     @Transactional
-    public BookDetailDTO createBook(BookCreateRequestDTO request) {
+    public BookDetailDTO createBook(BookCreateRequestDTO request) throws NoSuchElementException{
         // Fetch categories if provided
         Set<Category> categories = new HashSet<>();
         if (request.categoryIds() != null && !request.categoryIds().isEmpty()) {
             categories = new HashSet<>(categoryRepository.findAllById(request.categoryIds()));
+        }
+        if(categories.size()!=request.categoryIds().size()){
+            throw new NoSuchElementException("Al least one of the specified tags does not exist");
         }
 
         // Create Book entity from request
@@ -68,13 +91,77 @@ public class BookService {
         Book savedBook = bookRepository.save(book);
 
         // Create and save book formats if provided
+        // da togliere poi
         List<BookFormat> bookFormats = createBookFormats(request.formats(), savedBook);
+
+
+        try {
+            signalBookCreation(book);
+        }catch (Exception e){
+            bookRepository.delete(book);
+        }
 
         // Update the book with the formats
         savedBook.setAvailableFormats(bookFormats);
 
         return convertToBookDetailDTO(savedBook, bookFormats);
     }
+
+    private void signalBookCreation(Book book) {
+
+
+        // Invio del messaggio di registrazione con username e UUID
+        try {
+            BookSummaryDTO bookCreationMessage = BookSummaryDTO.builder()
+                    .id(book.getId())
+                    .title(book.getTitle())
+                    .authors(book.getAuthor())
+                    .publisher(book.getPublisher())
+                    .coverImageUrl(book.getCoverImageUrl())
+                    .categories(book.getCategories().stream().map(category -> {
+                        return new CategoryDTO(category.getId(),category.getName());
+                    }).collect(Collectors.toSet()))
+                    .build();
+
+
+            safeRabbitTemplate.invoke(ops -> {
+                ops.execute(channel -> {
+                    // Converte il DTO in byte[]
+                    byte[] body = safeRabbitTemplate.getMessageConverter()
+                            .toMessage(bookCreationMessage, new MessageProperties())
+                            .getBody();
+
+                    // Pubblica il messaggio con mandatory=true → errori NO_ROUTE arrivano subito
+                    channel.basicPublish(
+                            exchangeName,
+                            routingKeyParentBookCreated,
+                            true,  // mandatory
+                            null,  // MessageProperties opzionale, il converter gestisce headers
+                            body
+                    );
+                    return null;
+                });
+
+                // Attende conferma sincrona dal broker
+                ops.waitForConfirmsOrDie(3000);
+
+                return null;
+            });
+
+
+        } catch (Exception e) {
+            log.error("❌ Errore nella consegna del messaggio: abort della registrazione", e);
+           throw new RuntimeException(e);
+        }
+
+
+    }
+
+    private List<String> extractAuthors(String author) {
+        String[] split = author.split(",");
+        return Arrays.asList(split);
+    }
+
 
     private List<BookFormat> createBookFormats(List<BookFormatCreateDTO> formatDtos, Book book) {
         List<BookFormat> bookFormats = new ArrayList<>();
@@ -117,8 +204,9 @@ public class BookService {
 
     private BookDetailDTO convertToBookDetailDTO(Book book, List<BookFormat> bookFormats) {
         // Convert to DTOs
+
         List<CategoryDTO> categoryDTOs = book.getCategories().stream()
-                .map(category -> new CategoryDTO(category.getId(), category.getName(), category.getDescription()))
+                .map(category -> new CategoryDTO(category.getId(), category.getName()))
                 .collect(Collectors.toList());
 
         List<BookFormatDTO> formatDTOs = bookFormats.stream()
@@ -155,13 +243,14 @@ public class BookService {
     }
 
     private BookSummaryDTO convertToBookSummaryDTO(Book book) {
-        List<CategoryDTO> categoryDTOs = book.getCategories().stream()
-                .map(category -> new CategoryDTO(category.getId(), category.getName(), category.getDescription()))
-                .collect(Collectors.toList());
+        Set<CategoryDTO> categoryDTOs = book.getCategories().stream()
+                .map(category -> new CategoryDTO(category.getId(), category.getName()))
+                .collect(Collectors.toSet());
 
         return new BookSummaryDTO(
                 book.getId(),
                 book.getTitle(),
+                book.getPublisher(),
                 book.getAuthor(),
                 book.getCoverImageUrl(),
                 categoryDTOs

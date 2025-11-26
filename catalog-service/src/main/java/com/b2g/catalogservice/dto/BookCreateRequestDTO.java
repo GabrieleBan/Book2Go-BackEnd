@@ -5,11 +5,13 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-
+@Builder
 public record BookCreateRequestDTO(
         @NotBlank(message = "Title cannot be blank")
         @Size(min = 1, max = 255, message = "Title must be between 1 and 255 characters")

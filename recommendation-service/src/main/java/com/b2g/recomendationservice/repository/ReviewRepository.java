@@ -17,14 +17,14 @@ public interface ReviewRepository extends Neo4jRepository<ReviewDTO, Long> {
         MATCH (r:Reader)-[rel:REVIEWS]->(b:Book {id:$bookId})
         RETURN rel.id as id,r.id AS readerId, b.id AS bookId, rel.rating AS rating
     """)
-    List<ReviewDTO> findAllBookReviews(@Param("bookId") UUID bookId);
+    List<ReviewDTO> findAllBookReviews(@Param("bookId") String bookId);
 
     // Tutte le recensioni scritte da un lettore
     @Query("""
         MATCH (r:Reader {id:$readerId})-[rel:REVIEWS]->(b:Book)
         RETURN rel.id as id,r.id AS readerId, b.id AS bookId, rel.rating AS rating
     """)
-    List<ReviewDTO> findAllReviewsWrittenByReader(@Param("readerId") UUID readerId);
+    List<ReviewDTO> findAllReviewsWrittenByReader(@Param("readerId") String readerId);
 
     // Crea o modifica una recensione
     @Query("""
@@ -33,12 +33,12 @@ public interface ReviewRepository extends Neo4jRepository<ReviewDTO, Long> {
         SET rel.rating = $rating
         RETURN rel.id as id, r.id AS readerId, b.id AS bookId, rel.rating AS rating
     """)
-    ReviewDTO createReview(@Param("readerId") UUID readerId,
-                           @Param("bookId") UUID bookId,
+    ReviewDTO createReview(@Param("readerId") String readerId,
+                           @Param("bookId") String bookId,
                            @Param("rating") float rating);
 
     // Modifica una recensione (usa createReview)
-    default ReviewDTO modifyReview(UUID readerId, UUID bookId, float rating) {
+    default ReviewDTO modifyReview(String readerId, String bookId, float rating) {
         return createReview(readerId, bookId, rating);
     }
 
@@ -49,6 +49,6 @@ public interface ReviewRepository extends Neo4jRepository<ReviewDTO, Long> {
         DELETE rel
         RETURN deletedCount
     """)
-    int deleteReview(@Param("readerId") UUID readerId,
-                     @Param("bookId") UUID bookId);
+    int deleteReview(@Param("readerId") String readerId,
+                     @Param("bookId") String bookId);
 }

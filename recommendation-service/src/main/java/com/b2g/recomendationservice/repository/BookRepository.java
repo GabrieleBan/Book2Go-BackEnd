@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 @Repository
-public interface BookRepository  extends Neo4jRepository<Book, UUID> {
+public interface BookRepository  extends Neo4jRepository<Book, String> {
     @Query(
             value = """
         MATCH (b:Book)-[:Tag]->(t:Tag)
@@ -27,7 +27,7 @@ public interface BookRepository  extends Neo4jRepository<Book, UUID> {
         RETURN count(DISTINCT b)
         """
     )
-    Page<Book> findByTagsIdIn(@Param("tagIds") Set<UUID> tagIds, Pageable pageable);
+    Page<Book> findByTagsIdIn(@Param("tagIds") Set<String> tagIds, Pageable pageable);
     @Query(
             value = """
         MATCH (b:Book)-[:Tag]->(t:Tag)
@@ -44,7 +44,7 @@ public interface BookRepository  extends Neo4jRepository<Book, UUID> {
         RETURN count(DISTINCT b)
         """
     )
-    Page<Book> findByAllTags(@Param("tagIds") Set<UUID> tagIds,
+    Page<Book> findByAllTags(@Param("tagIds") Set<String> tagIds,
                              @Param("tagCount") long tagCount,
                              Pageable pageable);
 
@@ -69,7 +69,7 @@ public interface BookRepository  extends Neo4jRepository<Book, UUID> {
             RETURN count(DISTINCT c)
             """
     )
-    Page<Book> recommendByAuthorOrPublisher(@Param("userId") UUID userId, Pageable pageable);
+    Page<Book> recommendByAuthorOrPublisher(@Param("userId") String userId, Pageable pageable);
 
 
     // Raccomandazione lettori simili con paginazione
@@ -86,7 +86,7 @@ public interface BookRepository  extends Neo4jRepository<Book, UUID> {
             RETURN count(DISTINCT rec)
             """
     )
-    Page<Book> recommendBySimilarReaders(@Param("userId") UUID userId, Pageable pageable);
+    Page<Book> recommendBySimilarReaders(@Param("userId") String userId, Pageable pageable);
     @Query("""
     MATCH (u:Reader {id: $userId})-[:REVIEWS]->(b:Book)
     OPTIONAL MATCH (b)-[:WRITTEN_BY]->(:Writer)<-[:WRITTEN_BY]-(rec:Book)
@@ -97,7 +97,7 @@ public interface BookRepository  extends Neo4jRepository<Book, UUID> {
     RETURN c, count(r) AS reviewCount
     ORDER BY reviewCount DESC
     """)
-    List<Book> recommendByAuthorOrPublisher(@Param("userId") UUID userId);
+    List<Book> recommendByAuthorOrPublisher(@Param("userId") String userId);
 
     @Query("""
     MATCH (u:Reader {id: $userId})-[:REVIEWS]->(b:Book)<-[:REVIEWS]-(other:Reader)-[:REVIEWS]->(rec:Book)
@@ -105,7 +105,7 @@ public interface BookRepository  extends Neo4jRepository<Book, UUID> {
     RETURN rec, count(other) AS score
     ORDER BY score DESC
     """)
-    List<Book> recommendBySimilarReaders(@Param("userId") UUID userId);
+    List<Book> recommendBySimilarReaders(@Param("userId") String userId);
 }
 
 //
@@ -126,7 +126,7 @@ public interface BookRepository  extends Neo4jRepository<Book, UUID> {
 //        RETURN count(DISTINCT b)
 //        """
 //)
-//Page<Book> findByTagsIdIn(@Param("tagIds") Set<UUID> tagIds, Pageable pageable);
+//Page<Book> findByTagsIdIn(@Param("tagIds") Set<String> tagIds, Pageable pageable);
 //2️⃣ findByAllTags – libri che contengono tutti i tag passati
 //        java
 //Copia codice
@@ -149,7 +149,7 @@ public interface BookRepository  extends Neo4jRepository<Book, UUID> {
 //        RETURN count(DISTINCT b)
 //        """
 //)
-//Page<Book> findByAllTags(@Param("tagIds") Set<UUID> tagIds,
+//Page<Book> findByAllTags(@Param("tagIds") Set<String> tagIds,
 //                         @Param("tagCount") long tagCount,
 //                         Pageable pageable);
 //3️⃣ recommendByAuthorOrPublisher – raccomandazioni basate su autore o publisher
@@ -178,7 +178,7 @@ public interface BookRepository  extends Neo4jRepository<Book, UUID> {
 //        RETURN count(DISTINCT c)
 //        """
 //)
-//Page<Book> recommendByAuthorOrPublisher(@Param("userId") UUID userId, Pageable pageable);
+//Page<Book> recommendByAuthorOrPublisher(@Param("userId") String userId, Pageable pageable);
 //4️⃣ recommendBySimilarReaders – libri letti da lettori simili
 //        java
 //Copia codice
@@ -198,4 +198,4 @@ public interface BookRepository  extends Neo4jRepository<Book, UUID> {
 //        RETURN count(DISTINCT rec)
 //        """
 //)
-//Page<Book> recommendBySimilarReaders(@Param("userId") UUID userId, Pageable pageable);
+//Page<Book> recommendBySimilarReaders(@Param("userId") String userId, Pageable pageable);

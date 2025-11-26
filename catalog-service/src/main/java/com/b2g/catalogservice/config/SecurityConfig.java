@@ -24,6 +24,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/books/**", "/books").permitAll()
                         .requestMatchers("/categories/**", "/categories").permitAll()
+                        .requestMatchers("/test/create").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
