@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/BookToGo.iml" filepath="$PROJECT_DIR$/BookToGo.iml" />
       <module fileurl="file://$PROJECT_DIR$/auth-service/auth-service.iml" filepath="$PROJECT_DIR$/auth-service/auth-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/recommendation-service/recommendation-service.iml" filepath="$PROJECT_DIR$/recommendation-service/recommendation-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rental-service/rental-service.iml" filepath="$PROJECT_DIR$/rental-service/rental-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/review-service/review-service.iml" filepath="$PROJECT_DIR$/review-service/review-service.iml" />
     </modules>
   </component>

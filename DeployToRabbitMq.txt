@@ -1,0 +1,9 @@
+minikube -p minikube docker-env | Invoke-Expression
+minikube -p minikube docker-env
+kubectl apply -f k8s/namespace.yml
+kubectl config set-context --current --namespace=book2go
+per aggiungere eventuali nuovi db
+kubectl create configmap postgres-initdb-config --from-file=create-databases.sql=./init-db/create-databases.sql  --namespace=book2go -o yaml > k8s/deployment/postgres-initdb-configmap.yaml
+minikube addons enable ingress
+kubectl apply -R -f k8s/
+minikube tunnel

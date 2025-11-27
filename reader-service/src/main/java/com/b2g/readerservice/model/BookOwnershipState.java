@@ -1,7 +1,8 @@
 package com.b2g.readerservice.model;
 
-public enum ItemState {
+public enum BookOwnershipState {
     Owned,
+//    questi dopo si riferiscono a lend o stati per shipment
     Concluded,
     Processing,
     Failed,

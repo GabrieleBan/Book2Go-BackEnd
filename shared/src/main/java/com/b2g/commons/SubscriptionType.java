@@ -1,4 +1,4 @@
-package com.b2g.readerservice.model;
+package com.b2g.commons;
 
 public enum SubscriptionType {
     UNSUBSCRIBED,

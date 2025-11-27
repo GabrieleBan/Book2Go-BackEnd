@@ -12,38 +12,31 @@
         <outputRelativeToContentRoot value="true" />
         <module name="shared" />
       </profile>
-      <profile name="Annotation profile for reader-service" enabled="true">
+      <profile name="Annotation profile for review-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath>
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
         </processorPath>
-        <module name="auth-service" />
         <module name="payment-service" />
         <module name="bookcontent-service" />
         <module name="review-service" />
+        <module name="rental-service" />
         <module name="order-service" />
-        <module name="reader-service" />
-        <module name="notification-service" />
-      </profile>
-      <profile name="Annotation profile for catalog-service" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath>
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
-        </processorPath>
-        <module name="catalog-service" />
       </profile>
       <profile name="Annotation profile for recomendation-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <processorPath>
+        <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
         </processorPath>
+        <module name="auth-service" />
+        <module name="reader-service" />
+        <module name="notification-service" />
         <module name="recommendation-service" />
+        <module name="catalog-service" />
       </profile>
     </annotationProcessing>
   </component>
@@ -57,6 +50,7 @@
       <module name="payment-service" options="-parameters" />
       <module name="reader-service" options="-parameters" />
       <module name="recommendation-service" options="-parameters" />
+      <module name="rental-service" options="-parameters" />
       <module name="review-service" options="-parameters" />
     </option>
   </component>

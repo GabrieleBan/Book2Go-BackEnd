@@ -22,6 +22,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/readers/sum-info").permitAll()
                         .requestMatchers("/readers/all-info/*").permitAll()
+                        .requestMatchers("/readers/*/check/subscription").permitAll()
 
                         .anyRequest().authenticated()
                 )

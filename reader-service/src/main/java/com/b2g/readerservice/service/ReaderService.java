@@ -1,5 +1,6 @@
 package com.b2g.readerservice.service;
 
+import com.b2g.commons.SubscriptionType;
 import com.b2g.commons.UserRegistrationMessage;
 import com.b2g.readerservice.dto.ReaderForm;
 import com.b2g.readerservice.dto.ReaderPublicInfo;
@@ -11,6 +12,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import javax.management.InstanceAlreadyExistsException;
 import java.util.ArrayList;
@@ -77,5 +79,14 @@ public class ReaderService {
         Reader reader = readerRepository.findReaderById(userId);
         reader.setDescription(newDescription);
         readerRepository.save(reader);
+    }
+
+    public SubscriptionType getReaderSubscription(UUID readerId) throws Exception {
+
+        Reader r= readerRepository.findReaderById(readerId);
+        if(r==null) {
+            throw new Exception("Reader "+ readerId +" not found ");
+        }
+        return r.getSubscription();
     }
 }

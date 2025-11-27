@@ -2,7 +2,7 @@ type: http_request
 model: http_request
 id: rq_t93SLSjBCs
 createdAt: 2025-09-19T13:16:30.780442800
-updatedAt: 2025-11-19T22:30:06.953096600
+updatedAt: 2025-11-26T23:50:21.058315100
 workspaceId: wk_94bVhSAcpy
 folderId: fl_gQ2VqcuSam
 authentication: {}
@@ -14,7 +14,7 @@ headers: []
 method: GET
 name: Get Book
 sortPriority: 2500.0
-url: http://localhost:8091/books/fd2808f6-599c-4353-b98f-c09e417471ad
+url: http://localhost:8091/books/05f13ced-cfbc-4bf5-83f6-f243ae633bfc
 urlParameters:
 - enabled: true
   name: ''

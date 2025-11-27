@@ -8,6 +8,7 @@ import com.b2g.catalogservice.repository.BookFormatRepository;
 import com.b2g.catalogservice.repository.RentalOptionRepository;
 import com.b2g.commons.BookSummaryDTO;
 import com.b2g.commons.CategoryDTO;
+import com.b2g.commons.RentalOptionCreateDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.MessageProperties;
@@ -17,7 +18,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

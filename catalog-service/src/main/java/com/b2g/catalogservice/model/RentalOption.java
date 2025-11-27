@@ -17,7 +17,7 @@ import java.util.UUID;
 public class RentalOption {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+//    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     // Link back to the format this option applies to

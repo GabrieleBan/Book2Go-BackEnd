@@ -24,5 +24,5 @@ public class PersonalLibraryBookItem {
     private UUID userId;
     private Date expirationDate;
     @Enumerated(EnumType.STRING)
-    private ItemState state;
+    private BookOwnershipState state;
 }

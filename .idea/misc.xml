@@ -15,6 +15,7 @@
         <option value="$PROJECT_DIR$/reader-service/pom.xml" />
         <option value="$PROJECT_DIR$/bookcontent-service/pom.xml" />
         <option value="$PROJECT_DIR$/shared/pom.xml" />
+        <option value="$PROJECT_DIR$/rental-service/pom.xml" />
       </list>
     </option>
   </component>

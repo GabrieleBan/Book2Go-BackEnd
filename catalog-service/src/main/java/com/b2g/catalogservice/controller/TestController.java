@@ -2,14 +2,13 @@ package com.b2g.catalogservice.controller;
 
 import com.b2g.catalogservice.dto.BookCreateRequestDTO;
 import com.b2g.catalogservice.dto.BookFormatCreateDTO;
-import com.b2g.catalogservice.dto.RentalOptionCreateDTO;
+import com.b2g.commons.RentalOptionCreateDTO;
 import com.b2g.catalogservice.model.Category;
 import com.b2g.catalogservice.repository.CategoryRepository;
 import com.b2g.catalogservice.service.BookService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

@@ -1,5 +1,6 @@
 package com.b2g.readerservice.controller;
 
+import com.b2g.commons.SubscriptionType;
 import com.b2g.readerservice.dto.ReaderForm;
 import com.b2g.readerservice.dto.ReaderPublicInfo;
 import com.b2g.readerservice.dto.ReaderSummary;
@@ -9,6 +10,7 @@ import com.b2g.readerservice.service.remoteJwtService;
 import io.jsonwebtoken.Claims;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -20,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping("/readers")
 @RequiredArgsConstructor
@@ -107,6 +110,18 @@ public class ReaderController {
         return ResponseEntity.ok(new_description);
 
 
+    }
+
+    @GetMapping("/{readerId}/check/subscription")
+    public ResponseEntity<?> getReaderSubscriptionType(@PathVariable UUID readerId) {
+        try {
+            SubscriptionType subscriptionType=readerService.getReaderSubscription(readerId);
+            return ResponseEntity.ok(subscriptionType);
+        }catch (Exception e)
+        {
+            log.error("Error getting subscription type for reader with id {}",readerId,e);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
 

@@ -1,5 +1,6 @@
 package com.b2g.catalogservice.dto;
 
+import com.b2g.commons.RentalOptionCreateDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;

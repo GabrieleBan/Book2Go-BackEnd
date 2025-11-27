@@ -1,5 +1,5 @@
 package com.b2g.readerservice.model;
-
+import com.b2g.commons.SubscriptionType;
 import jakarta.persistence.*;
 import lombok.*;
 

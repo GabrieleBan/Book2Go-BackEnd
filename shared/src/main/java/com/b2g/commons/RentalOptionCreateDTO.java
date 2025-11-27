@@ -1,4 +1,4 @@
-package com.b2g.catalogservice.dto;
+package com.b2g.commons;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
