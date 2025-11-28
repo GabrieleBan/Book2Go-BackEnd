@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 public class UserRegistrationListener {
 
     private final JavaMailSender mailSender;
+    private final NotificationService notificationService;
 
     @Value("${app.confirmation.base-url}")
     private String confirmationBaseUrl;
@@ -22,26 +23,9 @@ public class UserRegistrationListener {
     @RabbitListener(queues = "${app.rabbitmq.queue.user-signup}")
     public void handleUserRegistration(UserRegistrationMessage message) {
         log.info("Ricevuto messaggio di registrazione utente: {}", message);
-        sendConfirmationEmail(message);
+        notificationService.sendConfirmationEmail(message);
     }
 
-    private void sendConfirmationEmail(UserRegistrationMessage message) {
-        String subject = "Conferma la tua registrazione";
-        String confirmationLink = confirmationBaseUrl + "/auth/confirm/" + message.getUuid();
-        String text = String.format("Ciao %s,\n\nGrazie per la registrazione! Conferma la tua email cliccando sul link: %s\n\nSe non hai richiesto la registrazione, ignora questa email.",
-                message.getUsername(), confirmationLink);
 
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(message.getEmail());
-        mailMessage.setSubject(subject);
-        mailMessage.setText(text);
-
-        try {
-            mailSender.send(mailMessage);
-            log.info("Email di conferma inviata a {}", message.getEmail());
-        } catch (Exception e) {
-            log.error("Errore nell'invio della email di conferma a {}: {}", message.getEmail(), e.getMessage());
-        }
-    }
 }
 

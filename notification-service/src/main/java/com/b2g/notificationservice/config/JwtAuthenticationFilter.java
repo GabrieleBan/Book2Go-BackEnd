@@ -1,6 +1,6 @@
 package com.b2g.notificationservice.config;
 
-import com.b2g.notificationservice.service.JwtService;
+import com.b2g.notificationservice.service.remoteJwtService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -15,12 +15,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtService jwtService;
+    private final remoteJwtService remoteJwtService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -46,16 +47,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         try {
-            Claims claims = jwtService.validateToken(jwt);
+            Claims claims = remoteJwtService.remoteValidateToken(jwt);
             String userId = claims.getSubject();
+//            System.out.println(userId);
+//            System.out.println(claims);
             if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UsernamePasswordAuthenticationToken authToken =
-                        new UsernamePasswordAuthenticationToken(userId, null, Collections.emptyList());
+                        new UsernamePasswordAuthenticationToken(claims, null, Collections.emptyList());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            String errorJson = String.format("{\"error\": \"%s\"}", e.getMessage().replace("\"", "'"));
+            response.getWriter().write(errorJson);
+            response.getWriter().flush();
             return;
         }
 
@@ -65,6 +72,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
-        return !path.startsWith("/test"); // filtra solo /test
+        List<String> publicPaths = List.of(
+                "/notifications/send"
+        );
+        return publicPaths.contains(path);// non  filtra i path pubblic
     }
+
 }

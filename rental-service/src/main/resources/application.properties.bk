@@ -1,0 +1,31 @@
+spring.application.name=catalog-service
+
+# Server Configuration
+server.port=8091
+
+# Database Configuration
+spring.datasource.url=jdbc:postgresql://localhost:5432/catalog_db
+spring.datasource.username=catalog_user
+spring.datasource.password=catalog_password
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+# JPA Configuration
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.properties.hibernate.format_sql=true
+
+# JWT Configuration
+jwt.keys.directory=./keys
+jwt.expiration.access-token=900000
+jwt.issuer=booktogo-auth-service
+jwt.audience=booktogo-services
+
+# Logging
+logging.level.com.b2g.catalogservice=DEBUG
+logging.level.org.springframework.security=DEBUG
+
+# OpenAPI Documentation
+springdoc.api-docs.path=/v3/api-docs
+springdoc.swagger-ui.path=/swagger-ui.html
+springdoc.swagger-ui.enabled=true
