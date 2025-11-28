@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -17,25 +18,27 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class RentalBookFormat {
+
     @Id
     private UUID formatId;
 
-    // The link back to the parent Book
     @Column(name = "book_id", nullable = false)
     private UUID bookId;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private FormatType formatType; // Enum: PHYSICAL, EBOOK, AUDIOBOOK
+    private FormatType formatType;
 
-    // -- NEW RELATIONSHIP ADDED --
-    @OneToMany(mappedBy = "bookFormat", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<RentalOption> rentalOptions;
+    @ManyToMany
+    @JoinTable(
+            name = "format_rental_options",
+            joinColumns = @JoinColumn(name = "format_id"),
+            inverseJoinColumns = @JoinColumn(name = "rental_option_id")
+    )
+    private Set<RentalOption> rentalOptions = new HashSet<>();
 
-    private Integer stockQuantity; // For PHYSICAL books
+    private Integer stockQuantity;
 
     @Column(nullable = false)
     private boolean isAvailableOnSubscription;
-//    @Version
-//    private Long version;
 }

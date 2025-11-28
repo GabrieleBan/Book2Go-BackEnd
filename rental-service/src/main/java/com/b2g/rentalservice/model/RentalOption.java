@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -21,16 +23,15 @@ public class RentalOption {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @NotNull
-    @Column(name = "book_format_id",nullable = false)
-    private UUID bookFormat;
-
     @Column(nullable = false)
-    private Integer durationDays; // e.g., 7, 14, 30
+    private Integer durationDays;
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
-    // You could add a description like "Standard Rental", "Extended Access"
     private String description;
+//
+//    @ManyToMany(mappedBy = "rentalOptions")
+//    @Builder.Default
+//    private Set<RentalBookFormat> formats = new HashSet<>();
 }

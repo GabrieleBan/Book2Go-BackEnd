@@ -14,6 +14,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.b2g.rentalservice.service.remoteJwtService;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -71,12 +72,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
 
-//        List<String> privatePaths = List.of(
-//                "/readers/me/**"
-//        );
-//        boolean b = privatePaths.stream().noneMatch(privatePath -> pathMatches(privatePath, path));
-//        System.out.println(b);
-        return true;
+        List<String> publicPaths = List.of(
+                "/rental/format/**"
+        );
+        System.out.println(path);
+        boolean b = publicPaths.stream().anyMatch(publicPath -> pathMatches(publicPath, path));
+        System.out.println(b);
+        return b;
     }
 
 

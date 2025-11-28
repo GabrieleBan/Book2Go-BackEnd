@@ -1,7 +1,11 @@
 package com.b2g.rentalservice.service;
 
+import ch.qos.logback.core.joran.sanity.Pair;
+import com.b2g.commons.LendRequest;
 import com.b2g.commons.RentalFormatCreationDTO;
 import com.b2g.commons.RentalOptionCreateDTO;
+import com.b2g.commons.SubscriptionType;
+import com.b2g.rentalservice.dto.FormatOptionLink;
 import com.b2g.rentalservice.dto.RetrieveFormatsOptionsDTO;
 import com.b2g.rentalservice.model.*;
 
@@ -16,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -68,37 +73,36 @@ public class RentalService {
             return new HashSet<>();
     }
 
+    @Transactional
     public RentalOption addOrCreateOptionTo(UUID formatId, @Valid RentalOptionCreateDTO optionDTO) throws Exception {
-        Optional<RentalBookFormat> format= rentalBookFormatRepository.findById(formatId);
-        if (format.isPresent()) {
-            RentalBookFormat rentalBookFormat = format.get();
-            RentalOption option= getOrCreateNewRentalOption(optionDTO,formatId);
+        RentalBookFormat format = rentalBookFormatRepository.findById(formatId)
+                .orElseThrow(() -> new Exception("Format not found in Rental System"));
 
-            rentalBookFormat.getRentalOptions().add(option);
-            rentalBookFormatRepository.save(rentalBookFormat);
-            return option;
-        }
-        else {
-            throw new Exception("Format not found in Rental System");
-        }
+        RentalOption option = getOrCreateNewRentalOption(optionDTO);
+
+        format.getRentalOptions().add(option);
+
+        // Salva dal lato "owner" della relazione
+        rentalBookFormatRepository.save(format);
+        return option;
     }
 
-    private RentalOption getOrCreateNewRentalOption(@Valid RentalOptionCreateDTO optionDTO, UUID rentalBookFormat) {
+    private RentalOption getOrCreateNewRentalOption(@Valid RentalOptionCreateDTO optionDTO) {
         Optional<RentalOption> option=rentalOptionRepository.findByDurationDaysAndPriceAndDescription(optionDTO.durationDays(),optionDTO.price(),optionDTO.description());
         if (option.isPresent()) {
             RentalOption rentalOption = option.get();
-            log.info("RentalOption created: " +  rentalOption);
+            log.info("RentalOption found: " +  rentalOption);
             return rentalOption;
         }
         else {
 
             RentalOption newOption=RentalOption.builder()
-                    .bookFormat(rentalBookFormat)
                     .price(optionDTO.price())
                     .description(optionDTO.description())
-                    .durationDays(optionDTO.durationDays()).build();
+                    .durationDays(optionDTO.durationDays())
+                    .build();
             newOption= rentalOptionRepository.save(newOption);
-            log.info("RentalOption saved: " + newOption);
+            log.info("RentalOption created: " + newOption);
             return newOption;
         }
     }
@@ -117,5 +121,45 @@ public class RentalService {
         else throw new Exception("Format not found in Rental System");
 
 
+    }
+
+    public void createNewlend(LendRequest request, UUID userId) throws Exception {
+        SubscriptionType type = checkUserSubscriprion(userId);
+        if(request.getPaymentmethod()==null && type == SubscriptionType.UNSUBSCRIBED)
+            throw new Exception("Must be subscribed to get a lend without paying");
+        FormatOptionLink formatAndOption= findOptionValidForFormat(request.getOptionId(),request.getFormatid());
+        if(formatAndOption==null)
+            throw new Exception("Rental Option does not exist for this format or format does not exist");
+        RentalBookFormat bookFormat=formatAndOption.format();
+        RentalOption option=formatAndOption.option();
+        FormatType requestedFormat= bookFormat.getFormatType();
+        if (request.getShippingaddress() == null &&
+                requestedFormat != FormatType.EBOOK &&
+                requestedFormat != FormatType.AUDIOBOOK) {
+            throw new Exception("Shipping address required for physical books");
+        }
+        reserveRequestedFormat(requestedFormat,option);
+    }
+
+    private void reserveRequestedFormat(FormatType requestedFormat, RentalOption option) {
+    }
+
+    private FormatOptionLink findOptionValidForFormat(UUID optionId, UUID formatId) {
+        RentalBookFormat format = rentalBookFormatRepository.findById(formatId)
+                .orElse(null);
+        if (format == null) return null;
+        RentalOption option = rentalOptionRepository.findById(optionId)
+                .orElse(null);
+        if (option == null) return null;
+        boolean present = format.getRentalOptions().stream()
+                .anyMatch(o -> o.getId().equals(optionId));
+        if (!present)
+            return null;
+        return new FormatOptionLink(format, option);
+    }
+
+
+    private SubscriptionType checkUserSubscriprion(UUID userId) {
+        return SubscriptionType.UNSUBSCRIBED;
     }
 }
