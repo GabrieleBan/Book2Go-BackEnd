@@ -4,7 +4,7 @@ import com.b2g.authservice.dto.LoginRequest;
 import com.b2g.authservice.dto.RefreshRequest;
 import com.b2g.authservice.dto.SignupRequest;
 import com.b2g.authservice.dto.TokenResponse;
-import com.b2g.authservice.service.AuthService;
+import com.b2g.authservice.service.AuthApplicationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -31,7 +31,7 @@ GET /.well-known/jwks.json → expose public keys for JWT validation (if using a
 @CrossOrigin("http://localhost:5173/")
 @RequiredArgsConstructor
 public class AuthController {
-    private final AuthService authService;
+    private final AuthApplicationService authService;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody SignupRequest request) {
