@@ -116,8 +116,8 @@ public interface BookRepository  extends Neo4jRepository<Book, String> {
 //        OPTIONAL MATCH (b)-[:WRITTEN_BY]->(a:Writer)
 //        OPTIONAL MATCH (b)-[:PUBLISHED_BY]->(p:Publisher)
 //        OPTIONAL MATCH (b)-[:Tag]->(tags:Tag)
-//        WITH b, collect(DISTINCT a) AS authors, collect(DISTINCT tags) AS tags, p AS publisher, count(DISTINCT t) AS matchedTags
-//        RETURN b { .id, .title, authors: authors, publisher: publisher, tags: tags }, matchedTags
+//        WITH b, collect(DISTINCT a) AS author, collect(DISTINCT tags) AS tags, p AS publisher, count(DISTINCT t) AS matchedTags
+//        RETURN b { .id, .title, author: author, publisher: publisher, tags: tags }, matchedTags
 //        ORDER BY matchedTags DESC, b.title ASC
 //        """,
 //        countQuery = """
@@ -139,7 +139,7 @@ public interface BookRepository  extends Neo4jRepository<Book, String> {
 //        OPTIONAL MATCH (b)-[:WRITTEN_BY]->(a:Writer)
 //        OPTIONAL MATCH (b)-[:PUBLISHED_BY]->(p:Publisher)
 //        OPTIONAL MATCH (b)-[:Tag]->(tags:Tag)
-//        RETURN b { .id, .title, authors: collect(DISTINCT a), publisher: p, tags: collect(DISTINCT tags) }
+//        RETURN b { .id, .title, author: collect(DISTINCT a), publisher: p, tags: collect(DISTINCT tags) }
 //        """,
 //        countQuery = """
 //        MATCH (b:Book)-[:Tag]->(t:Tag)
@@ -166,7 +166,7 @@ public interface BookRepository  extends Neo4jRepository<Book, String> {
 //        OPTIONAL MATCH (c)-[:PUBLISHED_BY]->(p:Publisher)
 //        OPTIONAL MATCH (c)-[:Tag]->(tags:Tag)
 //        OPTIONAL MATCH (c)<-[:REVIEWS]-(r:Reader)
-//        RETURN c { .id, .title, authors: collect(DISTINCT a), publisher: p, tags: collect(DISTINCT tags) }, count(r) AS reviewCount
+//        RETURN c { .id, .title, author: collect(DISTINCT a), publisher: p, tags: collect(DISTINCT tags) }, count(r) AS reviewCount
 //        ORDER BY reviewCount DESC
 //        """,
 //        countQuery = """
@@ -189,7 +189,7 @@ public interface BookRepository  extends Neo4jRepository<Book, String> {
 //        OPTIONAL MATCH (rec)-[:WRITTEN_BY]->(a:Writer)
 //        OPTIONAL MATCH (rec)-[:PUBLISHED_BY]->(p:Publisher)
 //        OPTIONAL MATCH (rec)-[:Tag]->(tags:Tag)
-//        RETURN rec { .id, .title, authors: collect(DISTINCT a), publisher: p, tags: collect(DISTINCT tags) }, count(other) AS score
+//        RETURN rec { .id, .title, author: collect(DISTINCT a), publisher: p, tags: collect(DISTINCT tags) }, count(other) AS score
 //        ORDER BY score DESC
 //        """,
 //        countQuery = """

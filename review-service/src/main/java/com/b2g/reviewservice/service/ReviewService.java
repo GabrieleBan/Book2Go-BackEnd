@@ -1,24 +1,21 @@
 package com.b2g.reviewservice.service;
 
+import com.b2g.commons.ReviewConfirmationDTO;
 import com.b2g.reviewservice.dto.RequestCreateReviewDTO;
-import com.b2g.reviewservice.dto.ReviewConfirmationDTO;
+
 import com.b2g.reviewservice.dto.ReviewDTO;
 import com.b2g.reviewservice.model.Review;
 import com.b2g.reviewservice.repository.ReviewRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
-import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -57,8 +54,8 @@ public class ReviewService {
                     .title(reviewDTO.title())
                     .postedDate(new Date(System.currentTimeMillis())) // data attuale
                     .build();
-            System.out.println(review);
-            reviewRepository.save(review);
+            log.info("created {}",review);
+            review=reviewRepository.save(review);
             action = "requiresConfirmation";
         } else {
             // Aggiorna recensione esistente
@@ -68,48 +65,41 @@ public class ReviewService {
             existingReview.setPostedDate(new Date(System.currentTimeMillis())); // aggiorna la data , ha senso?
             reviewRepository.save(existingReview);
             review = existingReview;
-            action = "updated";
-
-
+            if(existingReview.isCanBeShown())
+                action = "updated";
+            else
+                action = "requiresConfirmation";
         }
         notifyReviewAction(review,action);
 
         return true;
     }
-
+    @Value("${app.rabbitmq.routing-key.review.authorization.requested}")
+    private String reviewAuthorizationRequested;
     private void notifyReviewAction(Review review, String action) {
         String routingKey = switch (action) {
             case "created" -> "review.created";
             case "updated" -> "review.updated";
             case "deleted" -> "review.deleted";
-            case "requiresConfirmation" -> "review.awaitsConfirmation";
+            case "requiresConfirmation" -> reviewAuthorizationRequested;
             default -> throw new IllegalStateException("Unexpected value: " + action);
         };
-        if(!routingKey.equals("review.awaitsConfirmation")) {
+        if(!routingKey.equals(reviewAuthorizationRequested)) {
             ReviewDTO reviewDTO = Review.toReviewDTO(review);
+            log.info("notifying review modification {}",review);
             rabbitTemplate.convertAndSend(topicExchange, routingKey, reviewDTO);
         }
         else{
             ReviewConfirmationDTO reviewAwaiting = Review.toReviewConfirmationDTO(review);
+            log.info("review awaiting {}",reviewAwaiting);
             rabbitTemplate.convertAndSend(topicExchange, routingKey, reviewAwaiting);
         }
 
     }
 
-    @RabbitListener(queues = "review.authorization.queue")
-    public void handleReviewEvents(ReviewConfirmationDTO confirmedReview, @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey) {
 
-        System.out.println("Routing key usata: {}"+ routingKey);
-        switch (routingKey) {
-            case "review.created" -> {
-                System.out.println("Ricevuto messaggio di conferma review: {}"+ confirmedReview);
-                confirmReview(confirmedReview);
-            }
-        }
 
-    }
-
-    private void confirmReview(ReviewConfirmationDTO confirmedReview) {
+    protected void confirmReview(ReviewConfirmationDTO confirmedReview) {
         reviewRepository.findById(confirmedReview.getReviewId()).ifPresent(review -> {
             if (confirmedReview.isConfirmed()) {
                 review.setCanBeShown(true);

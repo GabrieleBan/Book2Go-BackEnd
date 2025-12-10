@@ -10,6 +10,6 @@ public record BookFormatDTO(
         BigDecimal purchasePrice,
         boolean isAvailableForPurchase,
         boolean isAvailableForRental,
-        boolean isAvailableOnSubscription,
-        List<RentalOptionDTO> rentalOptions
+        boolean isAvailableOnSubscription
+//        List<RentalOptionDTO> rentalOptions
 ) {}

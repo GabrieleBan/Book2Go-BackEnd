@@ -1,6 +1,7 @@
 package com.b2g.reviewservice.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.util.UUID;
@@ -8,7 +9,7 @@ import java.util.UUID;
 public record RequestCreateReviewDTO(
 
 
-        @NotBlank(message = "Title cannot be blank")
+        @NotNull(message = "BookId cannot be null")
         UUID bookId,
         float overallScore,
         @NotBlank(message = "Review cannot be blank")

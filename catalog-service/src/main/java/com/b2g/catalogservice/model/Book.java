@@ -35,7 +35,8 @@ public class Book {
     private String description;
 
     private String coverImageUrl;
-
+    @Column(nullable = false, columnDefinition = "FLOAT DEFAULT 0")
+    private float rating =0;
     private String publisher;
 
     private LocalDate publicationDate;

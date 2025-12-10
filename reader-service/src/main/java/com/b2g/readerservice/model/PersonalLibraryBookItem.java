@@ -1,6 +1,7 @@
 package com.b2g.readerservice.model;
 
 
+import com.b2g.commons.FormatType;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -11,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Data
@@ -21,8 +23,10 @@ import java.util.UUID;
 public class PersonalLibraryBookItem {
     @EmbeddedId
     private PersonalLibraryBookItemId id;
-    private UUID userId;
-    private Date expirationDate;
+    @Enumerated(EnumType.STRING)
+    private FormatType formatType;
+    private LocalDate startDate;
+    private LocalDate expirationDate;
     @Enumerated(EnumType.STRING)
     private BookOwnershipState state;
 }

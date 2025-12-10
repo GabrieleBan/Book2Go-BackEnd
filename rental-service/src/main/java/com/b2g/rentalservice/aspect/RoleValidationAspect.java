@@ -1,5 +1,6 @@
 package com.b2g.rentalservice.aspect;
 
+import org.springframework.security.core.Authentication;
 import com.b2g.rentalservice.annotation.RequireRole;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,6 +12,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import com.b2g.rentalservice.service.remoteJwtService;
@@ -29,48 +31,30 @@ public class RoleValidationAspect {
     @Around("@annotation(requireRole)")
     public Object validateRole(ProceedingJoinPoint joinPoint, RequireRole requireRole) throws Throwable {
         try {
-            // Get the current HTTP request
-            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-            HttpServletRequest request = attributes.getRequest();
-
-            // Extract JWT token from Authorization header
-            String authHeader = request.getHeader("Authorization");
-            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                log.warn("Missing or invalid Authorization header for role-protected endpoint");
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth == null || !auth.isAuthenticated()) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body("Missing or invalid Authorization header");
+                        .body("Invalid or missing authentication");
             }
 
-            String jwt = authHeader.substring(7);
-            if (jwt.trim().isEmpty()) {
-                log.warn("Empty JWT token for role-protected endpoint");
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body("Invalid token");
-            }
+            // Principal contiene le Claims messe dal tuo filtro
+            Claims claims = (Claims) auth.getPrincipal();
 
-            // Validate JWT and extract claims
-            Claims claims = remoteJwtService.remoteValidateToken(jwt);
-
-            // Extract roles from JWT claims
+            // Qui non chiami più remote
             List<String> userRoles = remoteJwtService.extractRoles(claims);
 
-            // Check if user has required roles
             String[] requiredRoles = requireRole.value();
-            boolean hasRequiredRole = checkUserRoles(userRoles, requiredRoles, requireRole.requireAll());
+            boolean hasRequiredRole =
+                    checkUserRoles(userRoles, requiredRoles, requireRole.requireAll());
 
             if (!hasRequiredRole) {
-                log.warn("User with roles {} does not have required roles {} for endpoint {}",
-                        userRoles, Arrays.toString(requiredRoles), request.getRequestURI());
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body("Insufficient privileges. Required role(s): " + Arrays.toString(requiredRoles));
+                        .body("Insufficient privileges. Required: " + Arrays.toString(requiredRoles));
             }
 
-            // User has required role(s), proceed with method execution
-            log.debug("User with roles {} authorized for endpoint {}", userRoles, request.getRequestURI());
             return joinPoint.proceed();
-
-        } catch (Exception e) {
-            log.error("Error during role validation: {}", e.getMessage());
+        }
+        catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body("Token validation failed: " + e.getMessage());
         }

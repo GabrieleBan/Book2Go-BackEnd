@@ -22,6 +22,13 @@ public class RabbitMQConfig {
     private String userConfirmedRoutingKey;
     @Value("${app.rabbitmq.service.prefix}")
     private String servicePrefix;
+    @Value("${app.rabbitmq.binding-key.lend.created}")
+    private String lendCreatedBindingKey;
+    @Value("${app.rabbitmq.binding-key.lend.ended}")
+    private String lendEndedBindingKey;
+    @Value("${app.rabbitmq.binding-key.review.authrequested}")
+    private String reviewAuthRequestedBindingKey;
+
 
 
 
@@ -42,6 +49,38 @@ public class RabbitMQConfig {
         return BindingBuilder.bind(userQueue)
                 .to(b2gExchange)
                 .with(userConfirmedRoutingKey);
+    }
+
+    @Bean
+    public Queue lendQueue() {
+        String queueName=servicePrefix+ ".lend.queue";
+        return new Queue(queueName, true, false, false);
+    }
+    @Bean
+    public Binding lendCreatedBinding(TopicExchange b2gExchange, Queue lendQueue) {
+        return BindingBuilder.bind(lendQueue)
+                .to(b2gExchange)
+                .with(lendCreatedBindingKey);
+    }
+    @Bean
+    public Binding lendExpiredBinding(TopicExchange b2gExchange, Queue lendQueue) {
+        return BindingBuilder.bind(lendQueue)
+                .to(b2gExchange)
+                .with(lendEndedBindingKey);
+    }
+
+
+    @Bean
+    public Queue reviewAuthQueue() {
+//        per ottenere i dati degli utenti confermati
+        String queueName=servicePrefix+ ".review.authorization.queue";
+        return new Queue(queueName, true, false, false);
+    }
+    @Bean
+    public Binding reviewAuthorizationBinding(TopicExchange b2gExchange, Queue reviewAuthQueue) {
+        return BindingBuilder.bind(reviewAuthQueue)
+                .to(b2gExchange)
+                .with(reviewAuthRequestedBindingKey);
     }
 
 

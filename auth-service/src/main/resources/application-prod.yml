@@ -1,0 +1,84 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: auth-service
+
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            clientId: REDACTED
+            clientSecret: REDACTED
+            scope:
+              - user
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+          google:
+            clientId: REDACTED
+            clientSecret: REDACTED
+            scope:
+              - openid
+              - profile
+              - email
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/b2g_db
+    username: user
+    password: password
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  rabbitmq:
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    host: localhost # Per test locale fuori da Docker
+    port: 5672
+    username: guest
+    password: guest
+
+app:
+  rabbitmq:
+    exchange: b2g.topic.exchange
+#    queue:
+#      user-signup: user.signup
+    routing-key:
+      signup-ticket: rk.user.registration
+      user-confirmed: rk.user.confirmed
+
+services:
+  restaurant:
+    url: http://localhost:8091
+  accounting:
+    url: http://localhost:8092
+
+logging:
+  level:
+    root: INFO
+    com.b2g.authservice: DEBUG
+
+jwt:
+  keys:
+    # Directory where RSA key pairs will be stored/loaded from
+    # For development, using a local directory is fine
+    directory: ./dev-keys
+
+  # Token expiration settings (in milliseconds)
+  expiration:
+    access-token: 900000      # 15 minutes
+    refresh-token: 2592000000 # 30 days
+
+  # Optional: JWT issuer claim
+  issuer: "b2g-auth-service"
+
+  # Optional: JWT audience claim
+  audience: "b2g-microservices"

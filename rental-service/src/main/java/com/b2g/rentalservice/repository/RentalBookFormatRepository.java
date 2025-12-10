@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Repository
@@ -15,4 +16,8 @@ public interface RentalBookFormatRepository extends JpaRepository<RentalBookForm
 //    @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT r FROM RentalBookFormat r WHERE r.formatId = :formatId")
     RentalBookFormat lockFormat(@Param("formatId") UUID formatId);
+
+    List<RentalBookFormat> findByBookId(UUID bookId);
+
+    RentalBookFormat findByFormatId(UUID formatId);
 }

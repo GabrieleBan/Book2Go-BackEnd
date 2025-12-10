@@ -1,30 +1,45 @@
 package com.b2g.readerservice.service;
 
+import com.b2g.commons.LendingMessage;
+import com.b2g.commons.ReviewConfirmationDTO;
 import com.b2g.commons.SubscriptionType;
 import com.b2g.commons.UserRegistrationMessage;
 import com.b2g.readerservice.dto.ReaderForm;
 import com.b2g.readerservice.dto.ReaderPublicInfo;
 import com.b2g.readerservice.dto.ReaderSummary;
+import com.b2g.readerservice.model.BookOwnershipState;
+import com.b2g.readerservice.model.PersonalLibraryBookItem;
+import com.b2g.readerservice.model.PersonalLibraryBookItemId;
 import com.b2g.readerservice.repository.ReaderLibraryRepository;
 import com.b2g.readerservice.repository.ReaderRepository;
 import com.b2g.readerservice.model.Reader;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.MessageProperties;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import javax.management.InstanceAlreadyExistsException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.time.LocalDate;
+import java.util.*;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReaderService {
     private final ReaderRepository readerRepository;
     private final ReaderLibraryRepository readerLibraryRepository;
+    private final RabbitTemplate safeRabbitTemplate;
+    @Value("${app.rabbitmq.routing-key.review.authorized}")
+    private  String authorizedReviewRoutingKey;
+    @Value("${app.rabbitmq.routing-key.review.rejected}")
+    private  String rejectedReviewRoutingKey;
+    @Value("${app.rabbitmq.exchange}")
+    private  String exchangeName;
+
 
     public List<ReaderSummary> retrieveReadersSummary(Set<UUID> readersIds) {
         List<Reader> readersList = readerRepository.findReadersById(readersIds);
@@ -89,4 +104,154 @@ public class ReaderService {
         }
         return r.getSubscription();
     }
+
+    public void addLendToLibrary(LendingMessage message) {
+        UUID userId = message.getUserId();
+        UUID archetypeBookId = message.getBookId();
+        UUID formatId = message.getFormatId();
+
+        PersonalLibraryBookItemId itemId = new PersonalLibraryBookItemId();
+        itemId.setUserId(userId);
+        itemId.setArchetypeBookId(archetypeBookId);
+        itemId.setFormatId(formatId);
+
+        Optional<PersonalLibraryBookItem> optionalItem =
+                readerLibraryRepository.findById(itemId);
+
+        PersonalLibraryBookItem item;
+
+        if (optionalItem.isPresent()) {
+            // Aggiorna l’item esistente
+            item = optionalItem.get();
+            item.setStartDate(LocalDate.now());
+            item.setExpirationDate(message.getEndDate());
+            item.setState(BookOwnershipState.Ongoing); // riflette prestito in corso
+        } else {
+            // Crea nuovo item
+            item = new PersonalLibraryBookItem();
+            item.setId(itemId);
+            item.setFormatType(message.getFormatType());
+            item.setStartDate(LocalDate.now());
+            item.setExpirationDate(message.getEndDate());
+            item.setState(BookOwnershipState.Ongoing); // stato iniziale per prestito attivo
+        }
+
+        readerLibraryRepository.save(item);
+    }
+    public void markLendAsExpired(LendingMessage message) {
+        UUID userId = message.getUserId();
+        UUID archetypeBookId = message.getBookId();
+        UUID formatId = message.getFormatId();
+
+        PersonalLibraryBookItemId itemId = new PersonalLibraryBookItemId();
+        itemId.setUserId(userId);
+        itemId.setArchetypeBookId(archetypeBookId);
+        itemId.setFormatId(formatId);
+
+        Optional<PersonalLibraryBookItem> optionalItem = readerLibraryRepository.findById(itemId);
+
+        if (optionalItem.isPresent()) {
+            PersonalLibraryBookItem item = optionalItem.get();
+            item.setState(BookOwnershipState.Late); // segna il prestito come scaduto
+            readerLibraryRepository.save(item);
+            log.info("Lend scaduto aggiornato per utente {} e libro {}", userId, archetypeBookId);
+        } else {
+            log.warn("Nessun PersonalLibraryBookItem trovato per utente {} e libro {} da marcare come scaduto", userId, archetypeBookId);
+        }
+    }
+
+
+    public void checkUserReviewAuthorization(ReviewConfirmationDTO message) {
+
+
+        UUID userId = message.getUserId();
+        UUID archetypeBookId = message.getBookId();
+
+        if (userId==null || archetypeBookId==null) {
+            return;
+        }
+
+        Optional<PersonalLibraryBookItem> lastItemOpt =
+                readerLibraryRepository.findTopByIdUserIdAndIdArchetypeBookIdOrderByExpirationDateDesc(
+                        userId, archetypeBookId
+                );
+
+        if (lastItemOpt.isEmpty()) {
+            log.info("Utente {} non ha mai ottenuto il libro {}", userId, archetypeBookId);
+            denyReview(message);
+            return;
+        }
+
+        PersonalLibraryBookItem lastItem = lastItemOpt.get();
+
+        LocalDate startDate = lastItem.getStartDate();
+
+        if (startDate == null) {
+            log.warn("StartDate mancante per item {}, rifiuto la review", lastItem.getId());
+            denyReview(message);
+            return;
+        }
+
+        LocalDate today = LocalDate.now();
+        LocalDate earliestAllowedReviewDate = startDate.plusDays(1);
+
+        if (today.isBefore(earliestAllowedReviewDate)) {
+
+            log.info("Review NON autorizzata: serve almeno 1 giorno di possesso. Start: {}, Today: {}",
+                    startDate, today);
+            denyReview(message);
+        } else {
+
+            log.info("Review autorizzata. Start: {}, Today: {}", startDate, today);
+            approveReview(message);
+        }
+    }
+
+    private void approveReview(ReviewConfirmationDTO message) {
+        message.setConfirmed(true);
+        sendReviewAuthorizationResult(message, authorizedReviewRoutingKey);
+    }
+
+    private void denyReview(ReviewConfirmationDTO message) {
+        message.setConfirmed(false);
+        sendReviewAuthorizationResult(message, rejectedReviewRoutingKey);
+
+    }
+
+    private void sendReviewAuthorizationResult(ReviewConfirmationDTO message, String routingKey) {
+
+        safeRabbitTemplate.invoke(ops -> {
+            ops.execute(channel -> {
+
+                // Convert DTO → byte[]
+                byte[] body = safeRabbitTemplate.getMessageConverter()
+                        .toMessage(message, new MessageProperties())
+                        .getBody();
+
+                // mandatory = true, così se non c’è binding → errore immediato
+                channel.basicPublish(
+                        exchangeName,
+                        routingKey,
+                        true,   // mandatory
+                        null,   // message props (handled by converter)
+                        body
+                );
+
+                return null;
+            });
+
+            // attende conferma sincrona del broker
+            ops.waitForConfirmsOrDie(3000);
+
+            return null;
+        });
+
+        log.info("Inviato esito review '{}' per user {} sulla routing key '{}'",
+                message.isConfirmed() ? "APPROVATA" : "NEGATA",
+                message.getUserId(),
+                routingKey
+        );
+    }
+
+
 }

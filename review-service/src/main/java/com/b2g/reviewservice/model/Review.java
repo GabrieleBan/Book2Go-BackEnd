@@ -1,10 +1,9 @@
 package com.b2g.reviewservice.model;
 
-import com.b2g.reviewservice.dto.ReviewConfirmationDTO;
+import com.b2g.commons.ReviewConfirmationDTO;
 import com.b2g.reviewservice.dto.ReviewDTO;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.sql.Date;
 import java.util.UUID;
 

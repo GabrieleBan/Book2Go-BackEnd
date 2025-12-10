@@ -2,16 +2,17 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/auth-service/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/bookcontent-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/catalog-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mocked-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/notification-service/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/order-service/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/payment-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/reader-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/recommendation-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/rental-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/review-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/shared/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/shared/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/topic-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/trash/order-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/trash/payment-service/src/main/java" charset="UTF-8" />
   </component>
 </project>

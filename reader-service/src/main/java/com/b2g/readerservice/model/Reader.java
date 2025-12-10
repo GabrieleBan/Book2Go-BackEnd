@@ -30,6 +30,7 @@ public class Reader {
     @Embedded
     private Address address;
     private String description;
+    private Integer readerPoints ;
     @PrePersist
     private void prePersist() {
         if (subscription == null) {

@@ -32,10 +32,11 @@ public class BookFormat {
     // Pricing
     @Column(precision = 10, scale = 2)
     private BigDecimal purchasePrice;
+    private float discountPercent;
 
-    // -- NEW RELATIONSHIP ADDED --
-    @OneToMany(mappedBy = "bookFormat", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RentalOption> rentalOptions;
+    // -- NEW RELATIONSHIP ADDED -- rimossi rental option dominio di rental
+//    @OneToMany(mappedBy = "bookFormat", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<RentalOption> rentalOptions;
 
     // Format-specific attributes
     private String filePath; // For EBOOK/AUDIOBOOK (e.g., path in a secure storage bucket)

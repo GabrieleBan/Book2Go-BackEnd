@@ -2,8 +2,7 @@ package com.b2g.rentalservice.config;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.amqp.core.Exchange;
-import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
@@ -16,14 +15,29 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
     @Value("${app.rabbitmq.exchange}")
     private String exchangeName;
+    @Value("${app.rabbitmq.queue.name}")
+    private String serviceQueuePrefix;
 
-//    @Value("${app.rabbitmq.routing-key.signup-ticket}")
-//    private String userRegisteredRoutingKey;
+    @Value("${app.rabbitmq.bindingkey.lend.ready}")
+    private String lendReadyAtLibraryKey;
 
 
     @Bean
     public Exchange b2gExchange() {
         return new TopicExchange(exchangeName, true, false);
+    }
+
+
+    @Bean
+    Queue inventoryQueue() {
+        return new Queue(serviceQueuePrefix+".inventory.arrivals", true);
+    }
+    @Bean
+    public Binding userCreatedBinding(Queue inventoryQueue, Exchange b2gExchange) {
+        return BindingBuilder.bind(inventoryQueue)
+                .to(b2gExchange)
+                .with(lendReadyAtLibraryKey)
+                .noargs();
     }
 
     @Bean

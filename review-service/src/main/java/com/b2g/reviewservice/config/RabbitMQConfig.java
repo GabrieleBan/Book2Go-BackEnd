@@ -20,11 +20,17 @@ public class RabbitMQConfig {
     @Value("${app.rabbitmq.exchange}")
     private String exchangeName;
 
-//    @Value("${app.rabbitmq.queue.name}")
-//    private String servicePrefix;
-//
-//    @Value("#{'${app.rabbitmq.routing-keys}'.split(',')}")
-//    private List<String> patternBindingKeys;
+    @Value("${app.rabbitmq.service.prefix}")
+    private String servicePrefix;
+
+    @Value("${app.rabbitmq.binding-key.review.authorized}")
+    private String reviewAuthorizedBindingKey;
+
+    @Value("${app.rabbitmq.binding-key.review.rejected}")
+    private String reviewRejectedBindingKey;
+
+//    @Value("${app.rabbitmq.routing-key.review.created}")
+//    private String reviewCreatedRoutingKey;
 
 
     @Bean
@@ -34,42 +40,23 @@ public class RabbitMQConfig {
 
 
     @Bean
-    public Queue bookQueue() {
-        return new Queue("review.book.queue", true, false, false);
-    }
-
-    @Bean
-    public Queue reviewQueue() {
+    public Queue reviewAuthorizationQueue() {
         return new Queue("review.authorization.queue", true, false, false);
     }
 
+
     @Bean
-    public Queue userQueue() {
-//        per confermare review valida
-        return new Queue("review.user.queue", true, false, false);
+    public Binding reviewConfirmedBinding(TopicExchange b2gExchange, Queue reviewAuthorizationQueue) {
+        return BindingBuilder.bind(reviewAuthorizationQueue)
+                .to(b2gExchange)
+                .with(reviewAuthorizedBindingKey);
     }
 
     @Bean
-    public Binding reviewBinding(TopicExchange b2gExchange, Queue reviewQueue) {
-        return BindingBuilder.bind(reviewQueue)
+    public Binding reviewRejectionBinding(TopicExchange b2gExchange, Queue reviewAuthorizationQueue) {
+        return BindingBuilder.bind(reviewAuthorizationQueue)
                 .to(b2gExchange)
-                .with("review.confirmed");
-    }
-
-
-
-    @Bean
-    public Binding bookBinding(TopicExchange b2gExchange, Queue bookQueue) {
-        return BindingBuilder.bind(bookQueue)
-                .to(b2gExchange)
-                .with("book.#");
-    }
-
-    @Bean
-    public Binding userBinding(TopicExchange b2gExchange, Queue userQueue) {
-        return BindingBuilder.bind(userQueue)
-                .to(b2gExchange)
-                .with("user.#");
+                .with(reviewRejectedBindingKey);
     }
 
 

@@ -7,9 +7,10 @@ import java.util.UUID;
 @Data
 public class LendRequest {
     @NotNull
-    private UUID formatid;
+    private UUID formatId;
+//    @NotNull
+//    private UUID optionId;
     @NotNull
-    private UUID optionId;
-    private ShippingAddress shippingaddress;
+    private UUID libraryId;
     private PaymentMethod paymentmethod;
 }

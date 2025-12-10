@@ -22,11 +22,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-@Slf4j
 @RestController
 @RequestMapping("/reviews")
-@RequiredArgsConstructor
 @CrossOrigin("http://localhost:5173/")
+@RequiredArgsConstructor
 public class ReviewController {
     private final remoteJwtService remoteJwtService;
     private final ReviewService reviewService;

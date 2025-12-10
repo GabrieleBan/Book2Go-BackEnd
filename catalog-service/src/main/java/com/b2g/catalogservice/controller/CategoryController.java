@@ -1,5 +1,6 @@
 package com.b2g.catalogservice.controller;
 
+import com.b2g.catalogservice.annotation.RequireRole;
 import com.b2g.catalogservice.dto.CategoryCreateRequestDTO;
 import com.b2g.catalogservice.model.Category;
 import com.b2g.catalogservice.repository.CategoryRepository;
@@ -29,7 +30,7 @@ public class CategoryController {
 
         return ResponseEntity.ok(categories);
     }
-
+    @RequireRole("ADMIN")
     @PostMapping({"", "/"})
     public ResponseEntity<Category> createCategory(@RequestBody @Valid CategoryCreateRequestDTO request) {
 

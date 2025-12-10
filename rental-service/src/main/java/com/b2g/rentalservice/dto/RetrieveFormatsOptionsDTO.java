@@ -1,6 +1,6 @@
 package com.b2g.rentalservice.dto;
 
-import com.b2g.rentalservice.model.FormatType;
+import com.b2g.commons.FormatType;
 import com.b2g.rentalservice.model.RentalOption;
 import lombok.Builder;
 import lombok.Data;

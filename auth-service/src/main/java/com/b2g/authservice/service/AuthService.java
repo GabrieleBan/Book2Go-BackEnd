@@ -6,10 +6,7 @@ import com.b2g.authservice.dto.TokenResponse;
 import com.b2g.authservice.exception.AccountNotEnabledException;
 import com.b2g.authservice.exception.InvalidCredentialsException;
 import com.b2g.authservice.exception.InvalidTokenException;
-import com.b2g.authservice.model.OAuthProvider;
-import com.b2g.authservice.model.RefreshToken;
-import com.b2g.authservice.model.User;
-import com.b2g.authservice.model.UserRole;
+import com.b2g.authservice.model.*;
 import com.b2g.authservice.repository.RefreshTokenRepository;
 import com.b2g.authservice.repository.UserRepository;
 import com.b2g.commons.UserRegistrationMessage;
@@ -35,10 +32,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -172,12 +166,21 @@ public class AuthService {
         return generateTokenResponse(user);
     }
 
-    public ResponseEntity<TokenResponse> refreshAccessToken(String refreshToken) {
-        RefreshToken token = validateRefreshToken(refreshToken);
-        User user = token.getUser();
+    @Transactional
+    public ResponseEntity<TokenResponse> refreshAccessToken(String rawRefreshToken) {
 
-        // Clean up old token and create new one
+        RefreshToken token = refreshTokenRepository.findByToken(rawRefreshToken)
+                .orElseThrow(() -> new InvalidTokenException(INVALID_REFRESH_TOKEN_ERROR));
+
+        if (token.isExpired()) {
+            refreshTokenRepository.delete(token);
+            throw new InvalidTokenException("Refresh token expired");
+        }
         refreshTokenRepository.delete(token);
+
+        User user = userRepository.findById(token.getUserId())
+                .orElseThrow(() -> new IllegalStateException("User not found"));
+
         return generateTokenResponse(user);
     }
 
@@ -199,10 +202,12 @@ public class AuthService {
         return User.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
-                .passwordHash(passwordEncoder.encode(request.getPassword()))
+                .credentials(new Credentials(passwordEncoder.encode(request.getPassword())))
+                .roles(Set.of(UserRole.READER))
                 .enabled(false)
                 .authProvider(OAuthProvider.NONE)
-                .role(UserRole.USER)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
                 .build();
     }
 
@@ -284,18 +289,20 @@ public class AuthService {
     }
 
     private User createNewOAuthUser(String email, String registrationId) {
+
         User user = User.builder()
                 .username(generateUsernameFromEmail(email))
                 .email(email)
-                .passwordHash(passwordEncoder.encode(UUID.randomUUID().toString()))
+                .credentials(new Credentials(passwordEncoder.encode(UUID.randomUUID().toString())))
+                .roles(Set.of(UserRole.READER))
                 .enabled(true)
                 .authProvider(getOAuthProvider(registrationId))
-                .role(UserRole.USER)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        user= userRepository.save(user);
+        user = userRepository.save(user);
+
         UserRegistrationMessage msg = UserRegistrationMessage.builder()
                 .username(user.getUsername())
                 .uuid(user.getId())
@@ -327,7 +334,7 @@ public class AuthService {
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new InvalidCredentialsException(INVALID_CREDENTIALS_ERROR));
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
+        if (!passwordEncoder.matches(request.getPassword(), user.getCredentials().getPasswordHash())) {
             throw new InvalidCredentialsException(INVALID_CREDENTIALS_ERROR);
         }
 
@@ -363,18 +370,19 @@ public class AuthService {
     }
 
     private String createAccessToken(User user) {
-        Map<String, Object> claims = Map.of(
-                "role", user.getRole().name(),
-                "username", user.getUsername(),
-                "userUUID", user.getId()
-        );
+
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("roles", user.getRoles().stream().map(Enum::name).toList());
+        claims.put("username", user.getUsername());
+        claims.put("userUUID", user.getId().toString());
+
         return jwtService.generateToken(user.getId().toString(), claims);
     }
 
     private RefreshToken createRefreshToken(User user) {
         RefreshToken refreshToken = RefreshToken.builder()
                 .token(UUID.randomUUID().toString())
-                .user(user)
+                .userId(user.getId())
                 .expiryDate(LocalDateTime.ofInstant(
                         Instant.ofEpochMilli(System.currentTimeMillis() + refreshTokenExpiration),
                         ZoneId.systemDefault()

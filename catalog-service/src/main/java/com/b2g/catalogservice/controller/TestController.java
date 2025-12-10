@@ -93,11 +93,8 @@ public class TestController {
                         40,
                         true,
                         true,
-                        false,
-                        List.of(
-                                new RentalOptionCreateDTO(7, BigDecimal.valueOf(3.50), "Noleggio settimanale"),
-                                new RentalOptionCreateDTO(30, BigDecimal.valueOf(8.99), "Noleggio mensile")
-                        )
+                        false
+
                 ),
                 new BookFormatCreateDTO(
                         "EBOOK",
@@ -105,10 +102,7 @@ public class TestController {
                         null,
                         true,
                         true,
-                        true,
-                        List.of(
-                                new RentalOptionCreateDTO(14, BigDecimal.valueOf(2.49), "Noleggio digitale 2 settimane")
-                        )
+                        true
                 ),
                 new BookFormatCreateDTO(
                         "AUDIOBOOK",
@@ -116,8 +110,7 @@ public class TestController {
                         null,
                         true,
                         false,
-                        true,
-                        Collections.emptyList()
+                        true
                 )
         );
 

@@ -20,12 +20,15 @@ public class RefreshToken {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "user_id", nullable = false)
+    private UUID userId;
 
     @Column(nullable = false, unique = true)
     private String token;
 
     private LocalDateTime expiryDate;
+
+    public boolean isExpired() {
+        return expiryDate != null && expiryDate.isBefore(LocalDateTime.now());
+    }
 }

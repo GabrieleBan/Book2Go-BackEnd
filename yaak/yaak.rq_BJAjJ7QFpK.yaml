@@ -2,16 +2,16 @@ type: http_request
 model: http_request
 id: rq_BJAjJ7QFpK
 createdAt: 2025-11-14T13:35:10.058026800
-updatedAt: 2025-11-24T21:47:52.969412700
+updatedAt: 2025-12-05T14:10:12.671350800
 workspaceId: wk_94bVhSAcpy
 folderId: fl_S3VUKLqvEu
 authentication:
-  token: eyJhbGciOiJSUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3QxIiwicm9sZSI6IkFETUlOIiwidXNlclVVSUQiOiI5YmZiN2M0Ni03ZGRkLTRhZWQtYTg5Zi0wN2E5YmJiYzEzY2MiLCJzdWIiOiI5YmZiN2M0Ni03ZGRkLTRhZWQtYTg5Zi0wN2E5YmJiYzEzY2MiLCJpYXQiOjE3NjQwMjA4NTQsImV4cCI6MTc2NDAyMTc1NCwiaXNzIjoiYjJnLWF1dGgtc2VydmljZSIsImF1ZCI6WyJiMmctbWljcm9zZXJ2aWNlcyJdfQ.VEZLJ0v9Frpq95fDUzeG_UKZRWsNsuA-ldqbwA59Hms02UoPuwbH7QEaD1XjsyQZ7qRNxF1Kb07RGBR36E-45tQvXDp7kFYnuouUnMKY_xqxzwpXcXVwujIsQICRgkt8s3qv8g-B1FsRlikztlGbPFgRslofVGYNM60pkGhIcJktIzHWoLOjSRJsSGVudYO8RMVkLdOwH6HxpBCRu7CI3d6YSrFHnHSgrjSFtG6m3wSrrYhNd8tlXFi5iT6Y0rxpmJlA9Bco7kq8ML7-ATG19VnU0yK1A8K8QVpIqybW4dvFNfml07tqLKI85jWCzvE43UR_Vaxp2cFTGpy-b6K2xQ
+  token: eyJhbGciOiJSUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluMSIsInJvbGUiOiJBRE1JTiIsInVzZXJVVUlEIjoiYTc2M2U4OGEtMzNkYS00Yjc5LWE2NjMtMzYzNmI1MmUxZThhIiwic3ViIjoiYTc2M2U4OGEtMzNkYS00Yjc5LWE2NjMtMzYzNmI1MmUxZThhIiwiaWF0IjoxNzY0OTQzODAwLCJleHAiOjE3NjQ5NDQ3MDAsImlzcyI6ImIyZy1hdXRoLXNlcnZpY2UiLCJhdWQiOlsiYjJnLW1pY3Jvc2VydmljZXMiXX0.LL-QBQIz9eytDhsmzn-c4u6ET9yVjgIG17IoGrbfY6bw0lTgJYOmd7m9tc4EwKhKukAoKORjIRpbvtYWW5U7G8mC7mBuEuElTHSxPZ6rG5KWADkhbxIilhzLqnLbCW7l76pTM-vyOtqOBBn6Ai-zJoC_pmiat7Rj4U36mBDEwcDOCKeLnsoFc-rZM0LjOp9uF10_GGUNTD66PUeVePJJ4vEl-TljKkou9QMhgTQvPxAEsjVgwZtIVameibhkCoNcgB0G8D5kiG5glEKXzr6or5UjwhxGR19ud7HQIr0fvuJJhkpriu1ABFtTXeBfi_tGVZkMtyJc0qPMCWVlsh-v_Q
 authenticationType: bearer
 body:
   text: |-
     {
-      "bookId": "fd2808f7-599c-4353-b98f-c09e417471ad",
+      "bookId": "abbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb",
       "overallScore": 5,
       "title": "Titolo della recensione3",
       "text": "Testo della recensione"

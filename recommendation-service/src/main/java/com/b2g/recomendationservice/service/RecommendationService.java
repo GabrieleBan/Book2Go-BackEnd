@@ -15,7 +15,6 @@ import org.springframework.data.domain.*;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 
-import java.lang.management.MemoryUsage;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -80,7 +79,7 @@ public class RecommendationService {
                 Optional<Tag> tmp = tagRepository.findById(categoryDTO.id().toString());
             return tmp.orElseGet(() -> tagRepository.save(new Tag(categoryDTO.id().toString(), categoryDTO.name())));
                 }).collect(Collectors.toList()) ;
-        List<String> authors=extractAuthors(bookSumm.authors());
+        List<String> authors=extractAuthors(bookSumm.author());
 
         List<WrittenBy> writtenBy = new ArrayList<>(List.of());
         for (String author : authors) {

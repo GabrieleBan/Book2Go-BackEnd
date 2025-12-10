@@ -5,10 +5,11 @@ import com.b2g.catalogservice.model.*;
 import com.b2g.catalogservice.repository.BookRepository;
 import com.b2g.catalogservice.repository.CategoryRepository;
 import com.b2g.catalogservice.repository.BookFormatRepository;
-import com.b2g.catalogservice.repository.RentalOptionRepository;
+
 import com.b2g.commons.BookSummaryDTO;
 import com.b2g.commons.CategoryDTO;
 import com.b2g.commons.RentalOptionCreateDTO;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.MessageProperties;
@@ -18,9 +19,17 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -32,7 +41,7 @@ public class BookService {
     private final BookRepository bookRepository;
     private final CategoryRepository categoryRepository;
     private final BookFormatRepository bookFormatRepository;
-    private final RentalOptionRepository rentalOptionRepository;
+
     private final RabbitTemplate rabbitTemplate;
     @Value("${app.rabbitmq.exchange}")
     private  String exchangeName;
@@ -40,6 +49,9 @@ public class BookService {
     private String queueNamePrefix;
     @Value("${app.rabbitmq.routingkey.book.creation}")
     private String routingKeyParentBookCreated;
+    @Value("${rentalService.internal.url}")
+    private String baseRentalUrl;
+    private final RestTemplate restTemplate;
 
     @Autowired
     @Qualifier("safeRabbitTemplate")
@@ -88,24 +100,91 @@ public class BookService {
                 .build();
 
         // Save the book first to get the ID
+        log.info("Book created: {}", book);
         Book savedBook = bookRepository.save(book);
+        log.info("Saved book: {}", savedBook);
 
         // Create and save book formats if provided
         // da togliere poi
         List<BookFormat> bookFormats = createBookFormats(request.formats(), savedBook);
-
-
+        log.info("Book formats: {}", bookFormats);
         try {
-            signalBookCreation(book);
-        }catch (Exception e){
-            bookRepository.delete(book);
+            for (BookFormat format : bookFormats) {
+                if (format.isAvailableForRental()) {
+                    boolean ok = sendFormatToRentalService(format, savedBook.getId());
+                    if (!ok) {
+                        throw new RuntimeException("Fallita la creazione del formato su RentalService: " + format.getId());
+                    }
+                }
+//                List<RentalOption> rentalOptionsEntities = new ArrayList<>();
+//                for (RentalOption option : format.getRentalOptions()) {
+//                    RentalOption rentalOption= sendRentalOptionToRentalService(format.getId(), option);
+//                    if (rentalOption == null) {
+//                        throw new RuntimeException("Fallita la creazione del RentalOption per format: " + format.getId());
+//                    }
+//
+//
+//                    RentalOption rentalOptionEntity = RentalOption.builder()
+//                            .id(rentalOption.getId())
+//                            .bookFormat(format)
+//                            .durationDays(rentalOption.getDurationDays())
+//                            .price(rentalOption.getPrice())
+//                            .description(rentalOption.getDescription())
+//                            .build();
+//
+//                    rentalOptionsEntities.add(rentalOptionEntity);
+//                }
+//
+//
+//                format.setRentalOptions(rentalOptionsEntities);
+
+            }
+
+            try {
+                signalBookCreation(book);
+            } catch (Exception e) {
+                throw new RuntimeException("Errore durante il signaling: " + e.getMessage(), e);
+            }
+
+        } catch (Exception e) {
+
+            bookFormatRepository.deleteAll(bookFormats);
+            bookRepository.delete(savedBook);
+            throw e;
         }
-
-        // Update the book with the formats
         savedBook.setAvailableFormats(bookFormats);
-
+        savedBook = bookRepository.save(savedBook);
         return convertToBookDetailDTO(savedBook, bookFormats);
     }
+
+//    private RentalOption sendRentalOptionToRentalService(UUID bookFormatId, RentalOption option) {
+//        String url =  baseRentalUrl+"/format/add-option/"+ bookFormatId; // completa l'URL con l'ID del format
+//
+//        // Corpo della richiesta
+//        Map<String, Object> requestBody = new HashMap<>();
+//        requestBody.put("durationDays", option.getDurationDays());
+//        requestBody.put("price", option.getPrice());
+//        requestBody.put("description", option.getDescription());
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+//
+//        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
+//
+//        try {
+//            ResponseEntity<RentalOptionDTO> response = restTemplate.postForEntity(url, requestEntity, RentalOptionDTO.class);
+//
+//            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+//                RentalOptionDTO created = response.getBody();
+//                option.setId(created.id());
+//                return option;
+//            } else {
+//                throw new RuntimeException("RentalService returned non-ok status: " + response.getStatusCode());
+//            }
+//        } catch (Exception e) {
+//            throw new RuntimeException("Errore durante l'invio della RentalOption al RentalService: " + e.getMessage(), e);
+//        }
+//    }
 
     private void signalBookCreation(Book book) {
 
@@ -115,7 +194,7 @@ public class BookService {
             BookSummaryDTO bookCreationMessage = BookSummaryDTO.builder()
                     .id(book.getId())
                     .title(book.getTitle())
-                    .authors(book.getAuthor())
+                    .author(book.getAuthor())
                     .publisher(book.getPublisher())
                     .coverImageUrl(book.getCoverImageUrl())
                     .categories(book.getCategories().stream().map(category -> {
@@ -157,6 +236,47 @@ public class BookService {
 
     }
 
+
+    // Metodo che invia il formato al RentalService tramite REST
+    private boolean sendFormatToRentalService(BookFormat format, UUID parentBookId) {
+        try {
+            // Costruisci payload
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("formatType", format.getFormatType().name());
+            payload.put("formatId", format.getId());
+            payload.put("parentBookId", parentBookId);
+            payload.put("purchasePrice", format.getPurchasePrice());
+            payload.put("stockQuantity", format.getStockQuantity());
+            payload.put("isAvailableOnSubscription", format.isAvailableOnSubscription());
+
+//            HttpHeaders headers = new HttpHeaders();
+//            headers.setContentType(MediaType.APPLICATION_JSON);
+//            headers.setBearerAuth(); // o gestisci tramite service auth
+            HttpServletRequest req = ((ServletRequestAttributes) RequestContextHolder
+                    .getRequestAttributes()).getRequest();
+
+            String bearer = req.getHeader("Authorization").substring(7);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setBearerAuth(bearer);
+
+            HttpEntity<Map<String, Object>> request = new HttpEntity<>(payload, headers);
+
+            ResponseEntity<String> response = restTemplate.postForEntity(
+                    baseRentalUrl+"/format/create",
+                    request,
+                    String.class
+            );
+
+            return response.getStatusCode().is2xxSuccessful();
+
+        } catch (Exception e) {
+            log.error("Errore invio formato {} al RentalService", format.getId(), e);
+            return false;
+        }
+    }
+
     private List<String> extractAuthors(String author) {
         String[] split = author.split(",");
         return Arrays.asList(split);
@@ -167,6 +287,7 @@ public class BookService {
         List<BookFormat> bookFormats = new ArrayList<>();
 
         if (formatDtos != null && !formatDtos.isEmpty()) {
+            // Creazione dei BookFormat senza rental option
             for (BookFormatCreateDTO formatDto : formatDtos) {
                 BookFormat bookFormat = BookFormat.builder()
                         .book(book)
@@ -176,27 +297,35 @@ public class BookService {
                         .isAvailableForPurchase(formatDto.isAvailableForPurchase())
                         .isAvailableForRental(formatDto.isAvailableForRental())
                         .isAvailableOnSubscription(formatDto.isAvailableOnSubscription())
-                        .rentalOptions(new ArrayList<>())
+//                        .rentalOptions(new ArrayList<>()) // vuota per ora
                         .build();
 
-                // Add rental options to the collection if provided
-                if (formatDto.rentalOptions() != null && !formatDto.rentalOptions().isEmpty()) {
-                    for (RentalOptionCreateDTO rentalOptionDto : formatDto.rentalOptions()) {
-                        RentalOption rentalOption = RentalOption.builder()
-                                .bookFormat(bookFormat)
-                                .durationDays(rentalOptionDto.durationDays())
-                                .price(rentalOptionDto.price())
-                                .description(rentalOptionDto.description())
-                                .build();
-
-                        bookFormat.getRentalOptions().add(rentalOption);
-                    }
-                }
-
-                // Save the BookFormat with all rental options
                 BookFormat savedBookFormat = bookFormatRepository.save(bookFormat);
                 bookFormats.add(savedBookFormat);
             }
+
+            // Aggiungo le rental option solo per
+//            for (int i = 0; i < bookFormats.size(); i++) {
+//                BookFormat savedFormat = bookFormats.get(i);
+//                BookFormatCreateDTO formatDto = formatDtos.get(i);
+//
+//                if (formatDto.rentalOptions() != null && !formatDto.rentalOptions().isEmpty()) {
+//                    List<RentalOption> rentalOptions = new ArrayList<>();
+//                    for (RentalOptionCreateDTO rentalOptionDto : formatDto.rentalOptions()) {
+//                        RentalOption rentalOption = RentalOption.builder()
+//                                .bookFormat(savedFormat)
+//                                .durationDays(rentalOptionDto.durationDays())
+//                                .price(rentalOptionDto.price())
+//                                .description(rentalOptionDto.description())
+//                                .build();
+//
+//                        rentalOptions.add(rentalOption);
+//                    }
+//
+//                    // Aggiorna il BookFormat con le rental option, **senza salvarle**
+//                    savedFormat.setRentalOptions(rentalOptions);
+//                }
+//            }
         }
 
         return bookFormats;
@@ -216,15 +345,15 @@ public class BookService {
                         format.getPurchasePrice(),
                         format.isAvailableForPurchase(),
                         format.isAvailableForRental(),
-                        format.isAvailableOnSubscription(),
-                        format.getRentalOptions().stream()
-                                .map(rentalOption -> new RentalOptionDTO(
-                                        rentalOption.getId(),
-                                        rentalOption.getDurationDays(),
-                                        rentalOption.getPrice(),
-                                        rentalOption.getDescription()
-                                ))
-                                .collect(Collectors.toList())
+                        format.isAvailableOnSubscription()
+//                        format.getRentalOptions().stream()
+//                                .map(rentalOption -> new RentalOptionDTO(
+//                                        rentalOption.getId(),
+//                                        rentalOption.getDurationDays(),
+//                                        rentalOption.getPrice(),
+//                                        rentalOption.getDescription()
+//                                ))
+//                                .collect(Collectors.toList())
                 ))
                 .collect(Collectors.toList());
 
@@ -246,13 +375,20 @@ public class BookService {
         Set<CategoryDTO> categoryDTOs = book.getCategories().stream()
                 .map(category -> new CategoryDTO(category.getId(), category.getName()))
                 .collect(Collectors.toSet());
+        Map <String ,BigDecimal> prices = new HashMap<>();
+        List<BookFormat> availableFormats = book.getAvailableFormats();
+        for (BookFormat bookFormat : availableFormats) {
+            prices.put(bookFormat.getFormatType().name(), bookFormat.getPurchasePrice());
+        }
 
         return new BookSummaryDTO(
                 book.getId(),
                 book.getTitle(),
-                book.getPublisher(),
                 book.getAuthor(),
+                book.getPublisher(),
                 book.getCoverImageUrl(),
+                prices,
+                book.getRating(),
                 categoryDTOs
         );
     }

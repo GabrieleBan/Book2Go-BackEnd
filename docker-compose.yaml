@@ -1,0 +1,236 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: pg-b2gdb
+    environment:
+      POSTGRES_DB: b2g_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d
+    networks:
+      - b2g-net
+
+  rabbitmq:
+    image: rabbitmq:3.11-management
+    container_name: rabbitmq_container
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"     # AMQP (per i microservizi)
+      - "15672:15672"   # Management UI (visita http://localhost:15672)
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - b2g-net
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: mailhog_container
+    ports:
+      - "1025:1025"     # SMTP server (per Spring Boot)
+      - "8025:8025"     # Web UI (visita http://localhost:8025)
+    networks:
+      - b2g-net
+
+
+
+  neo4j:
+    image: neo4j:latest
+    container_name: n4j-b2gdb
+    environment:
+      NEO4J_AUTH: "neo4j/guest12345"
+      NEO4J_server_bolt_enabled: "true"
+      NEO4J_server_bolt_listen__address: "0.0.0.0:7687"
+      NEO4J_server_http_enabled: "true"
+      NEO4J_server_http_listen__address: "0.0.0.0:7474"
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+    networks:
+      - b2g-net
+
+  auth-service:
+    build:
+      context: .
+      dockerfile: auth-service/Dockerfile
+    image: gabrieleban/auth-service:latest
+    container_name: auth-service
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/b2g_db
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+    depends_on:
+      - postgres
+      - rabbitmq
+    ports:
+      - "8090:8090"
+    networks:
+      - b2g-net
+    volumes:
+      - ./auth-service/dev-keys:/app/dev-keys
+
+  catalog-service:
+    build:
+      context: .
+      dockerfile: catalog-service/Dockerfile
+    image: gabrieleban/catalog-service:latest
+    container_name: catalog-service
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/b2g_db
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+    depends_on:
+      - postgres
+      - rabbitmq
+    ports:
+      - "8091:8091"
+    networks:
+      - b2g-net
+
+  notification-service:
+    build:
+      context: .
+      dockerfile: notification-service/Dockerfile
+    image: gabrieleban/notification-service:latest
+    container_name: notification-service
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/b2g_db
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_MAIL_HOST: mailhog
+      SPRING_MAIL_PORT: 1025
+    depends_on:
+      - postgres
+      - rabbitmq
+      - mailhog
+      - auth-service
+    ports:
+      - "8092:8092"
+    networks:
+      - b2g-net
+
+  reader-service:
+    build:
+      context: .
+      dockerfile: reader-service/Dockerfile
+    image: gabrieleban/reader-service:latest
+    container_name: reader-service
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/b2g_readers
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+    depends_on:
+      - postgres
+      - rabbitmq
+      - auth-service
+    ports:
+      - "8098:8098"
+    networks:
+      - b2g-net
+
+  recommendation-service:
+    build:
+      context: .
+      dockerfile: recommendation-service/Dockerfile
+    image: gabrieleban/recommendation-service:latest
+    container_name: recommendation-service
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_NEO4J_URI: bolt://neo4j:7687
+      SPRING_NEO4J_USERNAME: neo4j
+      SPRING_NEO4J_PASSWORD: guest12345
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+      SPRING_AUTOCONFIGURE_EXCLUDE: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+    depends_on:
+      - neo4j
+      - rabbitmq
+      - auth-service
+    ports:
+      - "8096:8096"
+    networks:
+      - b2g-net
+
+  rental-service:
+    build:
+      context: .
+      dockerfile: rental-service/Dockerfile
+    image: gabrieleban/rental-service:latest
+    container_name: rental-service
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/b2g_rental
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+      AUTHSERVICE_INTERNAL_URL: http://auth-service:8090/internal
+      READERSERVICE_INTERNAL_URL: http://reader-service:8098/readers/readerUUID/check/subscription
+    depends_on:
+      - postgres
+      - rabbitmq
+      - auth-service
+      - reader-service
+    ports:
+      - "8099:8099"
+    networks:
+      - b2g-net
+
+  review-service:
+    build:
+      context: .
+      dockerfile: review-service/Dockerfile
+    image: gabrieleban/review-service:latest
+    container_name: review-service
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/b2g_reviews
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+      AUTHSERVICE_INTERNAL_URL: http://auth-service:8090/internal
+    depends_on:
+      - postgres
+      - rabbitmq
+      - auth-service
+    ports:
+      - "8097:8097"
+    networks:
+      - b2g-net
+
+volumes:
+  pg_data:
+  rabbitmq_data:
+  neo4j_data:
+  neo4j_logs:
+
+networks:
+  b2g-net:
+    driver: bridge

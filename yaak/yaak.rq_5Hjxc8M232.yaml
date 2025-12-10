@@ -2,7 +2,7 @@ type: http_request
 model: http_request
 id: rq_5Hjxc8M232
 createdAt: 2025-08-25T12:38:36.514364
-updatedAt: 2025-11-18T20:40:49.894268400
+updatedAt: 2025-12-10T17:11:59.624224300
 workspaceId: wk_94bVhSAcpy
 folderId: fl_GBXwSTx9Sx
 authentication: {}
@@ -19,5 +19,5 @@ headers:
 method: POST
 name: Confirmation
 sortPriority: 1000.0
-url: http://localhost:8090/auth/confirm/08222645-e172-4096-bd2e-fe2286f107cb
+url: http://localhost:8090/auth/confirm/47643bd1-2e52-4486-80c5-9b810a641f1d
 urlParameters: []

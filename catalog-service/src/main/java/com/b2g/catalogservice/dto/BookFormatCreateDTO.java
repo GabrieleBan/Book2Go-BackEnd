@@ -22,8 +22,8 @@ public record BookFormatCreateDTO(
 
         boolean isAvailableForPurchase,
         boolean isAvailableForRental,
-        boolean isAvailableOnSubscription,
+        boolean isAvailableOnSubscription
 
-        @Valid
-        List<RentalOptionCreateDTO> rentalOptions
+//        @Valid
+//        List<RentalOptionCreateDTO> rentalOptions
 ) {}
