@@ -81,7 +81,7 @@ public class OAuthUserService {
         User user = User.builder()
                 .username(generateUsernameFromEmail(email))
                 .email(email)
-                .credentials(new Credentials(UUID.randomUUID().toString()))
+                .credentials(Credentials.fromRawPassword(UUID.randomUUID().toString()))
                 .roles(Set.of(UserRole.READER))
                 .enabled(true)
                 .authProvider(OAuthProvider.valueOf(provider.toUpperCase()))

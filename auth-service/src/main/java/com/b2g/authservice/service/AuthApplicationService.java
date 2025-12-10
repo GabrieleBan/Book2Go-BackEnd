@@ -26,31 +26,23 @@ import java.util.*;
 public class AuthApplicationService {
 
     private final UserRepository userRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
     private final UserRegistrationService userRegistrationService;
     private final OAuthUserService oauthUserService;
     private final TokenService tokenService;
 
-    /**
-     * Caso d'uso: registrazione di un nuovo utente
-     */
+    /** Caso d'uso: registrazione di un nuovo utente */
     @Transactional
     public ResponseEntity<String> registerUser(SignupRequest request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent() ||
                 userRepository.findByUsername(request.getUsername()).isPresent()) {
             return ResponseEntity.badRequest().body("Username or email already in use");
         }
-
-        // Delega la creazione e invio messaggio di registrazione
         User user = userRegistrationService.registerUser(request);
         return ResponseEntity.ok("User registered successfully");
     }
 
-    /**
-     * Caso d'uso: conferma email
-     */
+    /** Caso d'uso: conferma email */
     @Transactional
     public ResponseEntity<String> confirmEmail(String token) {
         User user = userRepository.findById(UUID.fromString(token))
@@ -64,14 +56,11 @@ public class AuthApplicationService {
         return ResponseEntity.ok("Email confirmed successfully");
     }
 
-    /**
-     * Caso d'uso: login con username/password
-     */
+    /** Caso d'uso: login con username/password */
     public ResponseEntity<TokenResponse> login(LoginRequest request) {
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new InvalidCredentialsException("Invalid username or password"));
-
-        if (!passwordEncoder.matches(request.getPassword(), user.getCredentials().getPasswordHash())) {
+        if (!(user.verifyPassword(request.getPassword()))) {
             throw new InvalidCredentialsException("Invalid username or password");
         }
 
@@ -83,9 +72,7 @@ public class AuthApplicationService {
         return ResponseEntity.ok(new TokenResponse(tokens.getAccessToken(), tokens.getRefreshToken()));
     }
 
-    /**
-     * Caso d'uso: login OAuth2
-     */
+    /** Caso d'uso: login OAuth2 */
     @Transactional
     public ResponseEntity<TokenResponse> loginOauth2(OAuth2AuthenticationToken authentication) {
         if (!oauthUserService.isValidProvider(authentication.getAuthorizedClientRegistrationId())) {
@@ -98,9 +85,7 @@ public class AuthApplicationService {
         return ResponseEntity.ok(new TokenResponse(tokens.getAccessToken(), tokens.getRefreshToken()));
     }
 
-    /**
-     * Caso d'uso: refresh token
-     */
+    /** Caso d'uso: refresh token */
     @Transactional
     public ResponseEntity<TokenResponse> refreshAccessToken(String rawRefreshToken) {
         User user = tokenService.consumeRefreshToken(rawRefreshToken);
@@ -110,8 +95,7 @@ public class AuthApplicationService {
     }
 
     /**
-     * Caso d'uso: logout
-     */
+     * Caso d'uso: logout */
     @Transactional
     public ResponseEntity<Void> logout(String refreshToken) {
         tokenService.revokeRefreshToken(refreshToken);

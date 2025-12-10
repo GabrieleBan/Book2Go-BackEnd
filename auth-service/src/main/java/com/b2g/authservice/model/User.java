@@ -55,5 +55,9 @@ public class User {
     public void removeRole(UserRole role) { this.roles.remove(role); }
 
     public boolean hasRole(UserRole role) { return roles.contains(role); }
+    public boolean verifyPassword(String rawPassword) {
+        return credentials.matches(rawPassword);
+    }
+
 }
 

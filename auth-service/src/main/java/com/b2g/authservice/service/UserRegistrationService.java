@@ -39,7 +39,7 @@ public class UserRegistrationService {
         User user = User.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
-                .credentials(new Credentials(request.getPassword()))
+                .credentials(Credentials.fromRawPassword(request.getPassword()))
                 .roles(Set.of(UserRole.READER))
                 .enabled(false)
                 .authProvider(OAuthProvider.NONE)
