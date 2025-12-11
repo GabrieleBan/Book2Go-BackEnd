@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.Nullable;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -17,7 +16,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LendingHistory {
+public class Lending {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;

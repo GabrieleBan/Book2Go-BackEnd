@@ -199,7 +199,7 @@ public class RentalService {
         LendState initialState;
         LocalDate startTime=null;
         LocalDate endTime=null;
-        LendingHistory newLend=null;
+        Lending newLend=null;
         if(requestedFormat.equals(FormatType.AUDIOBOOK) || requestedFormat.equals(FormatType.EBOOK)) {
             if(paymentMethod==null)
             {
@@ -212,7 +212,7 @@ public class RentalService {
             {
                 initialState=LendState.PROCESSING;
             }
-            newLend=LendingHistory.builder()
+            newLend= Lending.builder()
                     .state(initialState)
                     .startDate(startTime)
                     .endDate(endTime)
@@ -225,7 +225,7 @@ public class RentalService {
 
         } else if(paymentMethod==null && library!=null) {
             initialState=LendState.PROCESSING;
-            newLend=LendingHistory.builder()
+            newLend= Lending.builder()
                     .state(initialState)
                     .formatId(rentalBookFormat.getFormatId())
                     .type(rentalBookFormat.getFormatType())
@@ -251,7 +251,7 @@ public class RentalService {
 
 
 
-    private void notifyLendCreation(LendingHistory newLend, PaymentMethod paymentMethod, UUID libraryId) {
+    private void notifyLendCreation(Lending newLend, PaymentMethod paymentMethod, UUID libraryId) {
         LendingMessage message=LendingMessage.builder()
                 .lendState(newLend.getState())
                 .bookId(newLend.getBookId())
@@ -354,13 +354,13 @@ public class RentalService {
     }
 
     public PhysicalBookIdentifier givePhysicalBookToReader(@NotNull(message = "readerId that must receive the lend must be specified") UUID readerId, @NotNull(message = "library Id cannot be empty") UUID libraryId, @NotNull(message = "format Id cannot be empty") UUID formatId, @NotNull(message = "physical book id cannot be empty") Integer id) throws Exception {
-        Optional<LendingHistory> lendToFinalize=lendingHistoryRepository.findFirstByUserIdAndFormatIdAndPhysBookIdAndStateIn(readerId,formatId,id,List.of(LendState.AWAITING));
+        Optional<Lending> lendToFinalize=lendingHistoryRepository.findFirstByUserIdAndFormatIdAndPhysBookIdAndStateIn(readerId,formatId,id,List.of(LendState.AWAITING));
         int lendDuration=30;
         if (lendToFinalize.isEmpty()) {
             throw new Exception("Reader has no books to retrieve");
         }
         LocalDate start=LocalDate.now();
-        LendingHistory lend= lendToFinalize.get();
+        Lending lend= lendToFinalize.get();
         PhysicalBookIdentifier physicalBookId = retrieveLendableBookFormatFromInventory(libraryId,formatId,id);
 
         lend.setFormatId(physicalBookId.getFormatId());
@@ -408,7 +408,7 @@ public class RentalService {
 
     public void markLendingAsWaiting(LendingMessage message) {
 
-        LendingHistory lendToMark=lendingHistoryRepository.findById(message.getLendId()).orElse(null);
+        Lending lendToMark=lendingHistoryRepository.findById(message.getLendId()).orElse(null);
         lendToMark.setState(LendState.AWAITING);
         lendToMark.setPhysBookId(message.getPhysicalId());
         lendToMark.setStartDate(LocalDate.now());
@@ -419,8 +419,8 @@ public class RentalService {
 
     public List<PhysicalBookIdentifier> getReaderAwaitingRetrievalLends(@NotNull(message = "readerId that must receive the lend must be specified") UUID readerId) {
         List <PhysicalBookIdentifier> readerAwaitingRetrievalLends=new ArrayList<>();
-        List<LendingHistory> awaitingLends= lendingHistoryRepository.findByUserIdAndState(readerId,LendState.AWAITING);
-        for (LendingHistory awaitingLend : awaitingLends) {
+        List<Lending> awaitingLends= lendingHistoryRepository.findByUserIdAndState(readerId,LendState.AWAITING);
+        for (Lending awaitingLend : awaitingLends) {
             readerAwaitingRetrievalLends.add(new PhysicalBookIdentifier(awaitingLend.getPhysBookId(),awaitingLend.getFormatId()));
         }
         return readerAwaitingRetrievalLends;
