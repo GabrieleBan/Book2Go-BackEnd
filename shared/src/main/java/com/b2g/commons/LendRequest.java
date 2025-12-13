@@ -8,9 +8,6 @@ import java.util.UUID;
 public class LendRequest {
     @NotNull
     private UUID formatId;
-//    @NotNull
-//    private UUID optionId;
     @NotNull
     private UUID libraryId;
-    private PaymentMethod paymentmethod;
 }

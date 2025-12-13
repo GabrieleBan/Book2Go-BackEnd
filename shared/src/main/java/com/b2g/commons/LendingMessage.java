@@ -20,7 +20,6 @@ public class LendingMessage {
     private FormatType formatType;
     private String message;
     private LendState lendState;
-    private PaymentMethod paymentMethod;
     private UUID libraryId;
     private LocalDate startDate;
     private LocalDate endDate;

@@ -342,10 +342,10 @@ public class BookService {
                 .map(format -> new BookFormatDTO(
                         format.getId(),
                         format.getFormatType().name(),
-                        format.getPurchasePrice(),
-                        format.isAvailableForPurchase(),
-                        format.isAvailableForRental(),
-                        format.isAvailableOnSubscription()
+                        format.getPurchasePrice()
+//                        format.isAvailableForPurchase(),
+//                        format.isAvailableForRental(),
+//                        format.isAvailableOnSubscription()
 //                        format.getRentalOptions().stream()
 //                                .map(rentalOption -> new RentalOptionDTO(
 //                                        rentalOption.getId(),
@@ -403,5 +403,25 @@ public class BookService {
         }
 
         return Optional.empty();
+    }
+
+    public CatalogFormatResponse getBooksFormat(UUID bookId, UUID formatId) {
+
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() ->
+                        new NoSuchElementException("Book with id " + bookId + " not found"));
+
+        BookFormat format = book.getAvailableFormats()
+                .stream()
+                .filter(f -> f.getId().equals(formatId))
+                .findFirst()
+                .orElseThrow(() ->
+                        new NoSuchElementException("Format " + formatId + " does not belong to book " + bookId));
+
+        return new CatalogFormatResponse(
+                book.getId(),
+                format.getId(),
+                format.getFormatType()
+        );
     }
 }

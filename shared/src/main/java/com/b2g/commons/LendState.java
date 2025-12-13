@@ -1,5 +1,7 @@
 package com.b2g.commons;
 
+import java.util.List;
+
 public enum LendState {
     PROCESSING,
     AWAITING,
@@ -7,5 +9,13 @@ public enum LendState {
     LENDING,
     CONCLUDED,
     FAILED,
-    EXPIRED,
+    LATE;
+
+    public static List<LendState> activeStates() {
+        return List.of(PROCESSING, RESERVATION,AWAITING, LENDING, LATE);
+    }
+
+    public boolean isActive() {
+        return activeStates().contains(this);
+    }
 }

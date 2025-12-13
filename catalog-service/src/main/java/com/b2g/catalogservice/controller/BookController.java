@@ -2,6 +2,7 @@ package com.b2g.catalogservice.controller;
 
 import com.b2g.catalogservice.annotation.RequireRole;
 import com.b2g.catalogservice.dto.*;
+import com.b2g.catalogservice.model.BookFormat;
 import com.b2g.catalogservice.service.BookService;
 import com.b2g.commons.BookSummaryDTO;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.*;
 import jakarta.validation.Valid;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
@@ -49,6 +51,19 @@ public class BookController {
         Optional<BookDetailDTO> book = bookService.getBookById(id);
 
         return book.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{bookId}/formats/{formatId}")
+    public ResponseEntity<?> getBookFormat(
+            @PathVariable UUID bookId,
+            @PathVariable UUID formatId
+    ) {
+        try {
+            CatalogFormatResponse dto=bookService.getBooksFormat(bookId,formatId);
+            return ResponseEntity.ok(dto);
+        }catch (NoSuchElementException e) {return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());}
+
+
     }
 
 }

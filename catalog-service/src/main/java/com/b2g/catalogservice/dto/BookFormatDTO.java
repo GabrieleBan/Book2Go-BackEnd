@@ -7,9 +7,5 @@ import java.util.UUID;
 public record BookFormatDTO(
         UUID id,
         String formatType, // e.g., "EBOOK", "PHYSICAL"
-        BigDecimal purchasePrice,
-        boolean isAvailableForPurchase,
-        boolean isAvailableForRental,
-        boolean isAvailableOnSubscription
-//        List<RentalOptionDTO> rentalOptions
+        BigDecimal purchasePrice
 ) {}

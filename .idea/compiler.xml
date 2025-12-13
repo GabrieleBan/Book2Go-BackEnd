@@ -12,7 +12,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="shared" />
       </profile>
-      <profile name="Annotation profile for library-service" enabled="true">
+      <profile name="Annotation profile for rental-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -24,7 +24,7 @@
         <module name="topic-service" />
         <module name="review-service" />
         <module name="catalog-service" />
-        <module name="rental-service" />
+        <module name="lend-service" />
         <module name="reader-service" />
         <module name="notification-service" />
         <module name="recommendation-service" />
@@ -39,13 +39,13 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="auth-service" options="-parameters" />
       <module name="catalog-service" options="-parameters" />
+      <module name="lend-service" options="-parameters" />
       <module name="mocked-service" options="-parameters" />
       <module name="notification-service" options="-parameters" />
       <module name="order-service" options="-parameters" />
       <module name="payment-service" options="-parameters" />
       <module name="reader-service" options="-parameters" />
       <module name="recommendation-service" options="-parameters" />
-      <module name="rental-service" options="-parameters" />
       <module name="review-service" options="-parameters" />
       <module name="topic-service" options="-parameters" />
     </option>
