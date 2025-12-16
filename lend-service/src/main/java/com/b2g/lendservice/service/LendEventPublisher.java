@@ -46,6 +46,7 @@ public class LendEventPublisher {
         if (lending.getState().equals(LendState.PROCESSING))
             if (lending.getLibraryId() != null)
                 routingKey = routingKeyLendRequestCreated;
+        log.info("Used key: " + routingKey);
         if (routingKey.isEmpty()) {
             log.error("routing key is empty, unexpected lend state is " + lending.getState());
             throw new NotImplementedException("Routing key is empty");

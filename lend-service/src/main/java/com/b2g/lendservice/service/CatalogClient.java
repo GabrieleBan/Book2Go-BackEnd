@@ -24,7 +24,7 @@ public class CatalogClient {
     private String catalogServiceUrl; // es. http://catalog-service
 
     public CatalogFormatResponse getBookFormat(UUID bookId, UUID formatId) throws Exception {
-        String url = catalogServiceUrl + "/books/" + bookId + "/format/" + formatId;
+        String url = catalogServiceUrl + "/" + bookId + "/formats/" + formatId;
         try {
             ResponseEntity<CatalogFormatResponse> response =
                     restTemplate.exchange(url, HttpMethod.GET, null, CatalogFormatResponse.class);

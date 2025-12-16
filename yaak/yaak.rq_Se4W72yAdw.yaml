@@ -1,0 +1,49 @@
+type: http_request
+model: http_request
+id: rq_Se4W72yAdw
+createdAt: 2025-12-04T17:53:47.833366200
+updatedAt: 2025-12-16T19:05:51.096389400
+workspaceId: wk_94bVhSAcpy
+folderId: fl_qYLLc5Jiv3
+authentication:
+  token: eyJhbGciOiJSUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwidXNlclVVSUQiOiI4ZGI2MWIxMS1jMmVlLTRmYzYtOGNjMi1lZGU1NTRhNzNjMzUiLCJyb2xlcyI6WyJSRUFERVIiLCJBRE1JTiIsIkVNUExPWUVFIl0sInN1YiI6IjhkYjYxYjExLWMyZWUtNGZjNi04Y2MyLWVkZTU1NGE3M2MzNSIsImlhdCI6MTc2NTkxMTkzOCwiZXhwIjoxNzY1OTEyODM4LCJpc3MiOiJiMmctYXV0aC1zZXJ2aWNlIiwiYXVkIjpbImIyZy1taWNyb3NlcnZpY2VzIl19.f9EM6K3GE46yYZZtvNuGJt8ZaBUy00qpKdQYm80eQd6I6ESY-M4JU_nMm9wBQQlDVFt1LyUN-xmordGNyFoHQZ1bIYiclm4L0jj7UrpKmL5DsvvTEYt_TGBm6lWfiyFGauuxusKpEfNivcv3fkpSQmSpyNqllljsVuSK6YctAKP8JIdo8oOhZbtLItFZ42fyNc58A2UX4H0iZnt7fjZ64ePGVXDIeSkBLe72pT5j8tnx3XcncKJY7U2ylqs--C6loV8ZbDlFsbhAGOecA3VXOH6ROOSoNeZv4InKh_e1ooWjEMCob5INnH9rn9Wdvs8S7jBk5RCqHLkxySgBqb0Y5g
+authenticationType: bearer
+body:
+  text: |-
+    {
+      "userId":"8db61b11-c2ee-4fc6-8cc2-ede554a73c35",
+      "copyNumber":"1109459784",
+      "libraryId":"cdaaaaaa-abaa-aaaa-aaaa-aaaaaaaaaaaa"
+    }
+bodyType: application/json
+description: ''
+headers:
+- enabled: true
+  name: Content-Type
+  value: application/json
+  id: upx2RbKbYy
+method: POST
+name: Entrust
+sortPriority: 6000.0
+url: http://localhost:8099/lendings/a024e068-d68b-4632-bf34-ca7936a50d29/assignment
+urlParameters:
+- enabled: true
+  name: readerId
+  value: a763e88a-33da-4b79-a663-3636b52e1e8a
+  id: 8gMxz6WNY6
+- enabled: true
+  name: libraryId
+  value: cdaaaaaa-abaa-aaaa-aaaa-aaaaaaaaaaaa
+  id: hj0BMx3JgP
+- enabled: true
+  name: formatId
+  value: f4c1cf2c-1d58-40cb-bdc5-944815829a45
+  id: GJ3hcCCkgw
+- enabled: true
+  name: id
+  value: '2130905599'
+  id: 6tjVRJsP5X
+- enabled: true
+  name: ''
+  value: ''
+  id: gjnsMaT9S5

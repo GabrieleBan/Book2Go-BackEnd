@@ -2,11 +2,11 @@ type: http_request
 model: http_request
 id: rq_FdTSjKuKwh
 createdAt: 2025-08-27T23:53:08.177205
-updatedAt: 2025-12-04T17:07:52.649890600
+updatedAt: 2025-12-15T18:10:51.568714400
 workspaceId: wk_94bVhSAcpy
 folderId: fl_gQ2VqcuSam
 authentication:
-  token: eyJhbGciOiJSUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluMSIsInJvbGUiOiJBRE1JTiIsInVzZXJVVUlEIjoiYTc2M2U4OGEtMzNkYS00Yjc5LWE2NjMtMzYzNmI1MmUxZThhIiwic3ViIjoiYTc2M2U4OGEtMzNkYS00Yjc5LWE2NjMtMzYzNmI1MmUxZThhIiwiaWF0IjoxNzY0ODY4MDY2LCJleHAiOjE3NjQ4Njg5NjYsImlzcyI6ImIyZy1hdXRoLXNlcnZpY2UiLCJhdWQiOlsiYjJnLW1pY3Jvc2VydmljZXMiXX0.McX66a_n9N22LUhNComebFYlU_f7XZ4JcoybakwHNNgYMAW2Ji_2h9DHd9QGVFydVstP3SuQSIRz08JBOEjvRIS_qifeiSEv5OUUk_I_zxuW6MqJymq9PUonRQHS3mbf2HdmpXr6u-PkHkiVqmIHxw2PbdEzYoCYo2FyjqxcDwPLCIrUFobzrSCuB7n1D8F8wPw9LA8QqSILoSUFCYtvZ3tUU8gyRiTCOa-eJdPpIW62PBlxjDvs7Bd3Zw3hdF9GAvNiZp8HgZSkW1FXvDxs7pzHCbCn5u9DJ1D52VHfQhb7nYqP3BUqTrCWidBbV9v8UAgj4XDVBSJdbmdwjHDdiw
+  token: eyJhbGciOiJSUzI1NiJ9.eyJyb2xlcyI6WyJSRUFERVIiLCJBRE1JTiIsIkVNUExPWUVFIl0sInVzZXJuYW1lIjoiYWRtaW4iLCJ1c2VyVVVJRCI6IjhkYjYxYjExLWMyZWUtNGZjNi04Y2MyLWVkZTU1NGE3M2MzNSIsInN1YiI6IjhkYjYxYjExLWMyZWUtNGZjNi04Y2MyLWVkZTU1NGE3M2MzNSIsImlhdCI6MTc2NTgyMjIzMCwiZXhwIjoxNzY1ODIzMTMwLCJpc3MiOiJiMmctYXV0aC1zZXJ2aWNlIiwiYXVkIjpbImIyZy1taWNyb3NlcnZpY2VzIl19.gyXfElxViHO7ikqkD7tSsfXNVKlG-P83X68GCptrKYtBSnhaSRKWYqXjRBWnDuhime96fcmeo8l73Ch0OhAIbaOlu97etn6yR8Lv83Ifw3ow-SRawL1a2gRzZ5iGZbeByIqNK8htcqXq4uou02nS3VgONNl4twDlEcX-XoBP90W8KxKvb-K2S2eSr4bqfLhpZCn4UlrNcre8-1mPIRzkKIZvaVh5_gyxCdq83fwQc-E2PsikMTY4qEvzG0d6dT7f35ZWVNOUdkngN4dpt9rHLHaIFzSgiLNgkfcysZNo_MlZ7OCn2E_xkG6Sf_VGmg7OgNw0xgjGAStddDOY0mu3wA
 authenticationType: bearer
 body:
   text: |-
@@ -18,7 +18,7 @@ body:
       "publisher": "Secker & Warburg",
       "publicationDate": "1949-06-08",
       "categoryIds": [
-        "5f1dd87a-b5f5-4ed1-a3f8-4db6450fd513"
+        "64ac88b3-3a96-4b08-9e54-a1e62414c6fc"
       ],
       "formats": [
         {

@@ -109,36 +109,37 @@ public class BookService {
         List<BookFormat> bookFormats = createBookFormats(request.formats(), savedBook);
         log.info("Book formats: {}", bookFormats);
         try {
-            for (BookFormat format : bookFormats) {
-                if (format.isAvailableForRental()) {
-                    boolean ok = sendFormatToRentalService(format, savedBook.getId());
-                    if (!ok) {
-                        throw new RuntimeException("Fallita la creazione del formato su RentalService: " + format.getId());
-                    }
-                }
-//                List<RentalOption> rentalOptionsEntities = new ArrayList<>();
-//                for (RentalOption option : format.getRentalOptions()) {
-//                    RentalOption rentalOption= sendRentalOptionToRentalService(format.getId(), option);
-//                    if (rentalOption == null) {
-//                        throw new RuntimeException("Fallita la creazione del RentalOption per format: " + format.getId());
+//            per creare il lend ora bisogna farlo chiedendo direttamente al Lend service
+//            for (BookFormat format : bookFormats) {
+//                if (format.isAvailableForRental()) {
+//                    boolean ok = sendFormatToRentalService(format, savedBook.getId());
+//                    if (!ok) {
+//                        throw new RuntimeException("Fallita la creazione del formato su RentalService: " + format.getId());
 //                    }
-//
-//
-//                    RentalOption rentalOptionEntity = RentalOption.builder()
-//                            .id(rentalOption.getId())
-//                            .bookFormat(format)
-//                            .durationDays(rentalOption.getDurationDays())
-//                            .price(rentalOption.getPrice())
-//                            .description(rentalOption.getDescription())
-//                            .build();
-//
-//                    rentalOptionsEntities.add(rentalOptionEntity);
 //                }
+////                List<RentalOption> rentalOptionsEntities = new ArrayList<>();
+////                for (RentalOption option : format.getRentalOptions()) {
+////                    RentalOption rentalOption= sendRentalOptionToRentalService(format.getId(), option);
+////                    if (rentalOption == null) {
+////                        throw new RuntimeException("Fallita la creazione del RentalOption per format: " + format.getId());
+////                    }
+////
+////
+////                    RentalOption rentalOptionEntity = RentalOption.builder()
+////                            .id(rentalOption.getId())
+////                            .bookFormat(format)
+////                            .durationDays(rentalOption.getDurationDays())
+////                            .price(rentalOption.getPrice())
+////                            .description(rentalOption.getDescription())
+////                            .build();
+////
+////                    rentalOptionsEntities.add(rentalOptionEntity);
+////                }
+////
+////
+////                format.setRentalOptions(rentalOptionsEntities);
 //
-//
-//                format.setRentalOptions(rentalOptionsEntities);
-
-            }
+//            }
 
             try {
                 signalBookCreation(book);

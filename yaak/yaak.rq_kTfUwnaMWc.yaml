@@ -1,0 +1,24 @@
+type: http_request
+model: http_request
+id: rq_kTfUwnaMWc
+createdAt: 2025-11-27T21:28:27.814096400
+updatedAt: 2025-12-16T16:46:23.913287600
+workspaceId: wk_94bVhSAcpy
+folderId: fl_qYLLc5Jiv3
+authentication:
+  token: eyJhbGciOiJSUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwidXNlclVVSUQiOiI4ZGI2MWIxMS1jMmVlLTRmYzYtOGNjMi1lZGU1NTRhNzNjMzUiLCJyb2xlcyI6WyJFTVBMT1lFRSIsIlJFQURFUiIsIkFETUlOIl0sInN1YiI6IjhkYjYxYjExLWMyZWUtNGZjNi04Y2MyLWVkZTU1NGE3M2MzNSIsImlhdCI6MTc2NTgzNDIxNSwiZXhwIjoxNzY1ODM1MTE1LCJpc3MiOiJiMmctYXV0aC1zZXJ2aWNlIiwiYXVkIjpbImIyZy1taWNyb3NlcnZpY2VzIl19.LMQfpxBygqmOK_LwOMvh7owG24JzDXcGLayEce3iLpApyTR39ClB5eZKPJ22_caQa99VlaSIE6XR5jACNsDOBRYiXU38PLF1eU5jZrrBNMlmPfQ1BjOrf4C8P4UTB20STjmjMfxub2YbxtvMVk9ixZdsFwvo1OirxmfBonD5Q-xNF-wpRA8FnAqrMmSlKrmxlES3fn22GVzxOg3SyFS290nc41jVfhhibraBT_dFPwJI1EnZT0OjWog-zRjPqTAn9tevxUtr0zDM-Uyvs6yuZGVnkRYj_9tyfCbX0RYdSIWzjFyu67dDv9fJ54WomG9A6H-UDY7r8UkyHFWViQs3nw
+authenticationType: bearer
+body:
+  text: "{\n    \n  \"description\" : \"\",\n  \"durationDays\" : 30,\n  \"maxRenewals\" : 1,\n  \"minRequiredTier\" : \"SUB_TIER2\"\n}"
+bodyType: application/json
+description: ''
+headers:
+- enabled: true
+  name: Content-Type
+  value: application/json
+  id: YA6pBMFFkm
+method: POST
+name: Add Lending Option
+sortPriority: 2000.0
+url: http://localhost:8099/lendable-formats/a89c392a-3e91-4ed7-8c09-f17f845c7fd8/options
+urlParameters: []

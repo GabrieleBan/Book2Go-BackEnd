@@ -1,0 +1,23 @@
+type: http_request
+model: http_request
+id: rq_TNvbQn7VV8
+createdAt: 2025-11-25T18:47:08.334172500
+updatedAt: 2025-12-05T21:11:12.148832400
+workspaceId: wk_94bVhSAcpy
+folderId: fl_zS52BCUtYG
+authentication:
+  token: eyJhbGciOiJSUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluMSIsInJvbGUiOiJBRE1JTiIsInVzZXJVVUlEIjoiYTc2M2U4OGEtMzNkYS00Yjc5LWE2NjMtMzYzNmI1MmUxZThhIiwic3ViIjoiYTc2M2U4OGEtMzNkYS00Yjc5LWE2NjMtMzYzNmI1MmUxZThhIiwiaWF0IjoxNzY0OTY5MDYwLCJleHAiOjE3NjQ5Njk5NjAsImlzcyI6ImIyZy1hdXRoLXNlcnZpY2UiLCJhdWQiOlsiYjJnLW1pY3Jvc2VydmljZXMiXX0.g4hqEND_oURrnOlbBS1FStoBHn6x8WUcsTvW2rwMA8Me8J2UgunnplxTEH_CxvTlfA7TwcklpggrWP6ddXmXXwJNMi3opNEYka7bYsHu6qoQ6nfVrc30C7BVl30CPxg5dJK5zM6XJzVsX7ikJjQz_P0IiYbetgFdIW_iFS6oC-STSYFpt4YnFXQPstsgswySK-vs5FM9CZQ26Jlu2zYL_myT3WilY6GuMegNxPqMRniInFVGzlrndMnI-hSz9MN_UdNxVjT6ApQCZw0rh66XHBPlLP9360UhJctYZXfK7z2mvq9D7c8qvS9Fw9GbGTX79dk_ttQHBWeLRTWw6_RL6g
+authenticationType: bearer
+body: {}
+bodyType: null
+description: ''
+headers: []
+method: GET
+name: GetMyFullInfo
+sortPriority: 0.0009
+url: http://localhost:8098/readers/me/info
+urlParameters:
+- enabled: true
+  name: ''
+  value: ''
+  id: qdjT80wyRV

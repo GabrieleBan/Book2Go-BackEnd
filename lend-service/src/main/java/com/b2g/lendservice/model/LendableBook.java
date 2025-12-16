@@ -2,6 +2,7 @@ package com.b2g.lendservice.model;
 
 import com.b2g.commons.FormatType;
 import com.b2g.commons.SubscriptionType;
+import com.b2g.lendservice.Exceptions.LendingOptionException;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -44,9 +45,17 @@ public class LendableBook {
                 .isPresent();
     }
     public void addOption(LendingOption option) {
+        boolean alreadyExists = options.stream()
+                .anyMatch(o -> o.getMinRequiredTier().equals(option.getMinRequiredTier()));
+
+        if (alreadyExists) {
+            throw new LendingOptionException(
+                    "LendingOption with minRequiredTier " + option.getMinRequiredTier() + " already exists for this lendable"
+            );
+        }
+
         this.options.add(option);
     }
-
     public void removeOption(UUID optionId) {
         this.options.removeIf(o -> o.getId().equals(optionId));
     }

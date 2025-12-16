@@ -1,0 +1,37 @@
+type: http_request
+model: http_request
+id: rq_YtrZVhwLQZ
+createdAt: 2025-12-15T20:49:09.814295200
+updatedAt: 2025-12-16T16:46:23.897959200
+workspaceId: wk_94bVhSAcpy
+folderId: fl_qYLLc5Jiv3
+authentication:
+  disabled: true
+  token: eyJhbGciOiJSUzI1NiJ9.eyJ1c2VyVVVJRCI6IjhkYjYxYjExLWMyZWUtNGZjNi04Y2MyLWVkZTU1NGE3M2MzNSIsInVzZXJuYW1lIjoiYWRtaW4iLCJyb2xlcyI6WyJSRUFERVIiLCJBRE1JTiIsIkVNUExPWUVFIl0sInN1YiI6IjhkYjYxYjExLWMyZWUtNGZjNi04Y2MyLWVkZTU1NGE3M2MzNSIsImlhdCI6MTc2NTgyMzA0MiwiZXhwIjoxNzY1ODIzOTQyLCJpc3MiOiJiMmctYXV0aC1zZXJ2aWNlIiwiYXVkIjpbImIyZy1taWNyb3NlcnZpY2VzIl19.gc_bnK2L78e7n6_ckYFo0-BWOZMmy4sXB5HR_axLbXW46RZMVR8DLav_zclGVNVN6EMYnhbCMQOUYmW2vpezOKvJ9mK_QuDzHVdsT1uwCXhEinTNgzZFCbdkB4JWvhenZfl21hy6SOpe-EVVgCrUh3gUIEna1lZ8SXRRdsOo7FMACURE79F-PLWeaRPhwyomTvFHEXHgzVAmxOy30xQmCIgbT7JkBmFfIlfqGod1dGZAKz8xg1uv9grBwZdvXpsAMcxQvTG5HXgei3oLDxBI0wUKGGO_4t3qyMdZx8FIfFGRRxNsQ1p3unPwvieNkkmTyi1ZmhYHg211zsVESK7-Fw
+authenticationType: bearer
+body:
+  text: ''
+bodyType: application/json
+description: ''
+headers:
+- enabled: true
+  name: Content-Type
+  value: application/json
+  id: YA6pBMFFkm
+method: GET
+name: Get all Lendable Book by BookId
+sortPriority: 1000.0
+url: http://localhost:8099/lendable-formats
+urlParameters:
+- enabled: true
+  name: bookId
+  value: 72db787f-e6ea-41ad-8827-81f25e431c06
+  id: t7GDj4A2aZ
+- enabled: false
+  name: formatId
+  value: a89c392a-3e91-4ed7-8c09-f17f845c7fd8
+  id: xAbbFwzQ9R
+- enabled: true
+  name: ''
+  value: ''
+  id: IK64iHSk2M

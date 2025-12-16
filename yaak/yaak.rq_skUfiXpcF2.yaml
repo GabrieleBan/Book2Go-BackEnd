@@ -1,0 +1,26 @@
+type: http_request
+model: http_request
+id: rq_skUfiXpcF2
+createdAt: 2025-12-15T16:44:51.865646200
+updatedAt: 2025-12-15T18:30:44.213242800
+workspaceId: wk_94bVhSAcpy
+folderId: fl_gQ2VqcuSam
+authentication: {}
+authenticationType: null
+body: {}
+bodyType: null
+description: ''
+headers: []
+method: GET
+name: Get Book's Format
+sortPriority: 0.001
+url: http://localhost:8091/books/72db787f-e6ea-41ad-8827-81f25e431c06/formats/a89c392a-3e91-4ed7-8c09-f17f845c7fd8
+urlParameters:
+- enabled: true
+  name: categoryIds
+  value: ''
+  id: x9KPJMZzt6
+- enabled: true
+  name: ''
+  value: ''
+  id: iH0uV5JvHG

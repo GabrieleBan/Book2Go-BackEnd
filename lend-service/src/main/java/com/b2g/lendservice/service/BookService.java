@@ -3,6 +3,7 @@ package com.b2g.lendservice.service;
 import com.b2g.lendservice.Exceptions.BookAlreadyExistsException;
 import com.b2g.lendservice.Exceptions.LendableBookException;
 import com.b2g.lendservice.Exceptions.LendingOptionNotFoundException;
+import com.b2g.lendservice.dto.LendingOptionDTO;
 import com.b2g.lendservice.model.LendableBook;
 import com.b2g.lendservice.model.LendableCopy;
 import com.b2g.lendservice.model.LendingOption;
@@ -11,8 +12,6 @@ import com.b2g.lendservice.repository.LendableBookRepository;
 import com.b2g.lendservice.repository.LendingOptionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,13 +46,14 @@ public class BookService {
      * Aggiunge opzione
      */
     @Transactional
-    public LendingOption addLendingOption(UUID formatId, LendingOption option) throws LendableBookException {
+    public Set<LendingOption> addLendingOption(UUID formatId, LendingOptionDTO optionToAdd) throws LendableBookException {
         LendableBook book = lendableBookRepository.findByFormatId(formatId);
         if (book == null) {throw new LendableBookException("Lendable Book con id "+formatId+" non esiste");}
+        LendingOption option = LendingOption.create(optionToAdd);
         book.addOption(option);
-        lendableBookRepository.save(book);
+        book=lendableBookRepository.save(book);
         log.info("Opzione {} aggiunta a LendableBook {}", option.getId(), book.getFormatId());
-        return option;
+        return book.getOptions();
     }
 
     /**

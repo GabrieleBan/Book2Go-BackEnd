@@ -1,0 +1,35 @@
+type: http_request
+model: http_request
+id: rq_N3EnzAgw7U
+createdAt: 2025-11-25T22:18:46.965949800
+updatedAt: 2025-11-25T22:48:06.349790500
+workspaceId: wk_94bVhSAcpy
+folderId: fl_zS52BCUtYG
+authentication:
+  token: eyJhbGciOiJSUzI1NiJ9.eyJ1c2VyVVVJRCI6Ijc1MDM0NmJkLTdmOGItNDYxNi1hN2FkLTdhMDgyNDhiMjU5YSIsInVzZXJuYW1lIjoidGVzdDYiLCJyb2xlIjoiVVNFUiIsInN1YiI6Ijc1MDM0NmJkLTdmOGItNDYxNi1hN2FkLTdhMDgyNDhiMjU5YSIsImlhdCI6MTc2NDExMDE2OCwiZXhwIjoxNzY0MTExMDY4LCJpc3MiOiJiMmctYXV0aC1zZXJ2aWNlIiwiYXVkIjpbImIyZy1taWNyb3NlcnZpY2VzIl19.Hu_FRdkUECZ1tp_fVIZibYZlGxnXAl0_HehGWh7xmkY7snVhNZwkpw6szGv2wJsQETvcogaO-zUUMbC5SMLYvgYGBnmYwwP6bFZP1X5mMxayHCWK-36-zJXt_HrrUcAB08_R2k3ufVR_L802fobXrqTtpdtvsG9i_QnGZ4pjgFuUcROUk1rW30NbjzfPGLDqZIFCJEPpZnXbQLtsKuZTJ3k6b8eDlJU3oAJX5kbPSMlYwRi2MW9cqq-hTERLNCTZK2CI13xicZkzDQ_FD80CidHvFltabX3T05wVEo9bPmi2ip9-hbY9TUrr8qvvHN37T3Du_6ztqTiZ75qbXsagfA
+authenticationType: bearer
+body:
+  text: |-
+    {
+      "name": "Mario",
+      "surname": "Rossi",
+      "phone": "33312345678",
+      "address": {
+        "street": "Via Roma 25",
+        "city": "Torino",
+        "zip": "10121"
+      },
+      "description":"Mi piace leggere romanzi di fantascienza"
+    }
+bodyType: application/json
+description: ''
+headers:
+- enabled: true
+  name: Content-Type
+  value: application/json
+  id: xJaVBv3QkQ
+method: PUT
+name: Fill form
+sortPriority: 0.0007999999999999999
+url: http://localhost:8098/readers/me/fill-form-info
+urlParameters: []

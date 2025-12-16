@@ -4,6 +4,8 @@ import com.b2g.authservice.service.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.jwt.JwtException;
@@ -18,11 +20,12 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class InternalAuthenticationController {
 
+    private static final Logger log = LoggerFactory.getLogger(InternalAuthenticationController.class);
     private final JwtService jwtService; // il vero servizio auth, quello che conosce le chiavi
 
     @GetMapping("/validate")
     public ResponseEntity<?> validateToken(
-            @RequestHeader("Authorization") String authHeader) {
+            @RequestHeader(value = "Authorization", required = false) String authHeader) {
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -36,6 +39,7 @@ public class InternalAuthenticationController {
             Claims claims = jwtService.validateToken(token); // valida localmente
             // converte Claims in Map per restituire JSON
             Map<String, Object> claimsMap = new HashMap<>(claims);
+            log.info("claimsMap: " + claimsMap);
 
             return ResponseEntity.ok(claimsMap);
         } catch (ExpiredJwtException e) {

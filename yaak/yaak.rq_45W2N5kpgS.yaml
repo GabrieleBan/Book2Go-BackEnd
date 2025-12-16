@@ -1,0 +1,36 @@
+type: http_request
+model: http_request
+id: rq_45W2N5kpgS
+createdAt: 2025-12-04T18:20:00.587460900
+updatedAt: 2025-12-16T18:54:26.719277700
+workspaceId: wk_94bVhSAcpy
+folderId: fl_qYLLc5Jiv3
+authentication:
+  token: eyJhbGciOiJSUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwidXNlclVVSUQiOiI4ZGI2MWIxMS1jMmVlLTRmYzYtOGNjMi1lZGU1NTRhNzNjMzUiLCJyb2xlcyI6WyJSRUFERVIiLCJBRE1JTiIsIkVNUExPWUVFIl0sInN1YiI6IjhkYjYxYjExLWMyZWUtNGZjNi04Y2MyLWVkZTU1NGE3M2MzNSIsImlhdCI6MTc2NTkxMDk5MiwiZXhwIjoxNzY1OTExODkyLCJpc3MiOiJiMmctYXV0aC1zZXJ2aWNlIiwiYXVkIjpbImIyZy1taWNyb3NlcnZpY2VzIl19.c4Rtgza6zEWbpWmGC4gPufhDJ0oT5Ov1fSZq0CtLgBK0pg9TRoS36yPF8NWF3cc7Re0g34ma8LKDRs1NbtW6ClcZmAHUGvWKN5uk6kN3Mm1oqURVbSOsWke74aa85nCxdvjIefUu8gO73a13uAAvcvGEv9MkSpeuGOzE4JP1vSMA32_uc5H3Rp7SQ75D2F7izxK5smSGomK8SUJWPfa6At3ql3tVP8E9X4qNt1dLnuhPRkQ-qk0NDYcd4OuLcZuWN6KqsBR4QfoV4cMxC1k240xlhVnxT5CySHm9mcnGFAnicB4Mc50N5QEiGTnrb6DxByeVDMLSE9e2-O_w4hVs8g
+authenticationType: bearer
+body:
+  text: ''
+bodyType: application/json
+description: ''
+headers:
+- enabled: true
+  name: Content-Type
+  value: application/json
+  id: upx2RbKbYy
+method: GET
+name: get awaiting lendableCopies
+sortPriority: 5000.0
+url: http://localhost:8099/lendings/readers/8db61b11-c2ee-4fc6-8cc2-ede554a73c35/lendable-copies
+urlParameters:
+- enabled: true
+  name: readerId
+  value: a763e88a-33da-4b79-a663-3636b52e1e8a
+  id: 8gMxz6WNY6
+- enabled: true
+  name: libraryId
+  value: cdaaaaaa-abaa-aaaa-aaaa-aaaaaaaaaaaa
+  id: hj0BMx3JgP
+- enabled: true
+  name: ''
+  value: ''
+  id: E359Kn0RDB

@@ -30,6 +30,7 @@ public class SecurityConfig {
                         .requestMatchers("/readers/sum-info").permitAll()
                         .requestMatchers("/readers/all-info/*").permitAll()
                         .requestMatchers("/readers/*/check/subscription").permitAll()
+                        .requestMatchers("/subscriptions/*").permitAll()
 
                         .anyRequest().authenticated()
                 )

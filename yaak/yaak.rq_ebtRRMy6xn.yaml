@@ -1,0 +1,30 @@
+type: http_request
+model: http_request
+id: rq_ebtRRMy6xn
+createdAt: 2025-11-25T18:43:47.267836700
+updatedAt: 2025-11-25T18:46:34.491733
+workspaceId: wk_94bVhSAcpy
+folderId: fl_zS52BCUtYG
+authentication: {}
+authenticationType: null
+body: {}
+bodyType: null
+description: ''
+headers: []
+method: GET
+name: GetUserPublicInfo
+sortPriority: 0.0009
+url: http://localhost:8098/readers/all-info/750346bd-7f8b-4616-a7ad-7a08248b259a
+urlParameters:
+- enabled: true
+  name: readersIds
+  value: 5ad59251-a81c-461b-8990-3977d5a5a957 ,750346bd-7f8b-4616-a7ad-7a08248b259a
+  id: 3uk0tqkrKN
+- enabled: false
+  name: ''
+  value: ''
+  id: 3un9XpCS37
+- enabled: true
+  name: ''
+  value: ''
+  id: RQWcCEn5Gd

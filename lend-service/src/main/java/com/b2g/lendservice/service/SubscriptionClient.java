@@ -4,6 +4,7 @@ import com.b2g.commons.SubscriptionType;
 import com.b2g.lendservice.Exceptions.InfrastructureException;
 import com.b2g.lendservice.Exceptions.UserNotFoundException;
 import com.b2g.lendservice.model.UserSubscriptionData;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +30,7 @@ public class SubscriptionClient {
      */
     public UserSubscriptionData getUserSubscriptionData(UUID userId) throws Exception {
         String url = subscriptionServiceUrl.replace("readerUUID", userId.toString());
-
+        log.info("getUserSubscriptionData: " + url);
         try {
             ResponseEntity<UserSubscriptionDataDTO> response =
                     restTemplate.exchange(
@@ -40,6 +41,7 @@ public class SubscriptionClient {
                     );
 
             if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                log.info("getUserSubscriptionData: " + response.getBody());
                 UserSubscriptionDataDTO dto = response.getBody();
                 return new UserSubscriptionData(dto.tier(), dto.maxConcurrentLends());
             } else {
@@ -54,6 +56,7 @@ public class SubscriptionClient {
     }
 
     // DTO di trasferimento tra microservizi
+    @Data
     public static class UserSubscriptionDataDTO {
         private SubscriptionType tier;
         private Integer maxConcurrentLends;

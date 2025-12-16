@@ -4,8 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(scanBasePackages = {
-        "com.b2g.recommendationservice", // il tuo servizio
-        "com.b2g.shared"                 // se vuoi usare shared
+        "com.b2g.recomendationservice",
+        "com.b2g.shared"
 })
 public class RecomendationServiceApplication {
 

@@ -22,6 +22,7 @@ public class Lending {
 
     @Column(nullable = false)
     private UUID userId;
+    @Column(nullable = false)
     private UUID lendingOptionId;
 
     @Embedded
@@ -30,6 +31,7 @@ public class Lending {
             @AttributeOverride(name = "copyNumber", column = @Column(name = "copy_number"))
     })
     private LendableCopy copy;
+    @Column(nullable = false)
     private LocalDate requestedAt;
     @Embedded
     private LendingPeriod period;
@@ -50,6 +52,7 @@ public class Lending {
         this.lendingOptionId = lendingOptionId;
         this.libraryId = libraryId;
         this.requestedAt = LocalDate.now();
+        this.period = new LendingPeriod();
     }
 
     public static Lending create(UUID userId, UUID lendingOptionId,UUID libraryId, LendableCopy copy) {

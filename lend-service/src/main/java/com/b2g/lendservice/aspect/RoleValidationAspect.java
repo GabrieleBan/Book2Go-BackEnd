@@ -52,6 +52,7 @@ public class RoleValidationAspect {
             return joinPoint.proceed();
         }
         catch (Exception e) {
+//            gestire poi in advice
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body("Token validation failed: " + e.getMessage());
         }

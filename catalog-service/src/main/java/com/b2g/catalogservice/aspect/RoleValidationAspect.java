@@ -70,6 +70,7 @@ public class RoleValidationAspect {
             return joinPoint.proceed();
 
         } catch (Exception e) {
+            //devo poi gestirlo nel advice
             log.error("Error during role validation: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body("Token validation failed: " + e.getMessage());

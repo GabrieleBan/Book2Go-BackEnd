@@ -2,7 +2,7 @@ type: http_request
 model: http_request
 id: rq_ifMH2uT4x4
 createdAt: 2025-08-25T15:27:40.814943
-updatedAt: 2025-08-25T15:37:18.831112
+updatedAt: 2025-12-10T21:48:33.716499900
 workspaceId: wk_94bVhSAcpy
 folderId: fl_GBXwSTx9Sx
 authentication: {}
@@ -10,7 +10,7 @@ authenticationType: none
 body:
   text: |-
     {
-      "refreshToken": "5c08902e-ed7c-42a7-8526-fbe9d414606a"
+      "refreshToken": "d5fad2cb-eb68-4119-918e-7e651129609e"
     }
 bodyType: application/json
 description: ''

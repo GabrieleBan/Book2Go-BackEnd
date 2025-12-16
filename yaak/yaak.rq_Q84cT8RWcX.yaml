@@ -1,0 +1,30 @@
+type: http_request
+model: http_request
+id: rq_Q84cT8RWcX
+createdAt: 2025-11-25T18:32:15.606784600
+updatedAt: 2025-11-25T18:46:14.686069200
+workspaceId: wk_94bVhSAcpy
+folderId: fl_zS52BCUtYG
+authentication: {}
+authenticationType: null
+body: {}
+bodyType: null
+description: ''
+headers: []
+method: GET
+name: GetUsersSummary
+sortPriority: -0.0001
+url: http://localhost:8098/readers/sum-info
+urlParameters:
+- enabled: true
+  name: readersIds
+  value: 5ad59251-a81c-461b-8990-3977d5a5a957 ,750346bd-7f8b-4616-a7ad-7a08248b259a
+  id: 3uk0tqkrKN
+- enabled: false
+  name: ''
+  value: ''
+  id: 3un9XpCS37
+- enabled: true
+  name: ''
+  value: ''
+  id: RQWcCEn5Gd

@@ -2,6 +2,7 @@ package com.b2g.lendservice.controller;
 
 import com.b2g.lendservice.Exceptions.LendableBookException;
 import com.b2g.lendservice.annotation.RequireRole;
+import com.b2g.lendservice.dto.LendingOptionDTO;
 import com.b2g.lendservice.model.LendableBook;
 import com.b2g.lendservice.model.LendingOption;
 import com.b2g.lendservice.service.BookService;
@@ -23,7 +24,7 @@ public class LendableFormatsController {
 
     private final BookService bookService;
 
-    /** CREA UN NUOVO LENDABLE FORMAT (collega bookId + formatId) */
+    /** CREA UN NUOVO LENDABLE FORMAT (verifca bookId + formatId richiesta al catalogg service) */
     @RequireRole("ADMIN")
     @PostMapping
     @Transactional
@@ -35,7 +36,7 @@ public class LendableFormatsController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newFormat);
     }
 
-    /** RITORNA TUTTI I FORMATI PRESTABILI DI UN LIBRO */
+    /** Ritorna tutti i lendable formats di un libro (inteso come archetype book) */
     @GetMapping
     public ResponseEntity<List<LendableBook>> getLendableFormatsForBook(
             @RequestParam UUID bookId) {
@@ -47,11 +48,11 @@ public class LendableFormatsController {
     /** AGGIUNGE UN'OPZIONE DI PRESTITO A UN FORMATO PRESTABILE */
     @RequireRole("ADMIN")
     @PostMapping("/{formatId}/options")
-    public ResponseEntity<LendingOption> addOptionToFormat(
+    public ResponseEntity<Set<LendingOption>> addOptionToFormat(
             @PathVariable UUID formatId,
-            @RequestBody LendingOption option) throws LendableBookException {
+            @RequestBody LendingOptionDTO requestedOption) throws LendableBookException {
 
-        LendingOption newOption = bookService.addLendingOption(formatId, option);
+        Set<LendingOption> newOption = bookService.addLendingOption(formatId, requestedOption);
         return ResponseEntity.status(HttpStatus.CREATED).body(newOption);
     }
 

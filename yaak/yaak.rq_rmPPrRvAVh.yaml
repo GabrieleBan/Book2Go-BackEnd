@@ -1,0 +1,25 @@
+type: http_request
+model: http_request
+id: rq_rmPPrRvAVh
+createdAt: 2025-11-26T23:47:16.856342800
+updatedAt: 2025-11-28T22:23:24.454821600
+workspaceId: wk_94bVhSAcpy
+folderId: fl_gQ2VqcuSam
+authentication:
+  disabled: false
+  token: eyJhbGciOiJSUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluMSIsInJvbGUiOiJBRE1JTiIsInVzZXJVVUlEIjoiM2Y5OWNjYzktMGFkZi00MGY5LWIwNjQtMjliYmE0MTEyMDgwIiwic3ViIjoiM2Y5OWNjYzktMGFkZi00MGY5LWIwNjQtMjliYmE0MTEyMDgwIiwiaWF0IjoxNzY0MzY4MzQ2LCJleHAiOjE3NjQzNjkyNDYsImlzcyI6ImIyZy1hdXRoLXNlcnZpY2UiLCJhdWQiOlsiYjJnLW1pY3Jvc2VydmljZXMiXX0.M-ZT2MLwvGBw2MKn-N6K2LFWeqYZdgWa9pZWXAkj-sJl6jg1jLV8jrAuGFXTKjcCVmCeM87f0Ct4ZZbGfWOEv-Yckoc7EvvugCqBhpE5zkkZ1CBRAzKHaUEKaLgfivJ8_hWnOgb-LdFgEIH0D_nr4NQNsRM-mbQEzmUn3NuxTdAJfbpsVpGt6pZ5lhTWeVO3zvM1DzKPKMuHv8j-rWg6MOLAc7rYAeqo_tHotylxzvvO_328Q2nIstxvbZ3zi4C68liti4VI2bArf0BTI_QZex9FZ0u-HdfW1nBboZajh8XJ3d9baQzeRz4JpP2ygkxSXonCuv9USOTbpydudQiKVw
+authenticationType: bearer
+body:
+  text: ''
+bodyType: application/json
+description: ''
+headers:
+- enabled: true
+  name: Content-Type
+  value: application/json
+  id: tEGMWGJ0f5
+method: GET
+name: InitCatalog
+sortPriority: 5000.001
+url: http://localhost:8091/test/create
+urlParameters: []

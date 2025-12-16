@@ -29,18 +29,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         final String authHeader = request.getHeader("Authorization");
-        final String jwt;
+
         System.out.println("Internal Authorization header: " + authHeader);
-        // Per gli endpoint protetti, verifico che ci sia un header Authorization valido
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            filterChain.doFilter(request, response);
             return;
         }
 
-        jwt = authHeader.substring(7);
-        // Verifico che il token non sia vuoto
-        if (jwt.trim().isEmpty()) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        String jwt = authHeader.substring(7).trim();
+
+        if (jwt.isEmpty()) {
+            filterChain.doFilter(request, response);
             return;
         }
 
@@ -73,7 +72,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
 
         List<String> publicPaths = List.of(
-                "/rental/format/**"
         );
         System.out.println(path);
         boolean b = publicPaths.stream().anyMatch(publicPath -> pathMatches(publicPath, path));

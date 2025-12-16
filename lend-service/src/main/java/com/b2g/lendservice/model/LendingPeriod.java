@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import net.minidev.json.annotate.JsonIgnore;
 
 import java.time.LocalDate;
 
@@ -12,10 +13,10 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class LendingPeriod {
 
-    @Column(name = "start_date", nullable = false)
+    @Column(name = "start_date", nullable = true)
     private LocalDate start;
 
-    @Column(name = "end_date", nullable = false)
+    @Column(name = "end_date", nullable = true)
     private LocalDate end;
 
     public LendingPeriod(LocalDate start, LocalDate end) {
@@ -30,6 +31,7 @@ public class LendingPeriod {
     public int durationDays() {
         return (int) (end.toEpochDay() - start.toEpochDay());
     }
+    @JsonIgnore
     public boolean isValid() {
         return start != null && end != null && !end.isBefore(start);
     }

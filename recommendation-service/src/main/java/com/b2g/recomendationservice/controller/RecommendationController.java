@@ -56,6 +56,7 @@ public class RecommendationController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "false") boolean mustHaveAll) {
 
+
         // Chiama il service passando page e size
         Page<Book> recommendationPage = recommService.getGenericRecommendation(categoryIds, page, size, mustHaveAll);
 

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.web.authentication.session.SessionAuthenticationException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -22,35 +24,40 @@ public class remoteJwtService {
     @Value("${authService.internal.url}")
     private  String authServiceUrl;
 
-    private final RestTemplate restTemplate=new RestTemplate();
+    private final RestTemplate restTemplate;
 
     /**
      * Fa la chiamata HTTP al vero auth-service per validare il token
      */
     public Claims remoteValidateToken(String token) {
-        System.out.println("called remoteValidateToken with token: " + token);
+
+        String validateUrl = authServiceUrl.endsWith("/validate")
+                ? authServiceUrl
+                : authServiceUrl + "/validate";
+        log.info("Validating token: " + token);
+        log.info("Validating url: " + validateUrl);
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + token);
-        if(!authServiceUrl.contains("/validate")) {
-            authServiceUrl = authServiceUrl.concat("/validate");
-        }
+        headers.setBearerAuth(token);
+
         HttpEntity<Void> request = new HttpEntity<>(headers);
 
-        // L'URL punta all'endpoint interno di auth-service
-        ResponseEntity<Map> response = restTemplate.exchange(
-                authServiceUrl,
-                HttpMethod.GET,
-                request,
-                Map.class
-        );
+        try {
+            ResponseEntity<Map> response = restTemplate.exchange(
+                    validateUrl,
+                    HttpMethod.GET,
+                    request,
+                    Map.class
+            );
 
-        // Converte la mappa in Claims di JJWT
-        if (response.getStatusCode()== HttpStatus.OK) {
             return Jwts.claims(response.getBody());
-        }
-        else
-            throw new SessionAuthenticationException(response.getBody().toString());
 
+        } catch (HttpClientErrorException.Unauthorized e) {
+            throw new SessionAuthenticationException("Token invalid or expired");
+
+        } catch (RestClientException e) {
+            log.error("Invalid token", e);
+            throw new SessionAuthenticationException("Token invalid or expired");
+        }
     }
 
     public UUID extractUserUUID(Claims claims) {

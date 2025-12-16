@@ -1,0 +1,26 @@
+type: http_request
+model: http_request
+id: rq_7fJwcDiLNs
+createdAt: 2025-11-27T15:32:50.658168500
+updatedAt: 2025-11-28T12:26:30.677333500
+workspaceId: wk_94bVhSAcpy
+folderId: fl_zS52BCUtYG
+authentication: {}
+authenticationType: null
+body: {}
+bodyType: null
+description: ''
+headers: []
+method: GET
+name: CheckUserDescription
+sortPriority: 0.0009
+url: http://localhost:8098/readers/dd029476-c9e3-4d48-96b0-501f152055d7/check/subscription
+urlParameters:
+- enabled: false
+  name: readersIds
+  value: 5ad59251-a81c-461b-8990-3977d5a5a957 ,750346bd-7f8b-4616-a7ad-7a08248b259a
+  id: 3uk0tqkrKN
+- enabled: true
+  name: ''
+  value: ''
+  id: w9EBzu4CET
