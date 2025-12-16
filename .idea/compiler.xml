@@ -12,7 +12,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="shared" />
       </profile>
-      <profile name="Annotation profile for rental-service" enabled="true">
+      <profile name="Annotation profile for inventory-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -20,14 +20,22 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
         </processorPath>
         <module name="auth-service" />
-        <module name="mocked-service" />
+        <module name="inventory-service" />
         <module name="topic-service" />
         <module name="review-service" />
         <module name="catalog-service" />
-        <module name="lend-service" />
         <module name="reader-service" />
         <module name="notification-service" />
         <module name="recommendation-service" />
+      </profile>
+      <profile name="Annotation profile for rental-service" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath>
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
+        </processorPath>
+        <module name="lend-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -39,8 +47,8 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="auth-service" options="-parameters" />
       <module name="catalog-service" options="-parameters" />
+      <module name="inventory-service" options="-parameters" />
       <module name="lend-service" options="-parameters" />
-      <module name="mocked-service" options="-parameters" />
       <module name="notification-service" options="-parameters" />
       <module name="order-service" options="-parameters" />
       <module name="payment-service" options="-parameters" />

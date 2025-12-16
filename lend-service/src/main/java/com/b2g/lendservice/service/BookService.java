@@ -10,6 +10,7 @@ import com.b2g.lendservice.model.LendingOption;
 import com.b2g.lendservice.model.UserSubscriptionData;
 import com.b2g.lendservice.repository.LendableBookRepository;
 import com.b2g.lendservice.repository.LendingOptionRepository;
+import com.b2g.lendservice.service.infrastructure.CatalogClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

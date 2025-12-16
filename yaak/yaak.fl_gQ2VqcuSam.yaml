@@ -2,7 +2,7 @@ type: folder
 model: folder
 id: fl_gQ2VqcuSam
 createdAt: 2025-08-27T17:56:28.336504
-updatedAt: 2025-10-28T14:36:17.824138200
+updatedAt: 2025-12-16T22:19:04.134266800
 workspaceId: wk_94bVhSAcpy
 folderId: null
 authentication: {}
@@ -10,4 +10,4 @@ authenticationType: null
 description: ''
 headers: []
 name: Catalog
-sortPriority: 3000.0
+sortPriority: 6000.0

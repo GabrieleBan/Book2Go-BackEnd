@@ -11,10 +11,12 @@ import com.b2g.lendservice.dto.LendingRequest;
 import com.b2g.lendservice.model.*;
 import com.b2g.lendservice.repository.LendableBookRepository;
 import com.b2g.lendservice.repository.LendingRepository;
+import com.b2g.lendservice.service.infrastructure.InventoryClient;
+import com.b2g.lendservice.service.infrastructure.LendEventPublisher;
+import com.b2g.lendservice.service.infrastructure.SubscriptionClient;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,9 +31,9 @@ public class LendsService {
 
     private final LendingRepository lendingRepository;
     private final LendableBookRepository lendableBookRepository;
-    private final RabbitTemplate safeRabbitTemplate;
     private final SubscriptionClient subscriptionClient;
     private final LendEventPublisher lendEventPublisher;
+    private final InventoryClient inventoryClient;
 
     @Value("${app.rabbitmq.exchange}")
     private String exchangeName;
@@ -43,7 +45,7 @@ public class LendsService {
     private static final List<LendState> ACTIVE_STATES = LendState.activeStates();
 
     /**
-     * Richiesta prestito (dominio)
+     * Richiesta prestito
      */
     @Transactional
     public Lending requestLending(UUID userId, LendingRequest request) throws Exception {
@@ -121,7 +123,7 @@ public class LendsService {
         }
         lendingToFulfill.startLending(option, copy);
 
-        checkLendableCopyIsStillAvailable(copy,libraryId);
+        retrieveLendableCopyFromInventory(copy,libraryId);
 
 
         Lending fulfilledLend =  lendingRepository.save(lendingToFulfill);
@@ -129,8 +131,8 @@ public class LendsService {
         return fulfilledLend;
     }
 
-    private void checkLendableCopyIsStillAvailable(LendableCopy copy, UUID libraryId) {
-
+    private void retrieveLendableCopyFromInventory(LendableCopy copy, UUID libraryId) {
+        inventoryClient.retrieveCopy(copy,libraryId);
     }
 
     /**

@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.security.core.context.SecurityContextHolder;
-import com.b2g.lendservice.service.remoteJwtService;
+import com.b2g.lendservice.service.infrastructure.remoteJwtService;
 
 import java.util.Arrays;
 import java.util.List;

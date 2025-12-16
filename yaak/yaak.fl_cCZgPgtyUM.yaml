@@ -2,7 +2,7 @@ type: folder
 model: folder
 id: fl_cCZgPgtyUM
 createdAt: 2025-10-28T14:20:55.532538100
-updatedAt: 2025-10-28T14:36:17.816806600
+updatedAt: 2025-12-16T22:19:04.127019200
 workspaceId: wk_94bVhSAcpy
 folderId: null
 authentication: {}
@@ -10,4 +10,4 @@ authenticationType: null
 description: ''
 headers: []
 name: Recommendations
-sortPriority: 1000.0
+sortPriority: 4000.0

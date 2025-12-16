@@ -11,7 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import com.b2g.lendservice.service.remoteJwtService;
+import com.b2g.lendservice.service.infrastructure.remoteJwtService;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;

@@ -5,7 +5,7 @@ import com.b2g.lendservice.dto.LendableCopyEntrustRequest;
 import com.b2g.lendservice.dto.LendingRequest;
 import com.b2g.lendservice.model.Lending;
 import com.b2g.lendservice.service.LendsService;
-import com.b2g.lendservice.service.remoteJwtService;
+import com.b2g.lendservice.service.infrastructure.remoteJwtService;
 import io.jsonwebtoken.Claims;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
