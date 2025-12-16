@@ -130,6 +130,7 @@ public class LendsService {
     }
 
     private void checkLendableCopyIsStillAvailable(LendableCopy copy, UUID libraryId) {
+
     }
 
     /**
