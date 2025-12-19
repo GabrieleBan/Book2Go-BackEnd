@@ -1,4 +1,4 @@
-package com.b2g.inventoryservice.service;
+package com.b2g.inventoryservice.service.infrastructure;
 
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;

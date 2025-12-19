@@ -1,6 +1,6 @@
 package com.b2g.inventoryservice.config;
 
-import com.b2g.inventoryservice.service.JwtService;
+import com.b2g.inventoryservice.service.infrastructure.JwtService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

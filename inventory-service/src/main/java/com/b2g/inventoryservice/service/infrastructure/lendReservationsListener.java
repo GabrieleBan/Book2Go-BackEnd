@@ -1,6 +1,7 @@
-package com.b2g.inventoryservice.service;
+package com.b2g.inventoryservice.service.infrastructure;
 
 import com.b2g.commons.LendingMessage;
+import com.b2g.inventoryservice.service.applicationService.InventoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;

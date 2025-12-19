@@ -1,7 +1,7 @@
 package com.b2g.inventoryservice.aspect;
 
 import com.b2g.inventoryservice.annotation.RequireRole;
-import com.b2g.inventoryservice.service.JwtService;
+import com.b2g.inventoryservice.service.infrastructure.JwtService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

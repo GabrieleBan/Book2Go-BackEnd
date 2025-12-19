@@ -1,8 +1,8 @@
-package com.b2g.inventoryservice.service;
+package com.b2g.inventoryservice.service.applicationService;
 
 import com.b2g.commons.LendingMessage;
-import com.b2g.inventoryservice.model.LendingBooksReservations;
-import com.b2g.inventoryservice.model.PhysicalBookIdentifier;
+import com.b2g.inventoryservice.model.entities.ReservationRequest;
+import com.b2g.inventoryservice.model.valueObjects.CopyId;
 import com.b2g.inventoryservice.repository.ReservationsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Random;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -23,12 +24,7 @@ public class InventoryService {
         Random rn = new Random();
 
         int i = rn.nextInt();
-        reservationsRepository.save(LendingBooksReservations.builder()
-                        .physicalBookIdentifier(new PhysicalBookIdentifier(i,message.getFormatId()))
-                        .requestedAt(LocalDate.now())
-                        .reservedAt(LocalDate.now())
-                        .libraryID(message.getLibraryId())
-                        .build());
+        reservationsRepository.save(  ReservationRequest.create(message.getLibraryId(), message.getFormatId(), message.getUserId()));
         message.setPhysicalId(i);
         rabbitTemplate.convertAndSend(
                 exchange,             // default exchange

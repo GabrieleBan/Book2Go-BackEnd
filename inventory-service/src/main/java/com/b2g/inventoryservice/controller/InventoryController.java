@@ -2,9 +2,8 @@ package com.b2g.inventoryservice.controller;
 
 
 import com.b2g.inventoryservice.dto.UpdateCopyStateRequest;
-import com.b2g.inventoryservice.model.CopyUseState;
-import com.b2g.inventoryservice.model.LendingBooksReservations;
-import com.b2g.inventoryservice.model.PhysicalBookIdentifier;
+import com.b2g.inventoryservice.model.entities.ReservationRequest;
+import com.b2g.inventoryservice.model.valueObjects.CopyId;
 import com.b2g.inventoryservice.repository.ReservationsRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,9 +31,9 @@ public class InventoryController {
             ) {
         log.info("Retrieving inventory for book id {} a library {}", bookId, libraryId);
 
-        LendingBooksReservations reserved= reservationsRepository.findByLibraryIDAndPhysicalBookIdentifier(libraryId,new PhysicalBookIdentifier(copyNumber,bookId));
+        ReservationRequest reserved= reservationsRepository.findByLibraryIDAndPhysicalBookIdentifier(libraryId,new CopyId(bookId, copyNumber));
         reservationsRepository.delete(reserved);
-        return ResponseEntity.ok().body(reserved.getPhysicalBookIdentifier());
+        return ResponseEntity.ok().body(reserved.getCopyId());
     }
 
 
