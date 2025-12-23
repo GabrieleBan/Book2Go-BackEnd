@@ -1,5 +1,6 @@
 package com.b2g.inventoryservice.model.valueObjects;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.*;
 
@@ -7,16 +8,19 @@ import java.util.UUID;
 
 @Embeddable
 @Getter
-@AllArgsConstructor
+@EqualsAndHashCode
 @NoArgsConstructor
 public class CopyId {
 
-    private UUID libraryId;
-    private UUID formatId;
+
+
+    @Column(name = "book_id", nullable = false)
+    private UUID bookId;
+
+    @Column(name = "copy_number", nullable = false)
     private Integer copyNumber;
-    public CopyId(UUID libraryId, UUID formatId) {
-        this.libraryId = libraryId;
-        this.formatId = formatId;
-        this.copyNumber = null;
+    public CopyId( UUID formatId,int copyNumber) {
+        this.bookId = formatId;
+        this.copyNumber = copyNumber;
     }
 }

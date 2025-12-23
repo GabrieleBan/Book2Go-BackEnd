@@ -35,18 +35,8 @@ public class LendsService {
     private final LendEventPublisher lendEventPublisher;
     private final InventoryClient inventoryClient;
 
-    @Value("${app.rabbitmq.exchange}")
-    private String exchangeName;
-    @Value("${app.rabbitmq.routingkey.lend.request.created}")
-    private String routingKeyLendRequestCreated;
-    @Value("${app.rabbitmq.routingkey.lend.created}")
-    private String routingKeyLendCreated;
-
     private static final List<LendState> ACTIVE_STATES = LendState.activeStates();
 
-    /**
-     * Richiesta prestito
-     */
     @Transactional
     public Lending requestLending(UUID userId, LendingRequest request) throws Exception {
         UUID lendableBookId=request.lendableBookId();
@@ -73,7 +63,7 @@ public class LendsService {
             period= new LendingPeriod(LocalDate.now(), LocalDate.now().plusDays(option.getDurationDays()));
         }
 
-        Lending lending = Lending.create(userId,option.getId(),libraryId, copy);
+        Lending lending = Lending.create(userId,option.getId(),libraryId, copy,subscription.getTier());
 
 
 
@@ -170,14 +160,24 @@ public class LendsService {
 
     }
 
-
-    public void assignCopyToLend(UUID lendId, LendableCopy copy) {
-        Lending lend=lendingRepository.findById(lendId).orElse(null);
-        if(lend==null) {
-            throw new LendableBookException("Lend not found");
+    @Transactional
+    public void assignCopyToLend(LendableCopy copy,UUID libraryId) {
+        List<Lending> activeLendings=lendingRepository.findByCopy_LendableBookIdAndStateAndLibraryId(copy.getLendableBookId(),LendState.PROCESSING,libraryId);
+        LendableBook book= lendableBookRepository.findByFormatId(copy.getLendableBookId());
+        if(activeLendings==null || activeLendings.isEmpty()) {
+            log.error(" no processing lendings need book " + copy.getLendableBookId()+" at library " + libraryId);
+            return;
         }
+        Lending lend= decideLendingToAssignBasedOnSubscrition(activeLendings);
         lend.addCopy(copy);
         lendingRepository.save(lend);
+
+        lendEventPublisher.publishLendingEventAsync(lend,book);
+
+    }
+
+    private Lending decideLendingToAssignBasedOnSubscrition(List<Lending> activeLendings) {
+        return activeLendings.getFirst();
     }
 
     public List<Lending> getReaderLendings(UUID readerId, @NotNull Set<LendState> states) {

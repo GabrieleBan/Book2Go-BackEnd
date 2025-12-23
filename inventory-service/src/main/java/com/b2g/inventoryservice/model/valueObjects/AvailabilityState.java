@@ -2,8 +2,12 @@ package com.b2g.inventoryservice.model.valueObjects;
 
 
 public enum AvailabilityState {
+    FREE {
+        public boolean canBeReserved() { return true; }
+    },
     RESERVED,
-    FREE,
     IN_USE,
-    UNAVAILABLE
+    UNAVAILABLE;
+
+    public boolean canBeReserved() { return false; }
 }

@@ -7,8 +7,10 @@ import org.springframework.beans.PropertyValues;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+
 import java.util.Collection;
 import java.util.List;
+
 import java.util.UUID;
 
 @Repository
@@ -23,4 +25,8 @@ public interface LendingRepository extends JpaRepository<Lending, UUID> {
     Lending findByUserIdAndCopyAndStateIn(UUID userId, LendableCopy copy, Collection<LendState> states);
 
     List<Lending> findByUserIdAndStateAndLibraryId(UUID userId, LendState state, UUID libraryId);
+
+    List<Lending> findByCopy_LendableBookIdAndState(UUID lendableBookId, LendState lendState);
+
+    List<Lending> findByCopy_LendableBookIdAndStateAndLibraryId(UUID copyLendableBookId, LendState state, UUID libraryId);
 }

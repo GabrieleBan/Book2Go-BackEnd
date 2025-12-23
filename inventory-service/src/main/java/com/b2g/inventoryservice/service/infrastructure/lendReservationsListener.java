@@ -1,7 +1,8 @@
 package com.b2g.inventoryservice.service.infrastructure;
 
 import com.b2g.commons.LendingMessage;
-import com.b2g.inventoryservice.service.applicationService.InventoryService;
+import com.b2g.inventoryservice.service.applicationService.InventoryApplicationService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -18,7 +19,7 @@ public class lendReservationsListener {
     @Value("${app.rabbitmq.routingkey.lend.request.created}")
     private String requestLendReservationKey;
     private final RabbitTemplate rabbitTemplate;
-    private final InventoryService inventoryService;
+    private final InventoryApplicationService inventoryService;
 
     @RabbitListener(queues = "inventory.lend.queue")
     public void handleLendingEvent(
@@ -29,7 +30,7 @@ public class lendReservationsListener {
         log.info("Messaggio ricevuto: {}", message);
 
         if (routingKey.equals(requestLendReservationKey)) {
-            inventoryService.reserveLendingBook(message);
+            inventoryService.createReservationRequest(message.getLibraryId(),message.getFormatId());
         }
         else {
             log.warn("Routing key non gestita: {}", routingKey);

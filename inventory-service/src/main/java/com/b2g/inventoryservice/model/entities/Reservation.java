@@ -1,5 +1,6 @@
 package com.b2g.inventoryservice.model.entities;
 
+import com.b2g.inventoryservice.exceptions.ReservationException;
 import com.b2g.inventoryservice.model.valueObjects.CopyId;
 import com.b2g.inventoryservice.model.valueObjects.ReservationState;
 import jakarta.persistence.*;
@@ -15,45 +16,38 @@ import java.util.UUID;
 public class Reservation {
 
     @Id
-    @GeneratedValue
-    private UUID reservationId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long reservationId;
 
     @Embedded
     private CopyId copyId; // copia fisica assegnata
 
-    private UUID bookId;
-    private UUID userId;
-    private UUID libraryId;
+
 
     private Instant reservedAt;
 
     @Enumerated(EnumType.STRING)
     private ReservationState state;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id", insertable = false, updatable = false)
-    private Book book;
+    private Reservation(CopyId copyId) {
 
-    private Reservation(CopyId copyId, UUID bookId, UUID userId, UUID libraryId) {
-        this.reservationId = UUID.randomUUID();
         this.copyId = copyId;
-        this.bookId = bookId;
-        this.userId = userId;
-        this.libraryId = libraryId;
         this.reservedAt = Instant.now();
         this.state = ReservationState.CONFIRMED;
     }
 
-    public static Reservation create(CopyId copyId, UUID bookId, UUID userId, UUID libraryId) {
-        return new Reservation(copyId, bookId, userId, libraryId);
+    public static Reservation create(CopyId copyId) {
+        return new Reservation(copyId);
     }
 
     // =====================
     // DOMAIN METHODS
     // =====================
-    public void markInUse() {
+    public void markInUse(LibraryCopy copy) {
         if (state != ReservationState.CONFIRMED) {
             throw new IllegalStateException("Reservation must be CONFIRMED to start use");
+        }
+        if(! copy.getId().equals(this.copyId)) {throw new ReservationException("Trying to retrieve a reserved copy that does not match the copy id of the used reservation");
         }
         state = ReservationState.IN_USE;
     }

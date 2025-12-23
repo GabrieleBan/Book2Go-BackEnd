@@ -1,11 +1,8 @@
 package com.b2g.inventoryservice.controller;
 
 
-import com.b2g.inventoryservice.dto.UpdateCopyStateRequest;
-import com.b2g.inventoryservice.model.entities.ReservationRequest;
-import com.b2g.inventoryservice.model.valueObjects.CopyId;
-import com.b2g.inventoryservice.repository.ReservationsRepository;
-import jakarta.validation.Valid;
+import com.b2g.inventoryservice.model.entities.LibraryCopy;
+import com.b2g.inventoryservice.service.applicationService.InventoryApplicationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -19,21 +16,18 @@ import java.util.UUID;
 @RequestMapping("/inventory")
 @RequiredArgsConstructor
 public class InventoryController {
-    private final ReservationsRepository reservationsRepository;
+    private final InventoryApplicationService inventoryApplicationService;
     @PatchMapping(
             value = "/libraries/{libraryId}/physical-copies/{bookId}/{copyNumber}",
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> retrieveInventory(
             @PathVariable UUID bookId,
             @PathVariable UUID libraryId,
-            @PathVariable Integer copyNumber,
-            @RequestBody @Valid UpdateCopyStateRequest state
+            @PathVariable Integer copyNumber
             ) {
         log.info("Retrieving inventory for book id {} a library {}", bookId, libraryId);
-
-        ReservationRequest reserved= reservationsRepository.findByLibraryIDAndPhysicalBookIdentifier(libraryId,new CopyId(bookId, copyNumber));
-        reservationsRepository.delete(reserved);
-        return ResponseEntity.ok().body(reserved.getCopyId());
+        LibraryCopy copy= inventoryApplicationService.retrieveCopy(libraryId,bookId,copyNumber);
+        return ResponseEntity.ok().body(copy);
     }
 
 

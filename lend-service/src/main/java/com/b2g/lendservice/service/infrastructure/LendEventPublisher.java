@@ -12,6 +12,8 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -22,6 +24,8 @@ public class LendEventPublisher {
     private String routingKeyLendRequestCreated;
     @Value("${app.rabbitmq.routingkey.lend.created}")
     private String routingKeyLendCreated;
+    @Value("${app.rabbitmq.routingkey.lend.ready}")
+    private String routingKeyLendReady;
     private final RabbitTemplate safeRabbitTemplate;
 
 
@@ -29,6 +33,18 @@ public class LendEventPublisher {
      * Pubblicazione evento Lending (appena creato e fisico -> Processing , se digitale o assegnato in libreria -> Lending )
      */
     public void publishLendingEventAsync(Lending lending, LendableBook lendableBook) {
+        LocalDate start;
+        LocalDate end;
+        if(lending.getPeriod()!= null)
+        {
+            start= lending.getPeriod().getStart();
+            end= lending.getPeriod().getEnd();
+        }
+        else
+        {
+            start=null;
+            end=null;
+        }
         LendingMessage message = LendingMessage.builder()
                 .lendId(lending.getId())
                 .bookId(lendableBook.getBookId())
@@ -37,8 +53,8 @@ public class LendEventPublisher {
                 .userId(lending.getUserId())
                 .lendState(lending.getState())
                 .libraryId(lending.getLibraryId())
-                .startDate(lending.getPeriod().getStart())
-                .endDate(lending.getPeriod().getEnd())
+                .startDate(start)
+                .endDate(end)
                 .build();
         String routingKey = "";
         if (lending.getState().equals(LendState.LENDING))
@@ -46,6 +62,8 @@ public class LendEventPublisher {
         if (lending.getState().equals(LendState.PROCESSING))
             if (lending.getLibraryId() != null)
                 routingKey = routingKeyLendRequestCreated;
+        if (lending.getState().equals(LendState.AWAITING))
+                routingKey = routingKeyLendReady;
         log.info("Used key: " + routingKey);
         if (routingKey.isEmpty()) {
             log.error("routing key is empty, unexpected lend state is " + lending.getState());

@@ -1,6 +1,13 @@
 package com.b2g.inventoryservice.service.domainService;
 
+import com.b2g.inventoryservice.model.entities.LibraryCopy;
+import com.b2g.inventoryservice.model.entities.Reservation;
 import com.b2g.inventoryservice.model.entities.ReservationRequest;
+import com.b2g.inventoryservice.model.valueObjects.AvailabilityState;
+import com.b2g.inventoryservice.model.valueObjects.ReservationRequestState;
+import com.b2g.inventoryservice.repository.LibraryCopyRepository;
+import com.b2g.inventoryservice.repository.ReservationRepository;
+import com.b2g.inventoryservice.repository.ReservationRequestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,40 +22,34 @@ public class ReservationService {
     private final LibraryCopyRepository copyRepository;
 
 
-    public ReservationRequest createRequest(UUID libraryId, UUID bookId, UUID userId) {
-        ReservationRequest request = ReservationRequest.create(libraryId, bookId, userId);
-        return requestRepository.save(request);
+    public ReservationRequest createRequest(UUID libraryId, UUID bookId) {
+        ReservationRequest request = ReservationRequest.create(libraryId, bookId);
+        return request;
     }
 
 
     @Transactional
-    public Reservation assignCopy(Long requestId, Integer copyNumber) {
-        ReservationRequest request = requestRepository.findById(requestId)
-                .orElseThrow(() -> new IllegalArgumentException("Request not found"));
-
+    public Reservation assignCopy(ReservationRequest request, LibraryCopy copy) {
         if (request.getState() != ReservationRequestState.REQUESTED) {
             throw new IllegalStateException("Request is not in REQUESTED state");
         }
 
-        LibraryCopy copy = copyRepository.findByLibraryIdAndBookIdAndCopyNumberAndUseState(
-                        request.getLibraryId(),
-                        request.getBookId(),
-                        copyNumber,
-                        CopyUseState.FREE)
-                .orElseThrow(() -> new IllegalStateException("Copy not available"));
+        if (copy == null) {
+            throw new IllegalStateException("Copy not found");
+        }
 
-        // Aggiorna stato della copia fisica
+        Reservation reservation = request.assignTo(copy);
         copy.reserve();
-        copyRepository.save(copy);
-
-        // Crea prenotazione concreta
-        Reservation reservation = Reservation.create(copy.getId(), request.getBookId(), request.getUserId(), request.getLibraryId());
-        reservationRepository.save(reservation);
-
-        // Aggiorna request come assegnata
-        request.markAssigned(reservation.getReservationId());
-        requestRepository.save(request);
+        request.markAssigned();
 
         return reservation;
+    }
+
+    public LibraryCopy retrieveReservedCopy(Reservation reservation, LibraryCopy copy) {
+
+        copy.markInUse();
+        reservation.markInUse(copy);
+
+        return copy;
     }
 }

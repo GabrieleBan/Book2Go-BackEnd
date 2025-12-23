@@ -4,19 +4,21 @@ import com.b2g.inventoryservice.exceptions.AvailabilityException;
 import com.b2g.inventoryservice.model.valueObjects.CopyCondition;
 import com.b2g.inventoryservice.model.valueObjects.CopyId;
 import com.b2g.inventoryservice.model.valueObjects.AvailabilityState;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 import java.util.UUID;
 
 @Entity
 @Getter
+@EqualsAndHashCode
 public class LibraryCopy {
 
     @EmbeddedId
     private CopyId id;
+    @Column(name = "library_id", nullable = false)
+    private UUID libraryId;
 
     @Enumerated(EnumType.STRING)
     private AvailabilityState useState;
@@ -32,7 +34,7 @@ public class LibraryCopy {
         this.condition = CopyCondition.PERFECT;
     }
 
-    public static LibraryCopy create(CopyId id) {
+    public static LibraryCopy create(CopyId id, UUID libraryId) {
         return new LibraryCopy(id);
     }
 

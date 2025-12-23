@@ -18,25 +18,23 @@ public class ReservationRequest {
 
     private UUID libraryId;
     private UUID bookId; // formato/libro richiesto
-    private UUID userId;
+
 
     private Instant requestedAt;
 
     @Enumerated(EnumType.STRING)
     private ReservationRequestState state;
 
-    private Long assignedReservationId; // opzionale, null finché non viene assegnata una copia
-
-    private ReservationRequest(UUID libraryId, UUID bookId, UUID userId) {
+    private ReservationRequest(UUID libraryId, UUID bookId) {
         this.libraryId = libraryId;
         this.bookId = bookId;
-        this.userId = userId;
+
         this.requestedAt = Instant.now();
         this.state = ReservationRequestState.REQUESTED;
     }
 
-    public static ReservationRequest create(UUID libraryId, UUID bookId, UUID userId) {
-        return new ReservationRequest(libraryId, bookId, userId);
+    public static ReservationRequest create(UUID libraryId, UUID bookId) {
+        return new ReservationRequest(libraryId, bookId);
     }
 
     // =====================
@@ -56,11 +54,28 @@ public class ReservationRequest {
         state = ReservationRequestState.EXPIRED;
     }
 
-    public void markAssigned(Long reservationId) {
+    public void markAssigned() {
+        if (state == ReservationRequestState.ASSIGNED) {
+            return;}
         if (state != ReservationRequestState.REQUESTED) {
             throw new IllegalStateException("Only requested requests can be assigned");
         }
-        this.assignedReservationId = reservationId;
         this.state = ReservationRequestState.ASSIGNED;
+    }
+
+    public Reservation assignTo(LibraryCopy copy) {
+        if (state != ReservationRequestState.REQUESTED) {
+            throw new IllegalStateException("Request not assignable");
+        }
+
+        if (!copy.getId().getBookId().equals(bookId)) {
+            throw new IllegalArgumentException("Copy does not match requested book");
+        }
+
+
+
+        this.state = ReservationRequestState.ASSIGNED;
+
+        return Reservation.create(copy.getId());
     }
 }

@@ -17,9 +17,6 @@ public class RabbitMQConfig {
     @Value("${app.rabbitmq.exchange}")
     private String exchangeName;
 
-//    @Value("${app.rabbitmq.routing-key.signup-ticket}")
-//    private String userRegisteredRoutingKey;
-
 
     @Bean
     public Exchange b2gExchange() {

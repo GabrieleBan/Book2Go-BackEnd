@@ -8,7 +8,6 @@ import com.b2g.catalogservice.repository.BookFormatRepository;
 
 import com.b2g.commons.BookSummaryDTO;
 import com.b2g.commons.CategoryDTO;
-import com.b2g.commons.RentalOptionCreateDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +41,6 @@ public class BookService {
     private final CategoryRepository categoryRepository;
     private final BookFormatRepository bookFormatRepository;
 
-    private final RabbitTemplate rabbitTemplate;
     @Value("${app.rabbitmq.exchange}")
     private  String exchangeName;
     @Value("${app.rabbitmq.queue.name}")
@@ -142,7 +140,7 @@ public class BookService {
 //            }
 
             try {
-                signalBookCreation(book);
+                signalBookPageCreation(book);
             } catch (Exception e) {
                 throw new RuntimeException("Errore durante il signaling: " + e.getMessage(), e);
             }
@@ -187,7 +185,7 @@ public class BookService {
 //        }
 //    }
 
-    private void signalBookCreation(Book book) {
+    private void signalBookPageCreation(Book book) {
 
 
         // Invio del messaggio di registrazione con username e UUID

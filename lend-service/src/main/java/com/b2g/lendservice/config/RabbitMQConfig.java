@@ -18,7 +18,7 @@ public class RabbitMQConfig {
     @Value("${app.rabbitmq.queue.name}")
     private String serviceQueuePrefix;
 
-    @Value("${app.rabbitmq.bindingkey.lend.ready}")
+    @Value("${app.rabbitmq.bindingkey.book.reserved}")
     private String lendReadyAtLibraryKey;
 
 

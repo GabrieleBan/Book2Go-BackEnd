@@ -1,6 +1,7 @@
 package com.b2g.lendservice.model;
 
 import com.b2g.commons.LendState;
+import com.b2g.commons.SubscriptionType;
 import com.b2g.lendservice.Exceptions.LendingStateLifeCycleException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -23,6 +24,8 @@ public class Lending {
     @Column(nullable = false)
     private UUID userId;
     @Column(nullable = false)
+    private SubscriptionType subscriptionType;
+    @Column(nullable = false)
     private UUID lendingOptionId;
 
     @Embedded
@@ -42,7 +45,7 @@ public class Lending {
     @Column(nullable = true)
     private UUID libraryId;
 
-    protected Lending(@NotNull UUID userId,@NotNull LendableCopy copy,@NotNull UUID lendingOptionId, UUID libraryId, LendState state) {
+    protected Lending(@NotNull UUID userId,@NotNull LendableCopy copy,@NotNull UUID lendingOptionId, UUID libraryId, LendState state,SubscriptionType subscriptionType) {
         if(copy.isPhysical() && libraryId==null) {
             throw new IllegalArgumentException("libraryId cannot be null if copy is physical");
         }
@@ -53,10 +56,12 @@ public class Lending {
         this.libraryId = libraryId;
         this.requestedAt = LocalDate.now();
         this.period = new LendingPeriod();
+        this.subscriptionType = subscriptionType;
     }
 
-    public static Lending create(UUID userId, UUID lendingOptionId,UUID libraryId, LendableCopy copy) {
-        return new Lending(userId, copy,lendingOptionId, libraryId, LendState.PROCESSING);
+
+    public static Lending create(UUID userId, UUID lendingOptionId,UUID libraryId, LendableCopy copy, SubscriptionType subscriptionType) {
+        return new Lending(userId, copy,lendingOptionId, libraryId, LendState.PROCESSING,subscriptionType);
     }
 
     public void startLending(LendingOption usedOption, LendableCopy copy) {
@@ -116,6 +121,7 @@ public class Lending {
         }
         this.copy = copy;
         this.state = LendState.AWAITING;
+        this.period = new LendingPeriod(LocalDate.now(), (LocalDate) null);
 
     }
 }
