@@ -1,6 +1,7 @@
 package com.b2g.inventoryservice.controller;
 
 
+import com.b2g.inventoryservice.annotation.RequireRole;
 import com.b2g.inventoryservice.model.entities.LibraryCopy;
 import com.b2g.inventoryservice.service.applicationService.InventoryApplicationService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class InventoryController {
     private final InventoryApplicationService inventoryApplicationService;
+    @RequireRole({"EMPLOYEE","ADMIN"})
     @PatchMapping(
             value = "/libraries/{libraryId}/physical-copies/{bookId}/{copyNumber}",
             consumes = MediaType.APPLICATION_JSON_VALUE)

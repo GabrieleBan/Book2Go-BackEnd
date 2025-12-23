@@ -50,4 +50,5 @@ public class InternalAuthenticationController {
                     .body(Map.of("error", "Invalid token"));
         }
     }
+
 }

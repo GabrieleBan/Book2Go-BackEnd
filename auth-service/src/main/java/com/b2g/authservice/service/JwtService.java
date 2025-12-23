@@ -109,6 +109,7 @@ public class JwtService {
 
     public String generateToken(String subject, Map<String, Object> claims) {
         JwtBuilder builder = Jwts.builder()
+                .header().add("kid", "auth-key-1").and()
                 .claims(claims)
                 .subject(subject)
                 .issuedAt(new Date())

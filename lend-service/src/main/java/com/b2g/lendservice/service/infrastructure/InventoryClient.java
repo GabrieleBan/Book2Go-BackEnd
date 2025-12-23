@@ -10,7 +10,11 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -31,11 +35,14 @@ public class InventoryClient {
 
         UpdateCopyStateRequest body = new UpdateCopyStateRequest();
         body.setState("IN_USE");
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
+        String token = auth.getCredentials().toString();
         webClient.patch()
                 .uri(inventoryUrl + "/libraries/{libraryId}/physical-copies/{bookId}/{copyNumber}",
                         libraryId, copy.getLendableBookId(), copy.getCopyNumber())
                 .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .bodyValue(body)
                 .retrieve()
                 .toBodilessEntity()

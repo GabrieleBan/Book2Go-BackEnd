@@ -1,6 +1,7 @@
 package com.b2g.inventoryservice.config;
 
-import com.b2g.inventoryservice.service.infrastructure.JwtService;
+
+import com.b2g.inventoryservice.service.infrastructure.RemoteJwtService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -15,13 +16,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtService jwtService;
-
+    private final RemoteJwtService remoteJwtService;
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -29,33 +30,38 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         final String authHeader = request.getHeader("Authorization");
-        final String jwt;
 
-        // Per gli endpoint protetti, verifico che ci sia un header Authorization valido
+        System.out.println("Internal Authorization header: " + authHeader);
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            filterChain.doFilter(request, response);
             return;
         }
 
-        jwt = authHeader.substring(7);
+        String jwt = authHeader.substring(7).trim();
 
-        // Verifico che il token non sia vuoto
-        if (jwt.trim().isEmpty()) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        if (jwt.isEmpty()) {
+            filterChain.doFilter(request, response);
             return;
         }
 
         try {
-            Claims claims = jwtService.validateToken(jwt);
+
+            Claims claims = remoteJwtService.remoteValidateToken(jwt);
             String userId = claims.getSubject();
+            System.out.println(userId);
+            System.out.println(claims);
             if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UsernamePasswordAuthenticationToken authToken =
-                        new UsernamePasswordAuthenticationToken(userId, null, Collections.emptyList());
+                        new UsernamePasswordAuthenticationToken(claims, null, Collections.emptyList());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            String errorJson = String.format("{\"error\": \"%s\"}", e.getMessage().replace("\"", "'"));
+            response.getWriter().write(errorJson);
+            response.getWriter().flush();
             return;
         }
 
@@ -64,7 +70,35 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getRequestURI();
 
-        return true; // filtra solo /test
+        List<String> publicPaths = List.of(
+        );
+        System.out.println(path);
+        boolean b = publicPaths.stream().anyMatch(publicPath -> pathMatches(publicPath, path));
+        System.out.println(b);
+        return b;
+    }
+
+
+
+    private boolean pathMatches(String pattern, String path) {
+
+        // Case: "/auth/**" → deve avere QUALCOSA dopo la slash
+        if (pattern.endsWith("/**")) {
+            String base = pattern.substring(0, pattern.length() - 3); // "/auth"
+            if (!path.startsWith(base)) return false;
+
+            String remaining = path.substring(base.length()); // es. "/xyz", "/" oppure ""
+            return remaining.length() > 1;                    // deve essere più di "/"
+        }
+
+        // Case: "/auth/" → matcha solo il prefisso esatto
+        if (pattern.endsWith("/")) {
+            return path.startsWith(pattern);
+        }
+
+        // Exact match: "/login"
+        return path.equals(pattern);
     }
 }

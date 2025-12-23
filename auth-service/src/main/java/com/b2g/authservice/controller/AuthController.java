@@ -5,6 +5,7 @@ import com.b2g.authservice.dto.RefreshRequest;
 import com.b2g.authservice.dto.SignupRequest;
 import com.b2g.authservice.dto.TokenResponse;
 import com.b2g.authservice.service.AuthApplicationService;
+import com.b2g.authservice.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -13,6 +14,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+
+import java.math.BigInteger;
+import java.security.interfaces.RSAPublicKey;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 /*
 POST /auth/login → verify credentials, return access + refresh token.
 
@@ -78,4 +86,30 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body("OAuth2 authentication failed");
     }
+    private final JwtService jwtService;
+    @GetMapping("/.well-known/jwks.json")
+    public ResponseEntity<?> wellKnownJwks() {
+        RSAPublicKey rsaPublicKey = (RSAPublicKey) jwtService.getPublicKey();
+
+        Map<String, Object> jwk = new HashMap<>();
+        jwk.put("kty", "RSA");
+        jwk.put("use", "sig");
+        jwk.put("alg", "RS256");
+        jwk.put("kid", "auth-key-1");
+        jwk.put("n", base64UrlEncode(rsaPublicKey.getModulus()));
+        jwk.put("e", base64UrlEncode(rsaPublicKey.getPublicExponent()));
+
+        Map<String, Object> jwks = new HashMap<>();
+        jwks.put("keys", List.of(jwk));
+
+        return ResponseEntity.ok(jwks);
+    }
+
+    private String base64UrlEncode(BigInteger value) {
+        return Base64.getUrlEncoder()
+                .withoutPadding()
+                .encodeToString(value.toByteArray());
+    }
+
+
 }

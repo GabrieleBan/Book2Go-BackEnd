@@ -1,32 +1,72 @@
 package com.b2g.inventoryservice.service.infrastructure;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.authentication.session.SessionAuthenticationException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class JwtService {
+public class RemoteJwtService {
+    @Value("${authService.internal.url}")
+    private  String authServiceUrl;
 
-
-
-    public Claims validateToken(String token) {
-        return null;
-    }
+    private final RestTemplate restTemplate;
 
     /**
-     * Extract roles from JWT claims.
-     * Supports both "roles", "role" and "authorities" claim names.
-     *
-     * @param claims JWT claims
-     * @return List of role names
+     * Fa la chiamata HTTP al vero auth-service per validare il token
      */
+    public Claims remoteValidateToken(String token) {
+
+        String validateUrl = authServiceUrl.endsWith("/internal/validate")
+                ? authServiceUrl
+                : authServiceUrl + "/internal/validate";
+        log.info("Validating token: " + token);
+        log.info("Validating url: " + validateUrl);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+
+        HttpEntity<Void> request = new HttpEntity<>(headers);
+
+        try {
+            ResponseEntity<Map> response = restTemplate.exchange(
+                    validateUrl,
+                    HttpMethod.GET,
+                    request,
+                    Map.class
+            );
+
+            return Jwts.claims(response.getBody());
+
+        } catch (HttpClientErrorException.Unauthorized e) {
+            throw new SessionAuthenticationException("Token invalid or expired");
+
+        } catch (RestClientException e) {
+            log.error("Invalid token", e);
+            throw new SessionAuthenticationException("Token invalid or expired");
+        }
+    }
+
+    public UUID extractUserUUID(Claims claims) {
+        return UUID.fromString(claims.get("userUUID").toString());
+    }
+
     public List<String> extractRoles(Claims claims) {
         List<String> roles = new ArrayList<>();
 
@@ -79,4 +119,5 @@ public class JwtService {
 
         return roles;
     }
+
 }
