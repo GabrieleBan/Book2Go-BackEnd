@@ -4,46 +4,45 @@ package com.b2g.lendservice.advice;
 import com.b2g.lendservice.Exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.authentication.session.SessionAuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Gestione eccezioni custom per LendableBook
     @ExceptionHandler(LendableBookException.class)
-    public ResponseEntity<ErrorResponse> handleLendableBookException(LendableBookException ex) {
-        ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    public ResponseEntity<ErrorResponse> handleLendableBook(LendableBookException ex) {
+        return build(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
-    // Gestione eccezioni custom per prestiti già esistenti
     @ExceptionHandler(BookAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleBookAlreadyExists(BookAlreadyExistsException ex) {
-        ErrorResponse error = new ErrorResponse(HttpStatus.CONFLICT.value(), ex.getMessage());
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+        return build(HttpStatus.CONFLICT, ex.getMessage());
     }
 
-    // Gestione eccezioni custom per limite prestiti arrivato
     @ExceptionHandler(TooManyLendsException.class)
-    public ResponseEntity<ErrorResponse> handleTooManyLendsException(TooManyLendsException ex) {
-        ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    public ResponseEntity<ErrorResponse> handleTooManyLends(TooManyLendsException ex) {
+        return build(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
-
 
     @ExceptionHandler(LendingOptionNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleLendingOptionNotFound(LendingOptionNotFoundException ex) {
-        ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-    }
-    // Gestione generale per tutte le altre eccezioni
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
-        ErrorResponse error = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        return build(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
-    // DTO semplice per la risposta di errore
-    public static record ErrorResponse(int status, String message) {}
+    @ExceptionHandler(SessionAuthenticationException.class)
+    public ResponseEntity<ErrorResponse> handleSessionAuth(SessionAuthenticationException ex) {
+        return build(HttpStatus.UNAUTHORIZED, ex.getMessage());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleGeneric(Exception ex) {
+        return build(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+    }
+
+    private ResponseEntity<ErrorResponse> build(HttpStatus status, String message) {
+        return ResponseEntity.status(status).body(new ErrorResponse(status.value(), message));
+    }
+
+    public record ErrorResponse(int status, String message) {}
 }

@@ -27,35 +27,31 @@ public class RoleValidationAspect {
 
     @Around("@annotation(requireRole)")
     public Object validateRole(ProceedingJoinPoint joinPoint, RequireRole requireRole) throws Throwable {
-        try {
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            if (auth == null || !auth.isAuthenticated()) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body("Invalid or missing authentication");
-            }
 
-            // Principal contiene le Claims messe dal tuo filtro
-            Claims claims = (Claims) auth.getPrincipal();
-
-            // Qui non chiami più remote
-            List<String> userRoles = remoteJwtService.extractRoles(claims);
-
-            String[] requiredRoles = requireRole.value();
-            boolean hasRequiredRole =
-                    checkUserRoles(userRoles, requiredRoles, requireRole.requireAll());
-
-            if (!hasRequiredRole) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body("Insufficient privileges. Required: " + Arrays.toString(requiredRoles));
-            }
-
-            return joinPoint.proceed();
-        }
-        catch (Exception e) {
-//            gestire poi in advice
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Token validation failed: " + e.getMessage());
+                    .body("Invalid or missing authentication");
         }
+
+        // Principal contiene le Claims messe dal tuo filtro
+        Claims claims = (Claims) auth.getPrincipal();
+
+        // Qui non chiami più remote
+        List<String> userRoles = remoteJwtService.extractRoles(claims);
+
+        String[] requiredRoles = requireRole.value();
+        boolean hasRequiredRole =
+                checkUserRoles(userRoles, requiredRoles, requireRole.requireAll());
+
+        if (!hasRequiredRole) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Insufficient privileges. Required: " + Arrays.toString(requiredRoles));
+        }
+
+        return joinPoint.proceed();
+
+
     }
 
     private boolean checkUserRoles(List<String> userRoles, String[] requiredRoles, boolean requireAll) {

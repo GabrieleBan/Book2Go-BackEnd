@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.security.web.authentication.session.SessionAuthenticationException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import com.b2g.lendservice.service.infrastructure.remoteJwtService;
@@ -45,17 +46,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
 
-            Claims claims = remoteJwtService.remoteValidateToken(jwt);
-            String userId = claims.getSubject();
-            System.out.println(userId);
-            System.out.println(claims);
-            if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UsernamePasswordAuthenticationToken authToken =
-                        new UsernamePasswordAuthenticationToken(claims, jwt, Collections.emptyList());
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+        Claims claims = remoteJwtService.remoteValidateToken(jwt);
+        String userId = claims.getSubject();
+        System.out.println(userId);
+        System.out.println(claims);
+        if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UsernamePasswordAuthenticationToken authToken =
+                    new UsernamePasswordAuthenticationToken(claims, jwt, Collections.emptyList());
+            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityContextHolder.getContext().setAuthentication(authToken);
             }
-        } catch (Exception e) {
+        } catch (SessionAuthenticationException e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");
             String errorJson = String.format("{\"error\": \"%s\"}", e.getMessage().replace("\"", "'"));
