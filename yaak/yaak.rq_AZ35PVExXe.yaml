@@ -2,14 +2,14 @@ type: http_request
 model: http_request
 id: rq_AZ35PVExXe
 createdAt: 2025-11-27T23:39:36.164704700
-updatedAt: 2025-12-16T18:50:02.718082600
+updatedAt: 2025-12-29T23:41:04.390798500
 workspaceId: wk_94bVhSAcpy
 folderId: fl_qYLLc5Jiv3
 authentication:
-  token: eyJhbGciOiJSUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwidXNlclVVSUQiOiI4ZGI2MWIxMS1jMmVlLTRmYzYtOGNjMi1lZGU1NTRhNzNjMzUiLCJyb2xlcyI6WyJSRUFERVIiLCJBRE1JTiIsIkVNUExPWUVFIl0sInN1YiI6IjhkYjYxYjExLWMyZWUtNGZjNi04Y2MyLWVkZTU1NGE3M2MzNSIsImlhdCI6MTc2NTkxMDk5MiwiZXhwIjoxNzY1OTExODkyLCJpc3MiOiJiMmctYXV0aC1zZXJ2aWNlIiwiYXVkIjpbImIyZy1taWNyb3NlcnZpY2VzIl19.c4Rtgza6zEWbpWmGC4gPufhDJ0oT5Ov1fSZq0CtLgBK0pg9TRoS36yPF8NWF3cc7Re0g34ma8LKDRs1NbtW6ClcZmAHUGvWKN5uk6kN3Mm1oqURVbSOsWke74aa85nCxdvjIefUu8gO73a13uAAvcvGEv9MkSpeuGOzE4JP1vSMA32_uc5H3Rp7SQ75D2F7izxK5smSGomK8SUJWPfa6At3ql3tVP8E9X4qNt1dLnuhPRkQ-qk0NDYcd4OuLcZuWN6KqsBR4QfoV4cMxC1k240xlhVnxT5CySHm9mcnGFAnicB4Mc50N5QEiGTnrb6DxByeVDMLSE9e2-O_w4hVs8g
+  token: eyJraWQiOiJhdXRoLWtleS0xIiwiYWxnIjoiUlMyNTYifQ.eyJ1c2VybmFtZSI6ImFkbWluIiwidXNlclVVSUQiOiI4ZGI2MWIxMS1jMmVlLTRmYzYtOGNjMi1lZGU1NTRhNzNjMzUiLCJyb2xlcyI6WyJFTVBMT1lFRSIsIlJFQURFUiIsIkFETUlOIl0sInN1YiI6IjhkYjYxYjExLWMyZWUtNGZjNi04Y2MyLWVkZTU1NGE3M2MzNSIsImlhdCI6MTc2NzA1MTY1NywiZXhwIjoxNzY3MDUyNTU3LCJpc3MiOiJiMmctYXV0aC1zZXJ2aWNlIiwiYXVkIjpbImIyZy1taWNyb3NlcnZpY2VzIl19.bEur-QCGzZF-C4BegKs8P_iKZL1ZKi5-Fjj2OcD9SJcHX1Du4LXsiskgm7cJwwd5CPmvvuvV77odEew-0iB4RC0a9cEIkPrnsJ2Ws614g_y8Wr5XrINrPHK7ZkalyP8sFsphmaqRNMRUIcKS0lNDIGIVRywM1ELA8XYPoQgSD2ZE6ISrDn6vqBGXuF38U4Ap7rxmW5Gps8VtjsMxJqkIamXUnsNlf5YE-YYKnFdu6rwTohnIGPHC8zz0oDwA6CJCBiIkf0vxcxKMn7_nu1TA8I86FY7p-K8tSX-msIzrA2Y6EUsE8D-pG-uL44JMYw4Oon5n2ExgtqNx5v6FUpZSPA
 authenticationType: bearer
 body:
-  text: "{\n  \"lendableBookId\":\"a89c392a-3e91-4ed7-8c09-f17f845c7fd8\",\n  \"libraryId\": \"cdaaaaaa-abaa-aaaa-aaaa-aaaaaaaaaaaa\"\n}\n       "
+  text: "{\n  \"lendableBookId\":\"a89c392a-3e91-4ed7-8c09-f17f845c7fd8\",\n  \"libraryId\": \"00000000-0000-0000-0000-000000000001\"\n}\n       "
 bodyType: application/json
 description: ''
 headers:

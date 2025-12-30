@@ -101,6 +101,15 @@ services:
     networks:
       - b2g-net
 
+  client-frontend-service:
+    image: gabrieleban/my-module:latest
+    container_name: client-frontend-service
+    ports:
+      - "5173:80"
+    networks:
+      - b2g-net
+
+
   notification-service:
     build:
       context: .

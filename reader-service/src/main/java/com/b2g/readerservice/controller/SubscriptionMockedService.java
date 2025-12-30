@@ -20,7 +20,7 @@ public class SubscriptionMockedService {
     @GetMapping("/{readerId}")
     public ResponseEntity<?> subscriptions( @PathVariable UUID readerId) {
         log.info("Got subscriptions for reader " + readerId);
-        UserSubscriptionDataDTO userSubscriptionDataDTO = new UserSubscriptionDataDTO(SubscriptionType.SUB_TIER1,1);
+        UserSubscriptionDataDTO userSubscriptionDataDTO = new UserSubscriptionDataDTO(SubscriptionType.SUB_TIER1,2);
 //        UserSubscriptionDataDTO userSubscriptionDataDTO = new UserSubscriptionDataDTO(SubscriptionType.SUB_TIER2,2);
 
         return ResponseEntity.ok().body(userSubscriptionDataDTO);

@@ -72,7 +72,7 @@ public class NotificationService {
         UserNotificationBillboard note = UserNotificationBillboard.builder()
                 .userid(message.getUserId())
                 .title("Prestito creato")
-                .description("Il prestito per " + buildBookInfo(message) + " è stato creato con successo.")
+                .description("Il prestito per " + buildBookInfo(message) + " è stato ritirato.")
                 .timestamp(LocalDateTime.now())
                 .build();
 

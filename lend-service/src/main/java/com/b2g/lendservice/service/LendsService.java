@@ -117,7 +117,7 @@ public class LendsService {
 
 
         Lending fulfilledLend =  lendingRepository.save(lendingToFulfill);
-
+        lendEventPublisher.publishLendingEventAsync(fulfilledLend, lendableBook);
         return fulfilledLend;
     }
 

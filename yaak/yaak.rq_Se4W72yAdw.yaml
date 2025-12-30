@@ -2,18 +2,18 @@ type: http_request
 model: http_request
 id: rq_Se4W72yAdw
 createdAt: 2025-12-04T17:53:47.833366200
-updatedAt: 2025-12-16T22:58:03.489703400
+updatedAt: 2025-12-29T23:42:03.919118900
 workspaceId: wk_94bVhSAcpy
 folderId: fl_qYLLc5Jiv3
 authentication:
-  token: eyJhbGciOiJSUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwidXNlclVVSUQiOiI4ZGI2MWIxMS1jMmVlLTRmYzYtOGNjMi1lZGU1NTRhNzNjMzUiLCJyb2xlcyI6WyJSRUFERVIiLCJBRE1JTiIsIkVNUExPWUVFIl0sInN1YiI6IjhkYjYxYjExLWMyZWUtNGZjNi04Y2MyLWVkZTU1NGE3M2MzNSIsImlhdCI6MTc2NTkyNTg3MSwiZXhwIjoxNzY1OTI2NzcxLCJpc3MiOiJiMmctYXV0aC1zZXJ2aWNlIiwiYXVkIjpbImIyZy1taWNyb3NlcnZpY2VzIl19.Xu-cwjaMBt4dS_y4zExqccpwYdzjE2N1dp88VJT6j1qmrOKBS2P3aF4qq_Bry0NNlR8IUDXZ2INh0Cck7lTitO85NacyPKlwzBNCh9buHBgdrcncr68z7B0YkA6z9FEXh3cJI_P49gtEUWiG0NVDWGv7ZvYQs6pcBN8_gtZnp8Fs_d43FUn2ebXyMHIoaTeXT-s431swVnpz5x3FPpNGfsRgi2pddmxa3_vX6vsL_2B1aW1nZhOauCrM8YSFxJ4-WWvIGbE-u1TeXibviSLdiTPogNFkurjUnF1io4Bzcs2cVuU1FfPLT2g6SA4N5p3Luob_lJwaJkTDP0kHv_6V4A
+  token: eyJraWQiOiJhdXRoLWtleS0xIiwiYWxnIjoiUlMyNTYifQ.eyJ1c2VybmFtZSI6ImFkbWluIiwidXNlclVVSUQiOiI4ZGI2MWIxMS1jMmVlLTRmYzYtOGNjMi1lZGU1NTRhNzNjMzUiLCJyb2xlcyI6WyJFTVBMT1lFRSIsIlJFQURFUiIsIkFETUlOIl0sInN1YiI6IjhkYjYxYjExLWMyZWUtNGZjNi04Y2MyLWVkZTU1NGE3M2MzNSIsImlhdCI6MTc2NzA1MTY1NywiZXhwIjoxNzY3MDUyNTU3LCJpc3MiOiJiMmctYXV0aC1zZXJ2aWNlIiwiYXVkIjpbImIyZy1taWNyb3NlcnZpY2VzIl19.bEur-QCGzZF-C4BegKs8P_iKZL1ZKi5-Fjj2OcD9SJcHX1Du4LXsiskgm7cJwwd5CPmvvuvV77odEew-0iB4RC0a9cEIkPrnsJ2Ws614g_y8Wr5XrINrPHK7ZkalyP8sFsphmaqRNMRUIcKS0lNDIGIVRywM1ELA8XYPoQgSD2ZE6ISrDn6vqBGXuF38U4Ap7rxmW5Gps8VtjsMxJqkIamXUnsNlf5YE-YYKnFdu6rwTohnIGPHC8zz0oDwA6CJCBiIkf0vxcxKMn7_nu1TA8I86FY7p-K8tSX-msIzrA2Y6EUsE8D-pG-uL44JMYw4Oon5n2ExgtqNx5v6FUpZSPA
 authenticationType: bearer
 body:
   text: |-
     {
       "userId":"8db61b11-c2ee-4fc6-8cc2-ede554a73c35",
-      "copyNumber":"1109459784",
-      "libraryId":"cdaaaaaa-abaa-aaaa-aaaa-aaaaaaaaaaaa"
+      "copyNumber":"1",
+      "libraryId":"00000000-0000-0000-0000-000000000001"
     }
 bodyType: application/json
 description: ''
@@ -25,7 +25,7 @@ headers:
 method: POST
 name: Entrust
 sortPriority: 6000.0
-url: http://localhost:8099/lendings/a024e068-d68b-4632-bf34-ca7936a50d29/assignment
+url: http://localhost:8099/lendings/e27d99e2-0c8d-4807-918e-c3c17246cd33/assignment
 urlParameters:
 - enabled: true
   name: readerId

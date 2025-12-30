@@ -6,19 +6,19 @@ import com.b2g.commons.SubscriptionType;
 import com.b2g.commons.UserRegistrationMessage;
 import com.b2g.readerservice.dto.ReaderForm;
 import com.b2g.readerservice.dto.ReaderPublicInfo;
+import com.b2g.readerservice.dto.ReaderSpecifications;
 import com.b2g.readerservice.dto.ReaderSummary;
-import com.b2g.readerservice.model.BookOwnershipState;
-import com.b2g.readerservice.model.PersonalLibraryBookItem;
-import com.b2g.readerservice.model.PersonalLibraryBookItemId;
+import com.b2g.readerservice.model.*;
 import com.b2g.readerservice.repository.ReaderLibraryRepository;
 import com.b2g.readerservice.repository.ReaderRepository;
-import com.b2g.readerservice.model.Reader;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -253,5 +253,31 @@ public class ReaderService {
         );
     }
 
+
+    public List<ReaderPublicInfo> retrieveReader(
+            String username,
+            Address address,
+            String name,
+            String surname,
+            String phone,
+            String email
+    ) {
+
+        Specification<Reader> spec = Specification.<Reader>unrestricted()
+                .and(ReaderSpecifications.usernameEquals(username))
+                .and(ReaderSpecifications.nameLike(name))
+                .and(ReaderSpecifications.surnameLike(surname))
+                .and(ReaderSpecifications.emailEquals(email))
+                .and(ReaderSpecifications.phoneEquals(phone));
+        List<Reader> readers = readerRepository.findAll(spec);
+        if (readers.isEmpty()) {
+            throw new EntityNotFoundException("Reader not found");
+        }
+        List<ReaderPublicInfo> toReturn = new ArrayList<>();
+        for(Reader reader : readers) {
+            toReturn.add(ReaderPublicInfo.fromReader(reader));
+        }
+        return toReturn;
+    }
 
 }

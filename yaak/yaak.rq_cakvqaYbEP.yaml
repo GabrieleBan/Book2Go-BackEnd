@@ -2,7 +2,7 @@ type: http_request
 model: http_request
 id: rq_cakvqaYbEP
 createdAt: 2025-10-07T15:59:31.352876
-updatedAt: 2025-10-07T16:19:34.600470
+updatedAt: 2025-12-26T17:38:47.847071400
 workspaceId: wk_94bVhSAcpy
 folderId: fl_GBXwSTx9Sx
 authentication: {}
@@ -19,5 +19,5 @@ headers: []
 method: GET
 name: OAuth2
 sortPriority: 2000.001
-url: http://localhost:8090/login
+url: http://localhost:8097/auth/oauth2/authorization/google
 urlParameters: []

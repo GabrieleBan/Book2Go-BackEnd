@@ -10,7 +10,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
@@ -66,17 +68,55 @@ public class AuthController {
         return authService.logout(request.getRefreshToken());
     }
 
+//    @GetMapping("/oauth2/callback")
+//    public ResponseEntity<TokenResponse> oauth2Callback(OAuth2AuthenticationToken authentication, HttpServletRequest request) {
+//        // La nostra architettura è stateless, ma Spring Security ha creato una sessione per gestire l'OAuth2
+//        // Questa permette di effettuare attacchi di replay, quindi la invalidiamo subito
+//        HttpSession oauth2Session = request.getSession(false);
+//        if(oauth2Session != null) {
+//            oauth2Session.invalidate(); // Invalida la sessione OAuth2 per evitare replay
+//        }
+//
+//        // Utilizzo il metodo loginOauth2 del service
+//        return authService.loginOauth2(authentication);
+//    }
     @GetMapping("/oauth2/callback")
-    public ResponseEntity<TokenResponse> oauth2Callback(OAuth2AuthenticationToken authentication, HttpServletRequest request) {
-        // La nostra architettura è stateless, ma Spring Security ha creato una sessione per gestire l'OAuth2
-        // Questa permette di effettuare attacchi di replay, quindi la invalidiamo subito
+    public ResponseEntity<String> oauth2Callback(
+            OAuth2AuthenticationToken authentication,
+            HttpServletRequest request
+    ) {
+        // Invalidate OAuth2 session (stateless architecture)
         HttpSession oauth2Session = request.getSession(false);
-        if(oauth2Session != null) {
-            oauth2Session.invalidate(); // Invalida la sessione OAuth2 per evitare replay
+        if (oauth2Session != null) {
+            oauth2Session.invalidate();
         }
 
-        // Utilizzo il metodo loginOauth2 del service
-        return authService.loginOauth2(authentication);
+        // Generate tokens
+        TokenResponse tokenResponse = authService.loginOauth2(authentication).getBody();
+
+        // HTML that posts both tokens back to opener
+        String html = """
+        <html>
+          <body>
+            <script>
+              window.opener.postMessage(
+                {
+                  accessToken: '%s',
+                  refreshToken: '%s'
+                },
+                'http://localhost:5173'
+              );
+            </script>
+          </body>
+        </html>
+        """.formatted(
+                tokenResponse.getAccessToken(),
+                tokenResponse.getRefreshToken()
+        );
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.TEXT_HTML);
+        return new ResponseEntity<>(html, headers, HttpStatus.OK);
     }
 
 

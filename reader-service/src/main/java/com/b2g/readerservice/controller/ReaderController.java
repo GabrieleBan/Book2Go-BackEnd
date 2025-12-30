@@ -4,6 +4,7 @@ import com.b2g.commons.SubscriptionType;
 import com.b2g.readerservice.dto.ReaderForm;
 import com.b2g.readerservice.dto.ReaderPublicInfo;
 import com.b2g.readerservice.dto.ReaderSummary;
+import com.b2g.readerservice.model.Address;
 import com.b2g.readerservice.model.Reader;
 import com.b2g.readerservice.service.ReaderService;
 import com.b2g.readerservice.service.remoteJwtService;
@@ -53,12 +54,21 @@ public class ReaderController {
         return ResponseEntity.ok(summaries);
     }
 
+    @GetMapping("/")
+    public ResponseEntity<?> findReadersBy(@RequestParam(required = false) String username, @RequestParam(required = false) Address address,@RequestParam(required = false) String name,@RequestParam(required = false) String surname,@RequestParam(required = false) String email,@RequestParam(required = false) String phone) {
+        log.info("searching");
+        List<ReaderPublicInfo> info= readerService.retrieveReader(username,address,name,surname,phone,email);
+        return ResponseEntity.ok(info);
+    }
+
     @GetMapping("/all-info/{userId}")
     public ResponseEntity<?> getReaderInfo(@PathVariable UUID userId) {
 
         ReaderPublicInfo info= readerService.retrieveReaderFullPublicInfo(userId);
         return ResponseEntity.ok(info);
     }
+
+
 
     @GetMapping("/me/info")
     public ResponseEntity<?> getMyReaderInfo() {

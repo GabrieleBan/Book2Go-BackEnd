@@ -95,6 +95,7 @@ public class BookService {
     public Set<LendingOption> getOptionsForLendableFormat(UUID formatId) {
         LendableBook book = lendableBookRepository.findByFormatId(formatId);
         if(book==null) throw new LendableBookException("Lendable Book con id "+formatId+" non esiste");
+        log.info("book found {}", book);
         return book.getOptions();
     }
 }
