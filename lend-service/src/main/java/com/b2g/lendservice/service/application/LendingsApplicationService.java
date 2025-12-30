@@ -160,4 +160,22 @@ public class LendingsApplicationService {
     public List<Lending> getReaderLendings(UUID readerId, @NotNull Set<LendState> states) {
         return lendingRepository.findByUserIdAndStateIn(readerId, states);
     }
+
+    public List<LendableCopy> getAllAwaitingLendCopies(UUID libraryId) {
+        List<LendableCopy> copies = new ArrayList<>();
+        List<Lending> l;
+        if(libraryId!=null) {
+             l = lendingRepository.findByStateAndLibraryId(LendState.AWAITING, libraryId);
+        }
+        else
+        {
+             l = lendingRepository.findByState(LendState.AWAITING);
+
+        }
+        for (Lending lending : l) {
+            copies.add(lending.getCopy());
+        }
+
+        return copies;
+    }
 }

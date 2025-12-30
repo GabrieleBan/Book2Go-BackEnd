@@ -29,4 +29,8 @@ public interface LendingRepository extends JpaRepository<Lending, UUID> {
     List<Lending> findByCopy_LendableBookIdAndState(UUID lendableBookId, LendState lendState);
 
     List<Lending> findByCopy_LendableBookIdAndStateAndLibraryId(UUID copyLendableBookId, LendState state, UUID libraryId);
+
+    List<Lending> findByStateAndLibraryId(LendState state, UUID libraryId);
+
+    List<Lending> findByState(LendState state);
 }
