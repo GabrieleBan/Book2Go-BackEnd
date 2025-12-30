@@ -4,7 +4,7 @@ import com.b2g.commons.LendState;
 import com.b2g.lendservice.annotation.RequireRole;
 import com.b2g.lendservice.model.LendableCopy;
 import com.b2g.lendservice.model.Lending;
-import com.b2g.lendservice.service.LendsService;
+import com.b2g.lendservice.service.application.LendingsApplicationService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,7 @@ import java.util.UUID;
 @RequestMapping("/lendings/readers")
 @RequiredArgsConstructor
 public class ReaderLendingController {
-    private final LendsService lendingService;
+    private final LendingsApplicationService lendingService;
     @RequireRole("EMPLOYEE")
     @GetMapping("/{readerId}/lendable-copies")
     public ResponseEntity<List<LendableCopy>> getReaderAwaitingLendCopies(

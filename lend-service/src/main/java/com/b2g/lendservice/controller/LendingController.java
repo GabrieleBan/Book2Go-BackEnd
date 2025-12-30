@@ -4,7 +4,7 @@ import com.b2g.lendservice.annotation.RequireRole;
 import com.b2g.lendservice.dto.LendableCopyEntrustRequest;
 import com.b2g.lendservice.dto.LendingRequest;
 import com.b2g.lendservice.model.Lending;
-import com.b2g.lendservice.service.LendsService;
+import com.b2g.lendservice.service.application.LendingsApplicationService;
 import com.b2g.lendservice.service.infrastructure.remoteJwtService;
 import io.jsonwebtoken.Claims;
 import jakarta.validation.Valid;
@@ -22,7 +22,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class LendingController{
 
-    private final LendsService lendingService;
+    private final LendingsApplicationService lendingService;
     private final remoteJwtService jwtService;
 
     @RequireRole("READER")

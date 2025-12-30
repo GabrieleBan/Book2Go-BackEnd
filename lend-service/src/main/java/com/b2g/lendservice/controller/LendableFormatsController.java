@@ -5,7 +5,7 @@ import com.b2g.lendservice.annotation.RequireRole;
 import com.b2g.lendservice.dto.LendingOptionDTO;
 import com.b2g.lendservice.model.LendableBook;
 import com.b2g.lendservice.model.LendingOption;
-import com.b2g.lendservice.service.BookService;
+import com.b2g.lendservice.service.application.BookApplicationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class LendableFormatsController {
 
-    private final BookService bookService;
+    private final BookApplicationService bookApplicationService;
 
     /** CREA UN NUOVO LENDABLE FORMAT (verifca bookId + formatId richiesta al catalogg service) */
     @RequireRole("ADMIN")
@@ -32,7 +32,7 @@ public class LendableFormatsController {
             @RequestParam UUID bookId,
             @RequestParam UUID formatId) throws Exception {
 
-        LendableBook newFormat = bookService.createLendableBook(bookId, formatId);
+        LendableBook newFormat = bookApplicationService.createLendableBook(bookId, formatId);
         return ResponseEntity.status(HttpStatus.CREATED).body(newFormat);
     }
 
@@ -41,7 +41,7 @@ public class LendableFormatsController {
     public ResponseEntity<List<LendableBook>> getLendableFormatsForBook(
             @RequestParam UUID bookId) {
 
-        List<LendableBook> formats = bookService.getLendableFormatsForBook(bookId);
+        List<LendableBook> formats = bookApplicationService.getLendableFormatsForBook(bookId);
         return ResponseEntity.ok(formats);
     }
 
@@ -52,7 +52,7 @@ public class LendableFormatsController {
             @PathVariable UUID formatId,
             @RequestBody LendingOptionDTO requestedOption) throws LendableBookException {
 
-        Set<LendingOption> newOption = bookService.addLendingOption(formatId, requestedOption);
+        Set<LendingOption> newOption = bookApplicationService.addLendingOption(formatId, requestedOption);
         return ResponseEntity.status(HttpStatus.CREATED).body(newOption);
     }
 
@@ -62,14 +62,14 @@ public class LendableFormatsController {
     public ResponseEntity<Void> removeOptionFromFormat(
             @PathVariable UUID formatId,
             @PathVariable UUID optionId) {
-        bookService.removeLendingOption(formatId, optionId);
+        bookApplicationService.removeLendingOption(formatId, optionId);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{formatId}/options")
     public ResponseEntity<Set<LendingOption>> getOptionsForFormat(@PathVariable UUID formatId) {
 
-        Set<LendingOption> options = bookService.getOptionsForLendableFormat(formatId);
+        Set<LendingOption> options = bookApplicationService.getOptionsForLendableFormat(formatId);
 
         return ResponseEntity.ok(options);
     }

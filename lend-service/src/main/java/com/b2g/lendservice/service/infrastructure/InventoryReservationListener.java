@@ -1,16 +1,14 @@
 package com.b2g.lendservice.service.infrastructure;
 
-import com.b2g.commons.LendingMessage;
 import com.b2g.commons.ReservedBookMessage;
 import com.b2g.lendservice.model.LendableCopy;
-import com.b2g.lendservice.service.LendsService;
+import com.b2g.lendservice.service.application.LendingsApplicationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.handler.annotation.Header;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -18,7 +16,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class InventoryReservationListener {
 
-    private final LendsService lendsService;
+    private final LendingsApplicationService lendingsApplicationService;
     @Value("${app.rabbitmq.bindingkey.book.reserved}")
     private String readyKey;
 
@@ -34,7 +32,7 @@ public class InventoryReservationListener {
 
         if (routingKey.equals(readyKey)) {
 
-            lendsService.assignCopyToLend(copy,message.getLibraryId());
+            lendingsApplicationService.assignCopyToLend(copy,message.getLibraryId());
         }
         else {
             log.warn("Routing key non gestita: {}", routingKey);
