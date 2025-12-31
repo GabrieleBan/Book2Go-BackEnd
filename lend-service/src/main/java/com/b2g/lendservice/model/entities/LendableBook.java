@@ -1,8 +1,10 @@
-package com.b2g.lendservice.model;
+package com.b2g.lendservice.model.entities;
 
 import com.b2g.commons.FormatType;
 import com.b2g.commons.SubscriptionType;
 import com.b2g.lendservice.Exceptions.LendingOptionException;
+import com.b2g.lendservice.model.vo.LendingOption;
+import com.b2g.lendservice.model.vo.UserSubscriptionData;
 import jakarta.persistence.*;
 import lombok.*;
 

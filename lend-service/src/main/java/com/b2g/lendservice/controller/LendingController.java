@@ -3,7 +3,7 @@ package com.b2g.lendservice.controller;
 import com.b2g.lendservice.annotation.RequireRole;
 import com.b2g.lendservice.dto.LendableCopyEntrustRequest;
 import com.b2g.lendservice.dto.LendingRequest;
-import com.b2g.lendservice.model.Lending;
+import com.b2g.lendservice.model.entities.Lending;
 import com.b2g.lendservice.service.application.LendingsApplicationService;
 import com.b2g.lendservice.service.infrastructure.remoteJwtService;
 import io.jsonwebtoken.Claims;

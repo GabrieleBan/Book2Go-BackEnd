@@ -1,4 +1,4 @@
-package com.b2g.lendservice.model;
+package com.b2g.lendservice.model.entities;
 
 import jakarta.persistence.Embeddable;
 import lombok.*;

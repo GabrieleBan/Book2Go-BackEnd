@@ -3,7 +3,7 @@ package com.b2g.lendservice.service.infrastructure;
 import com.b2g.commons.SubscriptionType;
 import com.b2g.lendservice.Exceptions.InfrastructureException;
 import com.b2g.lendservice.Exceptions.UserNotFoundException;
-import com.b2g.lendservice.model.UserSubscriptionData;
+import com.b2g.lendservice.model.vo.UserSubscriptionData;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

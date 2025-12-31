@@ -2,16 +2,13 @@ package com.b2g.lendservice.service.application;
 
 import com.b2g.lendservice.Exceptions.BookAlreadyExistsException;
 import com.b2g.lendservice.Exceptions.LendableBookException;
-import com.b2g.lendservice.Exceptions.LendingOptionNotFoundException;
 import com.b2g.lendservice.dto.LendingOptionDTO;
-import com.b2g.lendservice.model.LendableBook;
-import com.b2g.lendservice.model.LendableCopy;
-import com.b2g.lendservice.model.LendingOption;
-import com.b2g.lendservice.model.UserSubscriptionData;
+import com.b2g.lendservice.model.entities.LendableBook;
+import com.b2g.lendservice.model.entities.LendableCopy;
+import com.b2g.lendservice.model.vo.LendingOption;
 import com.b2g.lendservice.repository.LendableBookRepository;
-import com.b2g.lendservice.repository.LendingOptionRepository;
 import com.b2g.lendservice.service.domain.BookDomainService;
-import com.b2g.lendservice.service.infrastructure.CatalogClient;
+import com.b2g.lendservice.service.infrastructure.CatalogACLClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,25 +23,26 @@ import java.util.UUID;
 public class BookApplicationService {
 
     private final LendableBookRepository lendableBookRepository;
-    private final CatalogClient catalogClient;
+    private final CatalogACLClient catalogACLClient;
     private final BookDomainService bookDomainService;
 
     // Crea nuovo LendableBook
 
     @Transactional
-    public LendableBook createLendableBook(UUID bookId, UUID formatId) throws Exception {
+    public LendableBook createLendableBook( UUID formatId) throws Exception {
         LendableBook existing = lendableBookRepository.findByFormatId(formatId);
         if (existing != null) {
             throw new BookAlreadyExistsException("Un formato per l prestito con lo stesso id esiste già");
         }
-
-        CatalogClient.CatalogFormatResponse catalogData =
-                catalogClient.getBookFormat(bookId, formatId);
-
+        CatalogACLClient.CatalogFormatResponse catalogData;
+        try {
+             catalogData = catalogACLClient.getBookFormat(formatId);
+        }catch (Exception e) {  throw new LendableBookException(" Formato non trovato nel catalogo");}
+        UUID bookId = catalogData.bookId();
         log.info("Lendable Book with id {} can be created", bookId);
 
         LendableBook newBook =
-                bookDomainService.createLendableBook(bookId, formatId, catalogData.getLendingFormat());
+                bookDomainService.createLendableBook(bookId, formatId, catalogData.formatType());
 
         return lendableBookRepository.save(newBook);
     }

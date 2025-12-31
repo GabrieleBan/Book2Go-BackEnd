@@ -1,14 +1,12 @@
 package com.b2g.lendservice.service.application;
 
-import com.b2g.commons.FormatType;
 import com.b2g.commons.LendState;
-import com.b2g.lendservice.Exceptions.LendableBookException;
-import com.b2g.lendservice.Exceptions.LendableCopyException;
-import com.b2g.lendservice.Exceptions.LendingException;
-import com.b2g.lendservice.Exceptions.TooManyLendsException;
 import com.b2g.lendservice.dto.LendableCopyEntrustRequest;
 import com.b2g.lendservice.dto.LendingRequest;
-import com.b2g.lendservice.model.*;
+import com.b2g.lendservice.model.entities.LendableBook;
+import com.b2g.lendservice.model.entities.LendableCopy;
+import com.b2g.lendservice.model.entities.Lending;
+import com.b2g.lendservice.model.vo.UserSubscriptionData;
 import com.b2g.lendservice.repository.LendableBookRepository;
 import com.b2g.lendservice.repository.LendingRepository;
 import com.b2g.lendservice.service.domain.LendingsDomainService;
@@ -21,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.*;
 @Slf4j
 @Service

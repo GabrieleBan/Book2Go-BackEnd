@@ -2,8 +2,8 @@ package com.b2g.lendservice.service.infrastructure;
 
 import com.b2g.commons.LendState;
 import com.b2g.commons.LendingMessage;
-import com.b2g.lendservice.model.LendableBook;
-import com.b2g.lendservice.model.Lending;
+import com.b2g.lendservice.model.entities.LendableBook;
+import com.b2g.lendservice.model.entities.Lending;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.NotImplementedException;

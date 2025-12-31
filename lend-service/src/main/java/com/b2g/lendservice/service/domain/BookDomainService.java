@@ -3,9 +3,9 @@ package com.b2g.lendservice.service.domain;
 import com.b2g.commons.FormatType;
 import com.b2g.lendservice.Exceptions.LendingOptionNotFoundException;
 import com.b2g.lendservice.dto.LendingOptionDTO;
-import com.b2g.lendservice.model.LendableBook;
-import com.b2g.lendservice.model.LendableCopy;
-import com.b2g.lendservice.model.LendingOption;
+import com.b2g.lendservice.model.entities.LendableBook;
+import com.b2g.lendservice.model.entities.LendableCopy;
+import com.b2g.lendservice.model.vo.LendingOption;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;

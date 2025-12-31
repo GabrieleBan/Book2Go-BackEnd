@@ -1,6 +1,6 @@
 package com.b2g.lendservice.repository;
 
-import com.b2g.lendservice.model.LendableBook;
+import com.b2g.lendservice.model.entities.LendableBook;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

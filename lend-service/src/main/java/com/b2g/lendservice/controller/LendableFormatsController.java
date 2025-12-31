@@ -3,8 +3,8 @@ package com.b2g.lendservice.controller;
 import com.b2g.lendservice.Exceptions.LendableBookException;
 import com.b2g.lendservice.annotation.RequireRole;
 import com.b2g.lendservice.dto.LendingOptionDTO;
-import com.b2g.lendservice.model.LendableBook;
-import com.b2g.lendservice.model.LendingOption;
+import com.b2g.lendservice.model.entities.LendableBook;
+import com.b2g.lendservice.model.vo.LendingOption;
 import com.b2g.lendservice.service.application.BookApplicationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,13 +26,12 @@ public class LendableFormatsController {
 
     /** CREA UN NUOVO LENDABLE FORMAT (verifca bookId + formatId richiesta al catalogg service) */
     @RequireRole("ADMIN")
-    @PostMapping
+    @PostMapping("/{formatId}")
     @Transactional
     public ResponseEntity<LendableBook> createNewLendableFormat(
-            @RequestParam UUID bookId,
-            @RequestParam UUID formatId) throws Exception {
+            @PathVariable UUID formatId) throws Exception {
 
-        LendableBook newFormat = bookApplicationService.createLendableBook(bookId, formatId);
+        LendableBook newFormat = bookApplicationService.createLendableBook( formatId);
         return ResponseEntity.status(HttpStatus.CREATED).body(newFormat);
     }
 

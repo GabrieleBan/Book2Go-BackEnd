@@ -1,6 +1,6 @@
 package com.b2g.lendservice.dto;
 
-import com.b2g.lendservice.model.LendingOption;
+import com.b2g.lendservice.model.vo.LendingOption;
 
 import java.util.UUID;
 

@@ -1,7 +1,7 @@
 package com.b2g.lendservice.service.infrastructure;
 
 import com.b2g.commons.ReservedBookMessage;
-import com.b2g.lendservice.model.LendableCopy;
+import com.b2g.lendservice.model.entities.LendableCopy;
 import com.b2g.lendservice.service.application.LendingsApplicationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

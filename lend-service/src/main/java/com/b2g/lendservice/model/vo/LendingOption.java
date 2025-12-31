@@ -1,4 +1,4 @@
-package com.b2g.lendservice.model;
+package com.b2g.lendservice.model.vo;
 
 import com.b2g.commons.SubscriptionType;
 import com.b2g.lendservice.dto.LendingOptionDTO;

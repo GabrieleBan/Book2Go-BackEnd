@@ -1,8 +1,10 @@
-package com.b2g.lendservice.model;
+package com.b2g.lendservice.model.entities;
 
 import com.b2g.commons.LendState;
 import com.b2g.commons.SubscriptionType;
 import com.b2g.lendservice.Exceptions.LendingStateLifeCycleException;
+import com.b2g.lendservice.model.vo.LendingOption;
+import com.b2g.lendservice.model.vo.LendingPeriod;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
