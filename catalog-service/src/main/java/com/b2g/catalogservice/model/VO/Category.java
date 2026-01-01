@@ -1,4 +1,4 @@
-package com.b2g.catalogservice.model;
+package com.b2g.catalogservice.model.VO;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

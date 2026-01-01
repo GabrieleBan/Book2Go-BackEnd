@@ -1,6 +1,6 @@
 package com.b2g.recomendationservice.service;
 
-import com.b2g.commons.BookSummaryDTO;
+import com.b2g.commons.BookSummaryMessage;
 import com.b2g.recomendationservice.dto.ReviewDTO;
 import com.b2g.recomendationservice.model.nodes.*;
 import com.b2g.recomendationservice.model.relationships.PublishedBy;
@@ -73,7 +73,7 @@ public class RecommendationService {
         return bookRepository.save(book);
     }
 
-    public Book addBookNode(BookSummaryDTO bookSumm) {
+    public Book addBookNode(BookSummaryMessage bookSumm) {
 
         List<Tag> tags=bookSumm.categories().stream().map(categoryDTO ->  {
                 Optional<Tag> tmp = tagRepository.findById(categoryDTO.id().toString());

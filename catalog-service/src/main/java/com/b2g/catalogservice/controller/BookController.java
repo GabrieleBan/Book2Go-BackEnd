@@ -2,16 +2,17 @@ package com.b2g.catalogservice.controller;
 
 import com.b2g.catalogservice.annotation.RequireRole;
 import com.b2g.catalogservice.dto.*;
-import com.b2g.catalogservice.model.BookFormat;
-import com.b2g.catalogservice.service.BookService;
-import com.b2g.commons.BookSummaryDTO;
+import com.b2g.catalogservice.model.Entities.BookFormat;
+
+import com.b2g.catalogservice.service.application.BookFormatApplicationService;
+import com.b2g.catalogservice.service.application.CatalogBookApplicationService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.*;
 import jakarta.validation.Valid;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
@@ -21,49 +22,49 @@ import java.util.*;
 @RequiredArgsConstructor
 public class BookController {
 
-    private final BookService bookService;
+    private final CatalogBookApplicationService catalogBookService;
+    private final BookFormatApplicationService bookFormatService;
 
     @GetMapping({"", "/"})
-    public ResponseEntity<List<BookSummaryDTO>> getAllBooks(
+    public ResponseEntity<Page<BookSummaryDTO>> getAllBooks(
             @RequestParam(required = false) Set<UUID> categoryIds,
             Pageable pageable) {
-        List<BookSummaryDTO> books = bookService.getAllBooks(categoryIds, pageable);
+        Page<BookSummaryDTO> books = catalogBookService.getBooksByCategories(categoryIds, pageable);
         return ResponseEntity.ok(books);
     }
 
     @PostMapping({"", "/"})
     @RequireRole("ADMIN")
-    public ResponseEntity<?> createBook(@RequestBody @Valid BookCreateRequestDTO request) {
-        BookDetailDTO createdBook;
-        try {
-            createdBook = bookService.createBook(request);
-        }
-        catch (NoSuchElementException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-
-        }
-
+    public ResponseEntity<BookSummaryDTO> createBook(@RequestBody @Valid CatalogBookCreateRequestDTO request) {
+        BookSummaryDTO createdBook = catalogBookService.createCatalogBook(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdBook);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BookDetailDTO> getBookById(@PathVariable UUID id) {
-        Optional<BookDetailDTO> book = bookService.getBookById(id);
-
-        return book.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<BookSummaryDTO> getBookById(@PathVariable UUID id) {
+        BookSummaryDTO book = catalogBookService.getCatalogBookSummaryById(id);
+        return ResponseEntity.ok(book);
     }
 
-    @GetMapping("/{bookId}/formats/{formatId}")
-    public ResponseEntity<?> getBookFormat(
+    @GetMapping("/formats/{formatId}")
+    public ResponseEntity<BookFormat> getBookFormat(
+            @PathVariable UUID formatId) {
+        BookFormat dto = bookFormatService.getBookFormat(formatId);
+        return ResponseEntity.ok(dto);
+    }
+    @GetMapping("/{bookId}/formats")
+    public ResponseEntity<List<BookFormat>> getCatalogBookFormats(
+            @PathVariable UUID bookId) {
+        List<BookFormat> dto = bookFormatService.getBookFormats(bookId);
+        return ResponseEntity.ok(dto);
+    }
+
+    @PostMapping("/{bookId}/formats")
+    @RequireRole("ADMIN")
+    public ResponseEntity<BookFormat> createBookFormat(
             @PathVariable UUID bookId,
-            @PathVariable UUID formatId
-    ) {
-        try {
-            CatalogFormatResponse dto=bookService.getBooksFormat(bookId,formatId);
-            return ResponseEntity.ok(dto);
-        }catch (NoSuchElementException e) {return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());}
-
-
+            @RequestBody @Valid BookFormatCreateDTO request) {
+        BookFormat createdFormat = bookFormatService.createBookFormat(bookId, request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdFormat);
     }
-
 }

@@ -12,11 +12,9 @@ public record BookDetailDTO(
         UUID id,
         String title,
         String author,
-        String isbn,
         String description,
         String publisher,
         LocalDate publicationDate,
-        String coverImageUrl,
         List<CategoryDTO> categories,
         List<BookFormatDTO> availableFormats
 ) {}

@@ -1,6 +1,6 @@
 package com.b2g.recomendationservice.service;
 
-import com.b2g.commons.BookSummaryDTO;
+import com.b2g.commons.BookSummaryMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -20,7 +20,7 @@ public class BookEventListener {
     private final RecommendationService recommendationService;
 
     @RabbitListener(queues = "${app.rabbitmq.service.prefix}"+".book.queue")
-    public void handleBookCreation(BookSummaryDTO message) {
+    public void handleBookCreation(BookSummaryMessage message) {
         log.info("Ricevuto messaggio di creazione Libro: {}", message);
         log.info("Creato un nuovo libro{}",recommendationService.addBookNode(message));
 

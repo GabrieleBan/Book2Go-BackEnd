@@ -2,9 +2,8 @@ package com.b2g.catalogservice.controller;
 
 import com.b2g.catalogservice.annotation.RequireRole;
 import com.b2g.catalogservice.dto.CategoryCreateRequestDTO;
-import com.b2g.catalogservice.model.Category;
+import com.b2g.catalogservice.model.VO.Category;
 import com.b2g.catalogservice.repository.CategoryRepository;
-import com.b2g.commons.CategoryDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/categories")

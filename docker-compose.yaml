@@ -233,12 +233,28 @@ services:
       - "8097:8097"
     networks:
       - b2g-net
+      -
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: admin123
+    ports:
+      - "9000:9000"   # API S3
+      - "9001:9001"   # Console Web
+    volumes:
+      - minio_data:/data
+    networks:
+      - b2g-net
 
 volumes:
   pg_data:
   rabbitmq_data:
   neo4j_data:
   neo4j_logs:
+  minio_data:
 
 networks:
   b2g-net:
