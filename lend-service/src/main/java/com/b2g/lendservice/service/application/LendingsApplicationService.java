@@ -6,6 +6,7 @@ import com.b2g.lendservice.dto.LendingRequest;
 import com.b2g.lendservice.model.entities.LendableBook;
 import com.b2g.lendservice.model.entities.LendableCopy;
 import com.b2g.lendservice.model.entities.Lending;
+import com.b2g.lendservice.model.entities.Reader;
 import com.b2g.lendservice.model.vo.UserSubscriptionData;
 import com.b2g.lendservice.repository.LendableBookRepository;
 import com.b2g.lendservice.repository.LendingRepository;
@@ -44,14 +45,13 @@ public class LendingsApplicationService {
 
         List<Lending> activeLends =
                 lendingRepository.findByUserIdAndStateIn(userId, ACTIVE_STATES);
-
+        Reader reader = new Reader(userId, activeLends);
         Lending lending =
                 lendingsDomainService.requestLending(
-                        userId,
+                        reader,
                         request,
                         subscription,
-                        lendableBook,
-                        activeLends
+                        lendableBook
                 );
 
         log.info("lending about to be saved");

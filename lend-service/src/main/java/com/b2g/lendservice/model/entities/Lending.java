@@ -102,19 +102,19 @@ public class Lending {
 //        this.state = LendState.PROCESSING;
 //    }
 
-    public void markAsAwaiting() {
-        this.state = LendState.AWAITING;
-    }
+//    public void markAsAwaiting() {
+//        this.state = LendState.AWAITING;
+//    }
+//
+//    public void conclude() {
+//        this.state = LendState.CONCLUDED;
+//    }
+//
+//    public void fail() {
+//        this.state = LendState.FAILED;
+//    }
 
-    public void conclude() {
-        this.state = LendState.CONCLUDED;
-    }
-
-    public void fail() {
-        this.state = LendState.FAILED;
-    }
-
-    public void addCopy(LendableCopy copy) {
+    public void assignCopy(LendableCopy copy) {
         if(state != LendState.PROCESSING && state != LendState.AWAITING) {
             throw new LendingStateLifeCycleException("Only PROCESSING lends can move from PROCESSING to AWAITING");
         }

@@ -4,6 +4,7 @@ import com.b2g.lendservice.dto.LendingRequest;
 import com.b2g.lendservice.model.entities.LendableBook;
 import com.b2g.lendservice.model.entities.Lending;
 import com.b2g.lendservice.model.entities.LendableCopy;
+import com.b2g.lendservice.model.entities.Reader;
 import com.b2g.lendservice.model.vo.LendingOption;
 import com.b2g.lendservice.model.vo.LendingPeriod;
 import com.b2g.lendservice.model.vo.UserSubscriptionData;
@@ -28,12 +29,13 @@ import java.util.*;
 public class LendingsDomainService {
 
     public Lending requestLending(
-            UUID userId,
+            Reader reader,
             LendingRequest request,
             UserSubscriptionData subscription,
-            LendableBook lendableBook,
-            List<Lending> activeLends
+            LendableBook lendableBook
     ) {
+
+        UUID userId=reader.getReaderId();
         UUID lendableBookId = request.lendableBookId();
         UUID libraryId = request.libraryId();
 
@@ -58,37 +60,21 @@ public class LendingsDomainService {
             );
         }
 
-        if (activeLends.size() >= subscription.getMaxConcurrentLends()) {
+        if (!reader.canBorrowMore(subscription.getMaxConcurrentLends())) {
             throw new TooManyLendsException(
                     "Il lettore non può ricevere altri prestiti attivi"
             );
         }
 
-        boolean alreadyLent =
-                activeLends.stream()
-                        .anyMatch(l ->
-                                l.getCopy()
-                                        .getLendableBookId()
-                                        .equals(lendableBookId)
-                        );
-
-        if (alreadyLent) {
+        if (reader.hasActiveLendingFor(lendableBookId)) {
             throw new LendingException(
                     "Il lettore ha già un prestito attivo per questo formato"
             );
         }
 
+
         LendableCopy copy =
                 new LendableCopy(lendableBook.getFormatId(), null);
-
-        // Periodo dipende dal LendingOption
-        LendingPeriod period = null;
-        if(lendableBook.getType() != FormatType.PHYSICAL) {
-            period = new LendingPeriod(
-                    LocalDate.now(),
-                    LocalDate.now().plusDays(option.getDurationDays())
-            );
-        }
 
         Lending lending =
                 Lending.create(
@@ -168,7 +154,7 @@ public class LendingsDomainService {
         }
 
         Lending lend = decideLendingToAssignBasedOnSubscrition(activeLendings);
-        lend.addCopy(copy);
+        lend.assignCopy(copy);
         return lend;
     }
 
