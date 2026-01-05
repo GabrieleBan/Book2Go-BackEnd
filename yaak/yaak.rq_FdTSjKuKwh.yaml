@@ -2,69 +2,24 @@ type: http_request
 model: http_request
 id: rq_FdTSjKuKwh
 createdAt: 2025-08-27T23:53:08.177205
-updatedAt: 2025-12-15T18:10:51.568714400
+updatedAt: 2026-01-05T16:17:30.904099700
 workspaceId: wk_94bVhSAcpy
 folderId: fl_gQ2VqcuSam
 authentication:
-  token: eyJhbGciOiJSUzI1NiJ9.eyJyb2xlcyI6WyJSRUFERVIiLCJBRE1JTiIsIkVNUExPWUVFIl0sInVzZXJuYW1lIjoiYWRtaW4iLCJ1c2VyVVVJRCI6IjhkYjYxYjExLWMyZWUtNGZjNi04Y2MyLWVkZTU1NGE3M2MzNSIsInN1YiI6IjhkYjYxYjExLWMyZWUtNGZjNi04Y2MyLWVkZTU1NGE3M2MzNSIsImlhdCI6MTc2NTgyMjIzMCwiZXhwIjoxNzY1ODIzMTMwLCJpc3MiOiJiMmctYXV0aC1zZXJ2aWNlIiwiYXVkIjpbImIyZy1taWNyb3NlcnZpY2VzIl19.gyXfElxViHO7ikqkD7tSsfXNVKlG-P83X68GCptrKYtBSnhaSRKWYqXjRBWnDuhime96fcmeo8l73Ch0OhAIbaOlu97etn6yR8Lv83Ifw3ow-SRawL1a2gRzZ5iGZbeByIqNK8htcqXq4uou02nS3VgONNl4twDlEcX-XoBP90W8KxKvb-K2S2eSr4bqfLhpZCn4UlrNcre8-1mPIRzkKIZvaVh5_gyxCdq83fwQc-E2PsikMTY4qEvzG0d6dT7f35ZWVNOUdkngN4dpt9rHLHaIFzSgiLNgkfcysZNo_MlZ7OCn2E_xkG6Sf_VGmg7OgNw0xgjGAStddDOY0mu3wA
+  token: eyJraWQiOiJhdXRoLWtleS0xIiwiYWxnIjoiUlMyNTYifQ.eyJ1c2VyVVVJRCI6ImFlMWE3YWRmLWE1MzktNGI0ZS1hNzFkLTQyMGVlOGUyYjRlYyIsInJvbGVzIjpbIkFETUlOIiwiUkVBREVSIiwiRU1QTE9ZRUUiXSwidXNlcm5hbWUiOiJhZG1pbiIsInN1YiI6ImFlMWE3YWRmLWE1MzktNGI0ZS1hNzFkLTQyMGVlOGUyYjRlYyIsImlhdCI6MTc2NzYyOTc3OCwiZXhwIjoxNzY3NjMwNjc4LCJpc3MiOiJiMmctYXV0aC1zZXJ2aWNlIiwiYXVkIjpbImIyZy1taWNyb3NlcnZpY2VzIl19.BvpprneH-GctHVEhXfLjIfZ1dRrTw17GOXnxSR-gntdDO1k0ch2O-k6top_AehPGU9ysCIVEm7-l56MAW_NWy_Q80JmLYiyCCCWBFDoqcxYudZEA6DF3EzMGgPuXb-5x88B9t-y0SaFyHVn_mcNf-mtV_zUcLHkWqHPdd5d9M_2RLudZu3JbZk-7B-SeQR76fAnF264dqYYuGk3NlLYyaoeT4NTxVtTyeR-ImMF-KykAQCLesNQwjVVtBbhm2wNRi43ZCdm14wCTzdetUpXIaKhX_0mIgMQ92Cay1fKHAj0EZX4wUerUF-l4lVjd1ADelzHAinnhklRDnHUh_hpasA
 authenticationType: bearer
 body:
   text: |-
     {
-      "title": "1985",
-      "author": "George Prwell",
-      "isbn": "9380451521036",
-      "description": "Un romanzo distopico ambientato in una società totalitaria dove il Grande Fratello controlla ogni aspetto della vita dei cittadini e la libertà individuale è completamente soppressa.",
-      "publisher": "Secker & Warburg",
-      "publicationDate": "1949-06-08",
+      "title": "Il grande romanzo ",
+      "edition": "Linea Rossa",
+      "author": "Mario Rossi",
+      "description": "Una storia avvincente tra storia e fantasia",
+      "publisher": "Edizioni Esempio",
+      "publicationDate": "2026-01-05",
       "categoryIds": [
-        "64ac88b3-3a96-4b08-9e54-a1e62414c6fc"
-      ],
-      "formats": [
-        {
-          "formatType": "PHYSICAL",
-          "purchasePrice": 19.99,
-          "stockQuantity": 40,
-          "isAvailableForPurchase": true,
-          "isAvailableForRental": true,
-          "isAvailableOnSubscription": false,
-          "rentalOptions": [
-            {
-              "durationDays": 7,
-              "price": 3.50,
-              "description": "Noleggio settimanale"
-            },
-            {
-              "durationDays": 30,
-              "price": 8.99,
-              "description": "Noleggio mensile"
-            }
-          ]
-        },
-        {
-          "formatType": "EBOOK",
-          "purchasePrice": 9.99,
-          "stockQuantity": null,
-          "isAvailableForPurchase": true,
-          "isAvailableForRental": true,
-          "isAvailableOnSubscription": true,
-          "rentalOptions": [
-            {
-              "durationDays": 14,
-              "price": 2.49,
-              "description": "Noleggio digitale 2 settimane"
-            }
-          ]
-        },
-        {
-          "formatType": "AUDIOBOOK",
-          "purchasePrice": 14.99,
-          "stockQuantity": null,
-          "isAvailableForPurchase": true,
-          "isAvailableForRental": false,
-          "isAvailableOnSubscription": true,
-          "rentalOptions": []
-        }
+        "c7678ac0-d0e2-44a0-9101-322193705d61",
+        "15fcdee6-623d-4323-b925-bbc66af3d3db"
       ]
     }
 bodyType: application/json

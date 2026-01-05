@@ -1,0 +1,28 @@
+type: http_request
+model: http_request
+id: rq_2WZjj3yewv
+createdAt: 2025-12-30T18:14:56.640531600
+updatedAt: 2025-12-30T18:21:42.408247
+workspaceId: wk_94bVhSAcpy
+folderId: fl_qYLLc5Jiv3
+authentication:
+  token: eyJraWQiOiJhdXRoLWtleS0xIiwiYWxnIjoiUlMyNTYifQ.eyJ1c2VyVVVJRCI6IjhkYjYxYjExLWMyZWUtNGZjNi04Y2MyLWVkZTU1NGE3M2MzNSIsInVzZXJuYW1lIjoiYWRtaW4iLCJyb2xlcyI6WyJSRUFERVIiLCJFTVBMT1lFRSIsIkFETUlOIl0sInN1YiI6IjhkYjYxYjExLWMyZWUtNGZjNi04Y2MyLWVkZTU1NGE3M2MzNSIsImlhdCI6MTc2NzExODgwOCwiZXhwIjoxNzY3MTE5NzA4LCJpc3MiOiJiMmctYXV0aC1zZXJ2aWNlIiwiYXVkIjpbImIyZy1taWNyb3NlcnZpY2VzIl19.P3tNaLXjZW7upZzGmSQRSPPVHaBCCwnAgrmI-3r9gVDfxhxxlPPGHdizddVPGTeARYVgqU35qesm653u4J3bIgZRLD5RfZyVjd9tNq8xYJ5uIjDp9fqYPPwKWDBlmrLNcf4RYlpd4po-6wjBlucC2nq0iLdpAww_Mfr9wIhCg2h9xTlEgwyALO3WZzipFYrKVNlUbJDsbRQ6Bfu--y9MZ2ftcFAGJpflsm-c0hfLXjIMOtxXpUHWwqLAVgtprzpLvJnz6BekLNEu5EavWhncdsdtetLvrQ5w6RgU1m3LriYESANlNbChbmASDof9rAXdhiZJoVsX0T3_tv6zKITcCA
+authenticationType: bearer
+body:
+  text: ''
+bodyType: null
+description: ''
+headers: []
+method: GET
+name: Get awaiting copies
+sortPriority: 3000.001
+url: http://localhost:8099/lendable-copies/
+urlParameters:
+- enabled: true
+  name: libraryId
+  value: 00000000-0000-0000-0000-000000000001
+  id: 6Ghikf6VZB
+- enabled: true
+  name: ''
+  value: ''
+  id: CgACpBDFnp

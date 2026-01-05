@@ -1,0 +1,22 @@
+type: http_request
+model: http_request
+id: rq_AtRckmLJ2c
+createdAt: 2025-12-26T10:02:54.423365400
+updatedAt: 2025-12-26T10:02:55.805725500
+workspaceId: wk_94bVhSAcpy
+folderId: fl_qYLLc5Jiv3
+authentication: {}
+authenticationType: null
+body: {}
+bodyType: null
+description: ''
+headers: []
+method: GET
+name: ''
+sortPriority: 999.9999
+url: http://localhost:8099/lendable-formats
+urlParameters:
+- enabled: true
+  name: bookId
+  value: 72db787f-e6ea-41ad-8827-81f25e431c06
+  id: 2E7DBtmNAG

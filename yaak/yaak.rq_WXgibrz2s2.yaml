@@ -2,17 +2,17 @@ type: http_request
 model: http_request
 id: rq_WXgibrz2s2
 createdAt: 2025-08-28T00:05:57.485124
-updatedAt: 2025-12-15T16:49:44.245299600
+updatedAt: 2026-01-05T16:18:27.293067100
 workspaceId: wk_94bVhSAcpy
 folderId: fl_gQ2VqcuSam
 authentication:
-  token: eyJhbGciOiJSUzI1NiJ9.eyJyb2xlcyI6WyJSRUFERVIiLCJFTVBMT1lFRSIsIkFETUlOIl0sInVzZXJVVUlEIjoiOGRiNjFiMTEtYzJlZS00ZmM2LThjYzItZWRlNTU0YTczYzM1IiwidXNlcm5hbWUiOiJhZG1pbiIsInN1YiI6IjhkYjYxYjExLWMyZWUtNGZjNi04Y2MyLWVkZTU1NGE3M2MzNSIsImlhdCI6MTc2NTgxNzM0MywiZXhwIjoxNzY1ODE4MjQzLCJpc3MiOiJiMmctYXV0aC1zZXJ2aWNlIiwiYXVkIjpbImIyZy1taWNyb3NlcnZpY2VzIl19.OKnHsLGly3T4GPa2z9Jw2rCipXih85OS8RO3_c4PNMJkKXdumrWG5BkntoAJAYYDHtpDUlmBDGpiz-Z8Gc5qBocuGm8JwnGPlRm6sfo4WpnSwHe564lN764Tnyu1YvZx4jJeWLATGqNLELnjOLHkEj_ocq_4-ifTCy269GXuErcF24u4TcyR6l64MY0LYeTZEeeNjZhVbHEjY7eiZJvu8QLX1IUVeLOIApysbpw_mRpqyGzwwAfX4lhZm1_q6kg24hX7ydZoqn8X6CVm_H6FDs5ruiKuhJE4_0-BS1z4JtRunjCe3wTFHg05RZ5TOpX23oVElHAPSfgRDB4BuEQJeA
+  token: eyJraWQiOiJhdXRoLWtleS0xIiwiYWxnIjoiUlMyNTYifQ.eyJ1c2VyVVVJRCI6ImFlMWE3YWRmLWE1MzktNGI0ZS1hNzFkLTQyMGVlOGUyYjRlYyIsInJvbGVzIjpbIkFETUlOIiwiUkVBREVSIiwiRU1QTE9ZRUUiXSwidXNlcm5hbWUiOiJhZG1pbiIsInN1YiI6ImFlMWE3YWRmLWE1MzktNGI0ZS1hNzFkLTQyMGVlOGUyYjRlYyIsImlhdCI6MTc2NzYyOTc3OCwiZXhwIjoxNzY3NjMwNjc4LCJpc3MiOiJiMmctYXV0aC1zZXJ2aWNlIiwiYXVkIjpbImIyZy1taWNyb3NlcnZpY2VzIl19.BvpprneH-GctHVEhXfLjIfZ1dRrTw17GOXnxSR-gntdDO1k0ch2O-k6top_AehPGU9ysCIVEm7-l56MAW_NWy_Q80JmLYiyCCCWBFDoqcxYudZEA6DF3EzMGgPuXb-5x88B9t-y0SaFyHVn_mcNf-mtV_zUcLHkWqHPdd5d9M_2RLudZu3JbZk-7B-SeQR76fAnF264dqYYuGk3NlLYyaoeT4NTxVtTyeR-ImMF-KykAQCLesNQwjVVtBbhm2wNRi43ZCdm14wCTzdetUpXIaKhX_0mIgMQ92Cay1fKHAj0EZX4wUerUF-l4lVjd1ADelzHAinnhklRDnHUh_hpasA
 authenticationType: bearer
 body:
   text: |-
     {
-      "name": "Romanzo Critico",
-      "description": "Esiste anche il contrario eh"
+      "name": "Romanzop torico",
+      "description": "MMMAAAA"
     }
 bodyType: application/json
 description: ''

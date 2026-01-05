@@ -1,0 +1,35 @@
+type: http_request
+model: http_request
+id: rq_NU7anX6uFB
+createdAt: 2026-01-05T14:46:58.479779800
+updatedAt: 2026-01-05T15:58:21.394869100
+workspaceId: wk_94bVhSAcpy
+folderId: fl_jhet5jX7mC
+authentication:
+  token: eyJraWQiOiJhdXRoLWtleS0xIiwiYWxnIjoiUlMyNTYifQ.eyJ1c2VyVVVJRCI6ImFlMWE3YWRmLWE1MzktNGI0ZS1hNzFkLTQyMGVlOGUyYjRlYyIsInJvbGVzIjpbIkFETUlOIiwiUkVBREVSIiwiRU1QTE9ZRUUiXSwidXNlcm5hbWUiOiJhZG1pbiIsInN1YiI6ImFlMWE3YWRmLWE1MzktNGI0ZS1hNzFkLTQyMGVlOGUyYjRlYyIsImlhdCI6MTc2NzYyODM4NSwiZXhwIjoxNzY3NjI5Mjg1LCJpc3MiOiJiMmctYXV0aC1zZXJ2aWNlIiwiYXVkIjpbImIyZy1taWNyb3NlcnZpY2VzIl19.MUca1KRs0Gxkt20CvzI7mBGXpmk9vU4KgFyLa29-n2OwiT0Jf7tXs3VCYYgH6K8fLHiMPnlz8tXkNB3aYK7TLKOWyCZNR9Zwh44i3Rm2dWvWJd87PegJfVxGLcEX5M0q2Tkv8hTvY5n_TToANIzd5Sa5AOAlLEiSCYE9LjuUCc5kyiAtclhG0y8u2P73gbAXXutW-1f3lea3aMbcAr65FqQMF5dh7fnpuNOIlkJMP7_p3URWd3N8-7Cx56SpBPJS1OMb1XYs2IsD5i4f5_DeCcoBVPubWzv6VzCVX5lnbNsbG3M_w8VKNQrxvz7jCMLaBLOlS2JbpJfayKJce2710g
+authenticationType: bearer
+body:
+  text: |-
+    {
+      "quantity": 2
+    }
+bodyType: application/json
+description: ''
+headers:
+- enabled: false
+  name: Media-Type
+  value: application/json
+  id: w8nVsNqKJG
+- enabled: true
+  name: Content-Type
+  value: application/json
+  id: XIU3nYKfnc
+- enabled: true
+  name: ''
+  value: ''
+  id: K6EfXsedRV
+method: PATCH
+name: Modify stock availability
+sortPriority: 1999.9999
+url: http://localhost:8095/inventory/stocks/libraries/00000000-0000-0000-0000-000000000001/books/a1e8d271-0b0e-46ef-912c-83bba9e6887e
+urlParameters: []

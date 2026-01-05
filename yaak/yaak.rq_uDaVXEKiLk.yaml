@@ -1,8 +1,8 @@
 type: http_request
 model: http_request
-id: rq_skUfiXpcF2
-createdAt: 2025-12-15T16:44:51.865646200
-updatedAt: 2026-01-05T14:38:58.825293500
+id: rq_uDaVXEKiLk
+createdAt: 2026-01-05T14:35:29.879005400
+updatedAt: 2026-01-05T15:28:50.834750800
 workspaceId: wk_94bVhSAcpy
 folderId: fl_gQ2VqcuSam
 authentication: {}
@@ -12,9 +12,9 @@ bodyType: null
 description: ''
 headers: []
 method: GET
-name: Get Book's Format
-sortPriority: 0.001
-url: http://localhost:8091/books/95db9fb3-7985-4269-b569-026f5caaa862/formats
+name: Get Format
+sortPriority: 0.002
+url: http://localhost:8091/books/formats/a1e8d271-0b0e-46ef-912c-83bba9e6887e
 urlParameters:
 - enabled: false
   name: categoryIds
@@ -23,4 +23,4 @@ urlParameters:
 - enabled: true
   name: ''
   value: ''
-  id: GZfcat6WGI
+  id: a6G3du4AzG

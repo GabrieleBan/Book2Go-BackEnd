@@ -2,11 +2,11 @@ type: http_request
 model: http_request
 id: rq_2t9HoijE92
 createdAt: 2025-11-27T20:32:45.743718300
-updatedAt: 2025-12-16T16:46:23.884243500
+updatedAt: 2026-01-05T19:19:01.700477500
 workspaceId: wk_94bVhSAcpy
 folderId: fl_qYLLc5Jiv3
 authentication:
-  token: eyJhbGciOiJSUzI1NiJ9.eyJ1c2VyVVVJRCI6IjhkYjYxYjExLWMyZWUtNGZjNi04Y2MyLWVkZTU1NGE3M2MzNSIsInVzZXJuYW1lIjoiYWRtaW4iLCJyb2xlcyI6WyJSRUFERVIiLCJBRE1JTiIsIkVNUExPWUVFIl0sInN1YiI6IjhkYjYxYjExLWMyZWUtNGZjNi04Y2MyLWVkZTU1NGE3M2MzNSIsImlhdCI6MTc2NTgyMzA0MiwiZXhwIjoxNzY1ODIzOTQyLCJpc3MiOiJiMmctYXV0aC1zZXJ2aWNlIiwiYXVkIjpbImIyZy1taWNyb3NlcnZpY2VzIl19.gc_bnK2L78e7n6_ckYFo0-BWOZMmy4sXB5HR_axLbXW46RZMVR8DLav_zclGVNVN6EMYnhbCMQOUYmW2vpezOKvJ9mK_QuDzHVdsT1uwCXhEinTNgzZFCbdkB4JWvhenZfl21hy6SOpe-EVVgCrUh3gUIEna1lZ8SXRRdsOo7FMACURE79F-PLWeaRPhwyomTvFHEXHgzVAmxOy30xQmCIgbT7JkBmFfIlfqGod1dGZAKz8xg1uv9grBwZdvXpsAMcxQvTG5HXgei3oLDxBI0wUKGGO_4t3qyMdZx8FIfFGRRxNsQ1p3unPwvieNkkmTyi1ZmhYHg211zsVESK7-Fw
+  token: eyJraWQiOiJhdXRoLWtleS0xIiwiYWxnIjoiUlMyNTYifQ.eyJ1c2VyVVVJRCI6ImFlMWE3YWRmLWE1MzktNGI0ZS1hNzFkLTQyMGVlOGUyYjRlYyIsInJvbGVzIjpbIkFETUlOIiwiUkVBREVSIiwiRU1QTE9ZRUUiXSwidXNlcm5hbWUiOiJhZG1pbiIsInN1YiI6ImFlMWE3YWRmLWE1MzktNGI0ZS1hNzFkLTQyMGVlOGUyYjRlYyIsImlhdCI6MTc2NzYyNDE4OCwiZXhwIjoxNzY3NjI1MDg4LCJpc3MiOiJiMmctYXV0aC1zZXJ2aWNlIiwiYXVkIjpbImIyZy1taWNyb3NlcnZpY2VzIl19.ak9Pou2Ia3q96ZZqSXLaZhLu6t48G8guOT22BwiNqBedai0dTa-EfGvwsUEtPshFYjIrUBFJWRB-_wesGQHeogyxWElE_W2lYPq2v1uxydWJhfjHsUx_wT2cEo50g44ucUvxQH_Fq0HpDgmzSUYUlcuWXK7091vLIj49jira0VqIT8TAzGHzinxNBz-jYoYgEphSTYQ1InGaYNtTaD9X9eY8Rwa_VxMySBTT9J_kyL6F1jhv4o38d_ZqcwK2uG7Viqbk79E3MK-ahUuIJ8SqPPJWssjUCyXuN8rQyR59MAEIgT8uCGNAClXCpUWv7pA3uDeDdQX8K1Oi5x8FUnjwBA
 authenticationType: bearer
 body:
   text: ''
@@ -20,17 +20,17 @@ headers:
 method: POST
 name: Create Rentable Format
 sortPriority: 0.0
-url: http://localhost:8099/lendable-formats
+url: http://localhost:8099/lendable-formats/a1e8d271-0b0e-46ef-912c-83bba9e6887e
 urlParameters:
-- enabled: true
+- enabled: false
   name: bookId
-  value: 72db787f-e6ea-41ad-8827-81f25e431c06
+  value: 95db9fb3-7985-4269-b569-026f5caaa862
   id: t7GDj4A2aZ
-- enabled: true
+- enabled: false
   name: formatId
-  value: a89c392a-3e91-4ed7-8c09-f17f845c7fd8
+  value: a1e8d271-0b0e-46ef-912c-83bba9e6887e
   id: xAbbFwzQ9R
 - enabled: true
   name: ''
   value: ''
-  id: K9feMPtX2H
+  id: 4Pk4SVCsjn
