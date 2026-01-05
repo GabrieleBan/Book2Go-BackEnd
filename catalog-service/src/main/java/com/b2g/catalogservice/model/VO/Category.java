@@ -1,6 +1,8 @@
 package com.b2g.catalogservice.model.VO;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,4 +26,11 @@ public class Category {
     private String name;
 
     private String description;
+
+    public Category(
+            @NotBlank(message = "Name cannot be blank") @Size(min = 1, max = 100, message = "Name must be between 1 and 100 characters") String name,
+            @Size(max = 500, message = "Description cannot exceed 500 characters") String description) {
+        this.name = name;
+        this.description = description;
+    }
 }

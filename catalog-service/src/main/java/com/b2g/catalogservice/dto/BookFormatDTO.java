@@ -7,5 +7,6 @@ import java.util.UUID;
 public record BookFormatDTO(
         UUID id,
         String formatType, // e.g., "EBOOK", "PHYSICAL"
+        String isbn,
         BigDecimal purchasePrice
 ) {}

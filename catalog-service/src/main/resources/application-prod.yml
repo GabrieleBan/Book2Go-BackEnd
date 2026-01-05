@@ -39,17 +39,37 @@ app:
     routingkey:
       book:
         creation: book.created
+      format:
+        created: book.format.created
+    bindinkey:
+
+      availability:
+        all: book.availability.*
+        available: book.availability.available
+        low: book.availability.low
+        out: book.availability.out
+        not_available: book.availability.not_available
 
 server:
   port: 8091
 
+#authentication
 authService:
+  jwks:
+    url: http://localhost:8090/auth/.well-known/jwks.json
   internal:
-    url: http://localhost:8090/internal
+    url: http://localhost:8090
 
-rentalService:
-  internal:
-    url: http://localhost:8099/rental/internal
+
+
+jwt:
+  public-key:
+    cache:
+      seconds: 300
+# non piu usato
+#rentalService:
+#  internal:
+#    url: http://localhost:8099/rental/internal
 
 logging:
   level:

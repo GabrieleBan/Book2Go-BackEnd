@@ -11,8 +11,6 @@ import java.util.UUID;
 
 @Repository
 public interface BookRepository extends JpaRepository<CatalogBook, UUID> {
-    CatalogBook findBookByIsbn(String isbn);
-
     // Metodo per filtrare libri per categorie con paginazione
     Page<CatalogBook> findByCategoriesIdIn(Set<UUID> categoryIds, Pageable pageable);
 }

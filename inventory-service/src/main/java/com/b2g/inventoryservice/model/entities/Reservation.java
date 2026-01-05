@@ -45,7 +45,7 @@ public class Reservation {
     // =====================
     public void markInUse(LibraryCopy copy) {
         if (state != ReservationState.CONFIRMED) {
-            throw new IllegalStateException("Reservation must be CONFIRMED to start use");
+            throw new ReservationException("Reservation must be CONFIRMED to start use");
         }
         if(! copy.getId().equals(this.copyId)) {throw new ReservationException("Trying to retrieve a reserved copy that does not match the copy id of the used reservation");
         }
@@ -54,14 +54,14 @@ public class Reservation {
 
     public void complete() {
         if (state != ReservationState.IN_USE) {
-            throw new IllegalStateException("Reservation must be IN_USE to complete");
+            throw new ReservationException("Reservation must be IN_USE to complete");
         }
         state = ReservationState.COMPLETED;
     }
 
     public void cancel() {
         if (state == ReservationState.IN_USE || state == ReservationState.COMPLETED) {
-            throw new IllegalStateException("Cannot cancel ongoing or completed reservation");
+            throw new ReservationException("Cannot cancel ongoing or completed reservation");
         }
         state = ReservationState.CANCELLED;
     }

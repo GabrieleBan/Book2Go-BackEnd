@@ -1,10 +1,9 @@
-package com.b2g.lendservice.service.infrastructure;
+package com.b2g.catalogservice.service.infrastructure;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import java.security.interfaces.RSAPublicKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,11 +17,12 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
-
+import java.security.interfaces.RSAPublicKey;
 import java.security.spec.RSAPublicKeySpec;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -34,7 +34,7 @@ public class remoteJwtService {
     @Value("${authService.jwks.url}")
     private String jwksUrl;
 
-    @Value("${jwt.public-key.cache.seconds:300}") // durata cache in secondi
+    @Value("${jwt.public-key.cache.seconds:300}")
     private long cacheSeconds;
 
     private final RestTemplate restTemplate;

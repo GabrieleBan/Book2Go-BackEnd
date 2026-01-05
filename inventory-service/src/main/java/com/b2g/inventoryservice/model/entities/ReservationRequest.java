@@ -1,5 +1,7 @@
 package com.b2g.inventoryservice.model.entities;
 
+
+import com.b2g.inventoryservice.exceptions.ReservationRequestException;
 import com.b2g.inventoryservice.model.valueObjects.ReservationRequestState;
 import jakarta.persistence.*;
 import lombok.*;
@@ -69,7 +71,7 @@ public class ReservationRequest {
         }
 
         if (!copy.getId().getBookId().equals(bookId)) {
-            throw new IllegalArgumentException("Copy does not match requested book");
+            throw new ReservationRequestException("Copy does not match requested book");
         }
 
 

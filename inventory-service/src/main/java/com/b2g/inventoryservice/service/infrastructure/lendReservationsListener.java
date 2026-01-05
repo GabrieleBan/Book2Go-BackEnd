@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class lendReservationsListener {
-    @Value("${app.rabbitmq.routingkey.lend.request.created}")
+    @Value("${app.rabbitmq.bindingkey.lend.request.created}")
     private String requestLendReservationKey;
     private final RabbitTemplate rabbitTemplate;
     private final InventoryApplicationService inventoryService;

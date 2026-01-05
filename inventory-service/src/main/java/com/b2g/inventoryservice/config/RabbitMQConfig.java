@@ -15,8 +15,11 @@ public class RabbitMQConfig {
     @Value("${app.rabbitmq.exchange}")
     private String exchangeName;
 
-    @Value("${app.rabbitmq.routingkey.lend.request.created}")
+    @Value("${app.rabbitmq.bindingkey.lend.request.created}")
     private String lendRequestedAtLibraryKey;
+
+    @Value("${app.rabbit.bindingkey.book.format.created}")
+    private String formatCreatedInCatalogKey;
 
 
     @Bean
@@ -36,6 +39,18 @@ public class RabbitMQConfig {
                 .with(lendRequestedAtLibraryKey)
                 .noargs();
     }
+    @Bean
+    Queue inventoryBookFormatQueue() {
+        return new Queue("inventory.catalog.queue", true);
+    }
+    @Bean
+    public Binding bookFormatCreatedBinding(Queue inventoryBookFormatQueue, Exchange b2gExchange) {
+        return BindingBuilder.bind(inventoryBookFormatQueue)
+                .to(b2gExchange)
+                .with(formatCreatedInCatalogKey)
+                .noargs();
+    }
+
 
     @Bean
     public MessageConverter jsonMessageConverter(ObjectMapper objectMapper) {

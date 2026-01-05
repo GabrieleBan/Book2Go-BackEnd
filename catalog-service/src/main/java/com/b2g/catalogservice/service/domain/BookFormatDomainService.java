@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class BookFormatDomainService {
 
-    public BookFormat createBookFormat(CatalogBook catalogBook, FormatType formatType, Price price ) {
+    public BookFormat createBookFormat(CatalogBook catalogBook, FormatType formatType, Price price,Integer pages,String isbn ) throws FormatException {
         if (catalogBook.hasFormat(formatType)) {
             throw new FormatException("Book already has a format of type " + formatType);
         }
@@ -20,7 +20,10 @@ public class BookFormatDomainService {
         return BookFormat.create(
                 catalogBook.getId(),
                 formatType,
-                price
+                price,
+                pages,
+                isbn
+
 
         );
     }

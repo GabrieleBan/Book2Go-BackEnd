@@ -22,6 +22,7 @@ public class CatalogBookDomainService {
     @Transactional
     public CatalogBook createCatalogBook(
             String title,
+            String edition,
             String author,
             String description,
             String publisher,
@@ -35,6 +36,7 @@ public class CatalogBookDomainService {
         // Usa il factory method della entity
         return CatalogBook.create(
                 title,
+                edition,
                 author,
                 description,
                 publisher,

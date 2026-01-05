@@ -27,9 +27,8 @@ public class CategoryApplicationService {
             );
         }
 
-        Category category = new Category();
-        category.setName(request.name());
-        category.setDescription(request.description());
+        Category category = new Category(request.name(),request.description());
+
         return categoryRepository.save(category);
     }
 }

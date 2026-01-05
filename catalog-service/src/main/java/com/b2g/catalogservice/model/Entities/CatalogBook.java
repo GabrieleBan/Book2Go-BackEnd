@@ -26,13 +26,15 @@ public class CatalogBook {
     @Column(nullable = false)
     private String title;
 
+    private String edition;
+
     @Column(nullable = false)
     private String author;
 
     @Lob
     private String description;
 
-    private String coverImageUrl;
+//    private String coverImageUrl;
 
     @Column(nullable = false, columnDefinition = "FLOAT DEFAULT 0")
     private float rating = 0;
@@ -63,12 +65,14 @@ public class CatalogBook {
     private LocalDateTime updatedAt;
 
     public static CatalogBook create(String title,
+                                     String edition,
                                      String author,
                                      String description,
                                      String publisher,
                                      LocalDate publicationDate,
                                      Set<Category> categories) {
         CatalogBook book = new CatalogBook();
+        book.setEdition(edition);
         book.setTitle(title);
         book.setAuthor(author);
         book.setDescription(description);

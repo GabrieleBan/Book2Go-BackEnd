@@ -7,6 +7,7 @@ import com.b2g.catalogservice.repository.BookRepository;
 import com.b2g.catalogservice.repository.CategoryRepository;
 import com.b2g.catalogservice.service.domain.CatalogBookDomainService;
 import com.b2g.catalogservice.exceptions.CatalogBookNotFoundException;
+import com.b2g.catalogservice.service.infrastructure.CatalogEventPublisher;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,6 +27,7 @@ public class CatalogBookApplicationService {
     private final CatalogBookDomainService catalogBookDomainService;
     private final BookRepository bookRepository;
     private final CategoryRepository categoryRepository;
+    private final CatalogEventPublisher catalogEventPublisher;
 
     @Transactional
     public BookSummaryDTO createCatalogBook(CatalogBookCreateRequestDTO request) {
@@ -35,15 +37,22 @@ public class CatalogBookApplicationService {
         // Chiamo il domain service per creare l'entità
         CatalogBook catalogBook = catalogBookDomainService.createCatalogBook(
                 request.title(),
+                request.edition(),
                 request.author(),
                 request.description(),
                 request.publisher(),
                 request.publicationDate(),
                 categories
         );
+        catalogBook= bookRepository.save(catalogBook);
+        try {
+            catalogEventPublisher.publishCatalogBookCreatedEvent(catalogBook);
+        } catch (Exception e) {
+            throw new RuntimeException("Errore durante il signaling: " + e.getMessage(), e);
+        }
 
         // Persiste tramite repository
-        return BookSummaryDTO.fromCatalogBook(bookRepository.save(catalogBook));
+        return BookSummaryDTO.fromCatalogBook(catalogBook);
     }
 
 
@@ -83,4 +92,6 @@ public class CatalogBookApplicationService {
     public Page<CatalogBook> getAllBooks(Pageable pageable) {
         return bookRepository.findAll(pageable);
     }
+
+
 }

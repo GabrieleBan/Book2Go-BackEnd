@@ -1,8 +1,5 @@
 package com.b2g.catalogservice.controller;
 
-import com.b2g.catalogservice.repository.CategoryRepository;
-import com.b2g.catalogservice.service.BookService;
-import com.b2g.catalogservice.service.application.CatalogBookApplicationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;

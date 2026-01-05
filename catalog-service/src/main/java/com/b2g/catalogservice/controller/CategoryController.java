@@ -4,6 +4,7 @@ import com.b2g.catalogservice.annotation.RequireRole;
 import com.b2g.catalogservice.dto.CategoryCreateRequestDTO;
 import com.b2g.catalogservice.model.VO.Category;
 import com.b2g.catalogservice.repository.CategoryRepository;
+import com.b2g.catalogservice.service.application.CategoryApplicationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,29 +19,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryController {
 
-    private final CategoryRepository categoryRepository;
+    private final CategoryApplicationService categoryApplicationService;
 
     @GetMapping({"", "/"})
     public ResponseEntity<List<Category>> getAllCategories() {
         // Fetch all categories from database
-        List<Category> categories = categoryRepository.findAll();
-
+        List<Category> categories = categoryApplicationService.getAllCategories();
 
         return ResponseEntity.ok(categories);
     }
     @RequireRole("ADMIN")
     @PostMapping({"", "/"})
     public ResponseEntity<Category> createCategory(@RequestBody @Valid CategoryCreateRequestDTO request) {
-
-        // Create Category entity from request
-        Category category = new Category();
-        category.setName(request.name());
-        category.setDescription(request.description());
-
-        // Save the category
-        Category savedCategory = categoryRepository.save(category);
-
-
+        Category savedCategory = categoryApplicationService.createCategory(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCategory);
     }
 

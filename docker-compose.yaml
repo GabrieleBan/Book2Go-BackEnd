@@ -233,7 +233,6 @@ services:
       - "8097:8097"
     networks:
       - b2g-net
-      -
   minio:
     image: minio/minio:latest
     container_name: minio

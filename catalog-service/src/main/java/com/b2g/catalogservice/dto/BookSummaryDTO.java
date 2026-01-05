@@ -16,7 +16,7 @@ public record BookSummaryDTO(
         String title,
         String author,
         String publisher,
-        String coverImageUrl,
+//        String coverImageUrl,
         Map<String, PriceInfo> prices, // map: formatType -> price info
         float rating,
         Set<CategoryDTO> categories
@@ -46,7 +46,6 @@ public record BookSummaryDTO(
                 .title(book.getTitle())
                 .author(book.getAuthor())
                 .publisher(book.getPublisher())
-                .coverImageUrl(book.getCoverImageUrl())
                 .prices(prices)
                 .rating(book.getRating())
                 .categories(categoryDTOs)

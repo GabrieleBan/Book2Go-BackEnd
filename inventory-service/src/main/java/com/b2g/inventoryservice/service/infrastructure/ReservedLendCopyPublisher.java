@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ReservedLendCopyPublisher {
     private final RabbitTemplate safeRabbitTemplate;
-    @Value("${app.rabbitmq.bindingkey.lend.book.reserved}")
+    @Value("${app.rabbitmq.routingkey.lend.book.reserved}")
     private  String reservedLendCopykey;
     @Value("${app.rabbitmq.exchange}")
     private String exchangeName;
@@ -30,7 +30,7 @@ public class ReservedLendCopyPublisher {
             String finalRoutingKey = reservedLendCopykey;
             safeRabbitTemplate.invoke(ops -> {
                 ops.execute(channel -> {
-                    // Converte il DTO in byte[]
+
                     byte[] body = safeRabbitTemplate.getMessageConverter()
                             .toMessage(message, new MessageProperties())
                             .getBody();
@@ -39,8 +39,8 @@ public class ReservedLendCopyPublisher {
                     channel.basicPublish(
                             exchangeName,
                             finalRoutingKey,
-                            true,  // mandatory
-                            null,  // MessageProperties opzionale, il converter gestisce headers
+                            true,
+                            null,
                             body
                     );
                     return null;

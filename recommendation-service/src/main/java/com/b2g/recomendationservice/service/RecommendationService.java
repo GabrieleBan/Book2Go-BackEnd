@@ -1,6 +1,6 @@
 package com.b2g.recomendationservice.service;
 
-import com.b2g.commons.BookSummaryMessage;
+import com.b2g.commons.CatalogBookCreatedEvent;
 import com.b2g.recomendationservice.dto.ReviewDTO;
 import com.b2g.recomendationservice.model.nodes.*;
 import com.b2g.recomendationservice.model.relationships.PublishedBy;
@@ -73,13 +73,13 @@ public class RecommendationService {
         return bookRepository.save(book);
     }
 
-    public Book addBookNode(BookSummaryMessage bookSumm) {
+    public Book addBookNode(CatalogBookCreatedEvent bookSumm) {
 
-        List<Tag> tags=bookSumm.categories().stream().map(categoryDTO ->  {
+        List<Tag> tags=bookSumm.categories.stream().map(categoryDTO ->  {
                 Optional<Tag> tmp = tagRepository.findById(categoryDTO.id().toString());
             return tmp.orElseGet(() -> tagRepository.save(new Tag(categoryDTO.id().toString(), categoryDTO.name())));
                 }).collect(Collectors.toList()) ;
-        List<String> authors=extractAuthors(bookSumm.author());
+        List<String> authors=extractAuthors(bookSumm.author);
 
         List<WrittenBy> writtenBy = new ArrayList<>(List.of());
         for (String author : authors) {
@@ -99,23 +99,23 @@ public class RecommendationService {
         }
 
         PublishedBy publishedBy = new PublishedBy();
-        Optional<Publisher> publisher= publisherRepository.findByName(bookSumm.publisher());
+        Optional<Publisher> publisher= publisherRepository.findByName(bookSumm.publisher);
         if (publisher.isPresent()) {
             publishedBy.setPublisher(publisher.get());
         }
         else
         {
             Publisher newPublisher = new Publisher();
-            newPublisher.setName(bookSumm.publisher());
+            newPublisher.setName(bookSumm.publisher);
             newPublisher= publisherRepository.save(newPublisher);
             publishedBy.setPublisher(newPublisher);
         }
 
 
         Book bookNode = Book.builder()
-                .id(bookSumm.id().toString())
+                .id(bookSumm.id.toString())
                 .tags(tags)
-                .title(bookSumm.title())
+                .title(bookSumm.title)
                 .authors(writtenBy)
                 .publisher(publishedBy)
                 .build();

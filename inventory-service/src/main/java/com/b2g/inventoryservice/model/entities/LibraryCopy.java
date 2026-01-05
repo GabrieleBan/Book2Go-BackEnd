@@ -46,21 +46,21 @@ public class LibraryCopy {
     public void reserve() {
         ensureUsable();
         if (useState != AvailabilityState.FREE) {
-            throw new IllegalStateException("Copy is not free");
+            throw new AvailabilityException("Copy is not free");
         }
         useState = AvailabilityState.RESERVED;
     }
 
     public void markInUse() {
         if (useState != AvailabilityState.RESERVED) {
-            throw new IllegalStateException("Copy must be reserved before use");
+            throw new AvailabilityException("Copy must be reserved before use");
         }
         useState = AvailabilityState.IN_USE;
     }
 
     public void markReturned() {
         if (useState != AvailabilityState.IN_USE) {
-            throw new IllegalStateException("Copy is not in use");
+            throw new AvailabilityException("Copy is not in use");
         }
         useState = AvailabilityState.FREE;
     }
@@ -78,7 +78,7 @@ public class LibraryCopy {
 
     private void ensureUsable() {
         if (!condition.isUsable()) {
-            throw new IllegalStateException("Copy is not usable");
+            throw new AvailabilityException("Copy is not usable");
         }
     }
 }
