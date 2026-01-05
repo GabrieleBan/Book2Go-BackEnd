@@ -5,6 +5,7 @@ import com.b2g.commons.CategoryDTO;
 import lombok.Builder;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -16,11 +17,14 @@ public record BookSummaryDTO(
         String title,
         String author,
         String publisher,
+        String edition,
 //        String coverImageUrl,
         Map<String, PriceInfo> prices, // map: formatType -> price info
         float rating,
         Set<CategoryDTO> categories
 ) {
+
+
 
 
     public record PriceInfo(BigDecimal basePrice, BigDecimal discountedPrice) {}
@@ -31,8 +35,8 @@ public record BookSummaryDTO(
                 .collect(Collectors.toMap(
                         f -> f.getFormatType().name(),
                         f -> new PriceInfo(
-                                f.getPrice().getPurchasePrice(),
-                                f.getPrice().finalPrice() // già scontato
+                                f.getPrice().getPurchasePrice().setScale(2, RoundingMode.HALF_UP),
+                                f.getPrice().finalPrice().setScale(2, RoundingMode.HALF_UP)
                         )
                 ));
 
@@ -44,6 +48,7 @@ public record BookSummaryDTO(
         return BookSummaryDTO.builder()
                 .id(book.getId())
                 .title(book.getTitle())
+                .edition(book.getEdition())
                 .author(book.getAuthor())
                 .publisher(book.getPublisher())
                 .prices(prices)

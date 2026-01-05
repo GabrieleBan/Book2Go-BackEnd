@@ -7,6 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.minidev.json.annotate.JsonIgnore;
+
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -52,7 +55,6 @@ public class CatalogBook {
     @OneToMany(mappedBy = "bookId", fetch = FetchType.LAZY)
     private List<BookFormat> availableFormats;
 
-    /**L'associazione many-to-many per consentire filtraggio e ricerca*/
     @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(
             name = "book_category_join",
@@ -78,17 +80,23 @@ public class CatalogBook {
         book.setDescription(description);
         book.setPublisher(publisher);
         book.setPublicationDate(publicationDate);
-        book.setCategories(categories);
+        book.setCategories(Set.of());
         book.setCreatedAt(LocalDateTime.now());
         book.setUpdatedAt(LocalDateTime.now());
         book.setAvailableFormats(new ArrayList<>()); // lazy fetch ok
+        for (Category category : categories) {
+            book.addCategory(category);
+        }
         return book;
     }
 
     // --- Behavior / Domain methods ---
 
     public void addCategory(Category category) {
-        categories.add(category);
+        if (categories.stream()
+                .noneMatch(c -> c.getName().equalsIgnoreCase(category.getName()))) {
+            categories.add(category);
+        }
     }
 
     public void removeCategory(UUID categoryId) {
@@ -107,9 +115,20 @@ public class CatalogBook {
                 .map(BookFormat::getId)
                 .toList();
     }
+    @JsonIgnore
     public boolean hasFormat(FormatType formatType) {
         if (availableFormats == null) return false;
         return availableFormats.stream()
                 .anyMatch(f -> f.getFormatType() == formatType);
+    }
+    @JsonIgnore
+    public boolean hasAnyFormatInPriceRange(BigDecimal min, BigDecimal max) {
+        if (availableFormats == null || availableFormats.isEmpty()) {
+            return false;
+        }
+
+        return availableFormats.stream()
+                .anyMatch(format ->
+                        format.matchesPriceRange(min, max));
     }
 }

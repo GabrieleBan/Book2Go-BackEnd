@@ -1,6 +1,5 @@
 package com.b2g.readerservice.dto;
 
-import com.b2g.readerservice.model.Address;
 import com.b2g.readerservice.model.Reader;
 import org.springframework.data.jpa.domain.Specification;
 public class ReaderSpecifications {

@@ -1,6 +1,9 @@
 package com.b2g.catalogservice.service.application;
 import com.b2g.catalogservice.dto.BookSummaryDTO;
 import com.b2g.catalogservice.dto.CatalogBookCreateRequestDTO;
+import com.b2g.catalogservice.dto.CatalogBookSearchCriteria;
+import com.b2g.catalogservice.dto.CatalogBookSpecifications;
+import com.b2g.catalogservice.exceptions.CatalogBookAlreadyExistsException;
 import com.b2g.catalogservice.model.Entities.CatalogBook;
 import com.b2g.catalogservice.model.VO.Category;
 import com.b2g.catalogservice.repository.BookRepository;
@@ -13,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 
@@ -31,6 +35,10 @@ public class CatalogBookApplicationService {
 
     @Transactional
     public BookSummaryDTO createCatalogBook(CatalogBookCreateRequestDTO request) {
+        boolean exists=bookRepository.existsByAuthorAndTitleAndEditionAndPublisher(request.author(), request.title(), request.edition(), request.publisher());
+        if(exists) {
+            throw new CatalogBookAlreadyExistsException("L'elemento del catalogo esiste già nel sistema");
+        }
         // Recupero categorie dai repository
         Set<Category> categories = new HashSet<>(categoryRepository.findAllById(request.categoryIds()));
 
@@ -75,7 +83,7 @@ public class CatalogBookApplicationService {
         Page<CatalogBook> booksPage;
 
         if (categoryIds == null || categoryIds.isEmpty()) {
-            booksPage = bookRepository.findAll(pageable);
+            booksPage = getAllBooks(pageable);
         } else {
             booksPage = bookRepository.findByCategoriesIdIn(categoryIds, pageable);
         }
@@ -93,5 +101,41 @@ public class CatalogBookApplicationService {
         return bookRepository.findAll(pageable);
     }
 
+
+    public Page<BookSummaryDTO> searchBooks(
+            CatalogBookSearchCriteria criteria,
+            Pageable pageable
+    ) {
+        Specification<CatalogBook> spec =
+                Specification.<CatalogBook>unrestricted()
+                        .and(CatalogBookSpecifications.titleLike(criteria.title()))
+                        .and(CatalogBookSpecifications.authorLike(criteria.author()))
+                        .and(CatalogBookSpecifications.publisherLike(criteria.publisher()))
+                        .and(CatalogBookSpecifications.hasCategories(criteria.categoryIds()))
+                        .and(CatalogBookSpecifications.hasFormatType(criteria.formatType()))
+                        .and(CatalogBookSpecifications.hasRatingAtLeast(criteria.minRating()));
+
+        Page<CatalogBook> page = bookRepository.findAll(spec, pageable);
+
+        if (criteria.minPrice() != null || criteria.maxPrice() != null) {
+            List<CatalogBook> filtered =
+                    page.getContent().stream()
+                            .filter(book ->
+                                    book.hasAnyFormatInPriceRange(
+                                            criteria.minPrice(),
+                                            criteria.maxPrice()))
+                            .toList();
+
+            return new PageImpl<>(
+                    filtered.stream()
+                            .map(BookSummaryDTO::fromCatalogBook)
+                            .toList(),
+                    pageable,
+                    filtered.size()
+            );
+        }
+
+        return page.map(BookSummaryDTO::fromCatalogBook);
+    }
 
 }

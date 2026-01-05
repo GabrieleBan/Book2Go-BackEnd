@@ -14,6 +14,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -89,6 +90,9 @@ public class BookFormat {
             throw new AvailabilityException("Un libro digitale può solo essere disponibile oppure non esserlo");
         }
         this.availability = availability;
+    }
+    public boolean matchesPriceRange(BigDecimal min, BigDecimal max) {
+        return price != null && price.isInRange(min, max);
     }
 
 }
