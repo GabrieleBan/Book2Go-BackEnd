@@ -1,8 +1,5 @@
 package com.b2g.catalogservice.service.application;
-import com.b2g.catalogservice.dto.BookSummaryDTO;
-import com.b2g.catalogservice.dto.CatalogBookCreateRequestDTO;
-import com.b2g.catalogservice.dto.CatalogBookSearchCriteria;
-import com.b2g.catalogservice.dto.CatalogBookSpecifications;
+import com.b2g.catalogservice.dto.*;
 import com.b2g.catalogservice.exceptions.CatalogBookAlreadyExistsException;
 import com.b2g.catalogservice.model.Entities.CatalogBook;
 import com.b2g.catalogservice.model.VO.Category;
@@ -13,6 +10,7 @@ import com.b2g.catalogservice.exceptions.CatalogBookNotFoundException;
 import com.b2g.catalogservice.service.infrastructure.CatalogEventPublisher;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -24,8 +22,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
+
+
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CatalogBookApplicationService {
 
     private final CatalogBookDomainService catalogBookDomainService;
@@ -39,9 +40,12 @@ public class CatalogBookApplicationService {
         if(exists) {
             throw new CatalogBookAlreadyExistsException("L'elemento del catalogo esiste già nel sistema");
         }
+        log.info("superato problema");
         // Recupero categorie dai repository
-        Set<Category> categories = new HashSet<>(categoryRepository.findAllById(request.categoryIds()));
+        log.info(request.categoryIds().toString());
+        Set<Category> categories = new HashSet<>(categoryRepository.findAllById(request.categoryIds().stream().toList()));
 
+        log.info("dopo categorie");
         // Chiamo il domain service per creare l'entità
         CatalogBook catalogBook = catalogBookDomainService.createCatalogBook(
                 request.title(),
@@ -52,24 +56,27 @@ public class CatalogBookApplicationService {
                 request.publicationDate(),
                 categories
         );
+        log.info("prima di salvataggio");
         catalogBook= bookRepository.save(catalogBook);
+        log.info("dopo salvataggio");
         try {
             catalogEventPublisher.publishCatalogBookCreatedEvent(catalogBook);
         } catch (Exception e) {
+            log.error(e.getMessage());
             throw new RuntimeException("Errore durante il signaling: " + e.getMessage(), e);
         }
-
+        log.info(catalogBook.toString());
         // Persiste tramite repository
         return BookSummaryDTO.fromCatalogBook(catalogBook);
     }
 
 
-    public BookSummaryDTO getCatalogBookSummaryById(UUID bookId) {
+    public BookDetailDTO getCatalogBookSummaryById(UUID bookId) {
         CatalogBook book= bookRepository.findById(bookId).orElse(null);
         if (book == null) {
             throw new CatalogBookNotFoundException("Libro non trovato nel catalogo");
         }
-        return BookSummaryDTO.fromCatalogBook(book);
+        return BookDetailDTO.fromCatalogBook(book);
     }
     public CatalogBook getCatalogBookById(UUID bookId) {
         CatalogBook book= bookRepository.findById(bookId).orElse(null);

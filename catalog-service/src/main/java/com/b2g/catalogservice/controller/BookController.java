@@ -44,8 +44,8 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BookSummaryDTO> getBookById(@PathVariable UUID id) {
-        BookSummaryDTO book = catalogBookService.getCatalogBookSummaryById(id);
+    public ResponseEntity<BookDetailDTO> getBookById(@PathVariable UUID id) {
+        BookDetailDTO book = catalogBookService.getCatalogBookSummaryById(id);
         return ResponseEntity.ok(book);
     }
 

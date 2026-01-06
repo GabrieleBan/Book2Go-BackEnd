@@ -3,10 +3,7 @@ package com.b2g.catalogservice.model.Entities;
 import com.b2g.catalogservice.model.VO.Category;
 import com.b2g.catalogservice.model.VO.FormatType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import net.minidev.json.annotate.JsonIgnore;
 
 import java.math.BigDecimal;
@@ -19,6 +16,7 @@ import java.util.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 
 public class CatalogBook {
 
@@ -80,7 +78,7 @@ public class CatalogBook {
         book.setDescription(description);
         book.setPublisher(publisher);
         book.setPublicationDate(publicationDate);
-        book.setCategories(Set.of());
+        book.setCategories(new HashSet<>());
         book.setCreatedAt(LocalDateTime.now());
         book.setUpdatedAt(LocalDateTime.now());
         book.setAvailableFormats(new ArrayList<>()); // lazy fetch ok
@@ -103,9 +101,7 @@ public class CatalogBook {
         categories.removeIf(c -> c.getId().equals(categoryId));
     }
 
-    public Set<Category> getCategories() {
-        return Collections.unmodifiableSet(categories);
-    }
+
 
     /**
      * Metodo di comodità per leggere tutti i formatId associati al book
@@ -124,7 +120,7 @@ public class CatalogBook {
     @JsonIgnore
     public boolean hasAnyFormatInPriceRange(BigDecimal min, BigDecimal max) {
         if (availableFormats == null || availableFormats.isEmpty()) {
-            return false;
+            return min == null || min.equals(BigDecimal.ZERO);
         }
 
         return availableFormats.stream()

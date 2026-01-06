@@ -30,7 +30,7 @@ public class CatalogBookDomainService {
             Set<Category> categories
     ) {
         if (categories == null || categories.isEmpty()) {
-            throw new CategoryNotFoundException("At least one category must be specified");
+            throw new CategoryNotFoundException("Una o più categorie non trovate");
         }
 
         // Usa il factory method della entity

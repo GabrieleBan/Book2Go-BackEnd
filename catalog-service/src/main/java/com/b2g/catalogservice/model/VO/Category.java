@@ -1,5 +1,6 @@
 package com.b2g.catalogservice.model.VO;
 
+import com.b2g.commons.CategoryDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -8,6 +9,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -32,5 +36,13 @@ public class Category {
             @Size(max = 500, message = "Description cannot exceed 500 characters") String description) {
         this.name = name;
         this.description = description;
+    }
+
+    public static List<CategoryDTO> toCategoryDto(Set<Category> categories) {
+        List<CategoryDTO> dtos = new ArrayList<>();
+        for (Category category : categories) {
+            dtos.add(new CategoryDTO(category.getId(), category.getName()));
+        }
+        return dtos;
     }
 }
