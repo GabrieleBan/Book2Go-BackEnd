@@ -33,6 +33,7 @@ public class SecurityConfig {
                         .requestMatchers("/readers/all-info/*").permitAll()
                         .requestMatchers("/readers/*/check/subscription").permitAll()
                         .requestMatchers("/subscriptions/*").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/content/**").permitAll()
 
                         .anyRequest().authenticated()
                 )
