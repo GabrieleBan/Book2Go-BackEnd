@@ -2,7 +2,7 @@ type: http_request
 model: http_request
 id: rq_wiVxDiEBT9
 createdAt: 2025-12-15T21:35:30.620703500
-updatedAt: 2025-12-26T10:22:04.402998600
+updatedAt: 2026-01-06T23:43:41.923496600
 workspaceId: wk_94bVhSAcpy
 folderId: fl_qYLLc5Jiv3
 authentication: {}
@@ -19,5 +19,5 @@ headers:
 method: GET
 name: Get all lending options of Book
 sortPriority: 3000.0
-url: http://localhost:8099/lendable-formats/a89c392a-3e91-4ed7-8c09-f17f845c7fd8/options
+url: http://localhost:8099/lendable-formats/9eae3891-2e4a-4b82-8d0d-f1c5b45acef9/options
 urlParameters: []

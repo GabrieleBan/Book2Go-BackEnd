@@ -2,7 +2,7 @@ type: http_request
 model: http_request
 id: rq_zAGKQDMC4U
 createdAt: 2026-01-03T15:36:26.725501100
-updatedAt: 2026-01-05T16:07:55.942369
+updatedAt: 2026-01-06T22:15:51.987707500
 workspaceId: wk_94bVhSAcpy
 folderId: fl_gQ2VqcuSam
 authentication:
@@ -16,7 +16,6 @@ body:
       "purchasePrice": 49.99,
       "discountPercentage": 0,
       "isbn": "978-3-16-148410-0",
-      "stockQuantity": 5,
       "numberOfPages": 350
     }
 bodyType: application/json

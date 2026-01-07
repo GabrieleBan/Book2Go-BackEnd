@@ -2,16 +2,16 @@ type: http_request
 model: http_request
 id: rq_NU7anX6uFB
 createdAt: 2026-01-05T14:46:58.479779800
-updatedAt: 2026-01-05T15:58:21.394869100
+updatedAt: 2026-01-07T14:31:18.018184400
 workspaceId: wk_94bVhSAcpy
 folderId: fl_jhet5jX7mC
 authentication:
-  token: eyJraWQiOiJhdXRoLWtleS0xIiwiYWxnIjoiUlMyNTYifQ.eyJ1c2VyVVVJRCI6ImFlMWE3YWRmLWE1MzktNGI0ZS1hNzFkLTQyMGVlOGUyYjRlYyIsInJvbGVzIjpbIkFETUlOIiwiUkVBREVSIiwiRU1QTE9ZRUUiXSwidXNlcm5hbWUiOiJhZG1pbiIsInN1YiI6ImFlMWE3YWRmLWE1MzktNGI0ZS1hNzFkLTQyMGVlOGUyYjRlYyIsImlhdCI6MTc2NzYyODM4NSwiZXhwIjoxNzY3NjI5Mjg1LCJpc3MiOiJiMmctYXV0aC1zZXJ2aWNlIiwiYXVkIjpbImIyZy1taWNyb3NlcnZpY2VzIl19.MUca1KRs0Gxkt20CvzI7mBGXpmk9vU4KgFyLa29-n2OwiT0Jf7tXs3VCYYgH6K8fLHiMPnlz8tXkNB3aYK7TLKOWyCZNR9Zwh44i3Rm2dWvWJd87PegJfVxGLcEX5M0q2Tkv8hTvY5n_TToANIzd5Sa5AOAlLEiSCYE9LjuUCc5kyiAtclhG0y8u2P73gbAXXutW-1f3lea3aMbcAr65FqQMF5dh7fnpuNOIlkJMP7_p3URWd3N8-7Cx56SpBPJS1OMb1XYs2IsD5i4f5_DeCcoBVPubWzv6VzCVX5lnbNsbG3M_w8VKNQrxvz7jCMLaBLOlS2JbpJfayKJce2710g
+  token: eyJraWQiOiJhdXRoLWtleS0xIiwiYWxnIjoiUlMyNTYifQ.eyJ1c2VyVVVJRCI6ImFlMWE3YWRmLWE1MzktNGI0ZS1hNzFkLTQyMGVlOGUyYjRlYyIsInVzZXJuYW1lIjoiYWRtaW4iLCJyb2xlcyI6WyJFTVBMT1lFRSIsIlJFQURFUiIsIkFETUlOIl0sInN1YiI6ImFlMWE3YWRmLWE1MzktNGI0ZS1hNzFkLTQyMGVlOGUyYjRlYyIsImlhdCI6MTc2Nzc5NjE5OCwiZXhwIjoxNzY3Nzk3MDk4LCJpc3MiOiJiMmctYXV0aC1zZXJ2aWNlIiwiYXVkIjpbImIyZy1taWNyb3NlcnZpY2VzIl19.SImf5FxT56ggtcfOd2mHEVkvgNz-bIE0sXL4-xxUsJhxwrrsIyO68HNN1lSblz8XFNLgUkl-bApWl_VXUqKgx7-3dfTi1lohQV3vSBRl4ZU3xJqkGZb9j-NUU0sY5XiHOSxbeWSBG7RDfNS8daHgzmJf2iTOeEJGRqhpYXujbPW_i5yLpif8FfZCa9w8eIYnXWFy1PTHzgDUm6-V7os5Vn7D86JALDjfFs-fw463AyA5yxqY2ChPDqTsruPoXcQuyjYGXcOCjC7YuZaar2NErp7x1XwN5zbaO3wrVyWGYqg8LyZcWMwiFfuRY-U8ucTg91yxUOF5bjAEPkJt31cL0A
 authenticationType: bearer
 body:
   text: |-
     {
-      "quantity": 2
+      "quantity": 1
     }
 bodyType: application/json
 description: ''
@@ -31,5 +31,5 @@ headers:
 method: PATCH
 name: Modify stock availability
 sortPriority: 1999.9999
-url: http://localhost:8095/inventory/stocks/libraries/00000000-0000-0000-0000-000000000001/books/a1e8d271-0b0e-46ef-912c-83bba9e6887e
+url: http://localhost:8095/inventory/stocks/libraries/00000000-0000-0000-0000-000000000001/books/0f02e79d-6326-409a-9158-f5f5c85c8b13
 urlParameters: []

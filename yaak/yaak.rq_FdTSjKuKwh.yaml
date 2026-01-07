@@ -2,24 +2,24 @@ type: http_request
 model: http_request
 id: rq_FdTSjKuKwh
 createdAt: 2025-08-27T23:53:08.177205
-updatedAt: 2026-01-05T16:17:30.904099700
+updatedAt: 2026-01-06T18:40:24.001292600
 workspaceId: wk_94bVhSAcpy
 folderId: fl_gQ2VqcuSam
 authentication:
-  token: eyJraWQiOiJhdXRoLWtleS0xIiwiYWxnIjoiUlMyNTYifQ.eyJ1c2VyVVVJRCI6ImFlMWE3YWRmLWE1MzktNGI0ZS1hNzFkLTQyMGVlOGUyYjRlYyIsInJvbGVzIjpbIkFETUlOIiwiUkVBREVSIiwiRU1QTE9ZRUUiXSwidXNlcm5hbWUiOiJhZG1pbiIsInN1YiI6ImFlMWE3YWRmLWE1MzktNGI0ZS1hNzFkLTQyMGVlOGUyYjRlYyIsImlhdCI6MTc2NzYyOTc3OCwiZXhwIjoxNzY3NjMwNjc4LCJpc3MiOiJiMmctYXV0aC1zZXJ2aWNlIiwiYXVkIjpbImIyZy1taWNyb3NlcnZpY2VzIl19.BvpprneH-GctHVEhXfLjIfZ1dRrTw17GOXnxSR-gntdDO1k0ch2O-k6top_AehPGU9ysCIVEm7-l56MAW_NWy_Q80JmLYiyCCCWBFDoqcxYudZEA6DF3EzMGgPuXb-5x88B9t-y0SaFyHVn_mcNf-mtV_zUcLHkWqHPdd5d9M_2RLudZu3JbZk-7B-SeQR76fAnF264dqYYuGk3NlLYyaoeT4NTxVtTyeR-ImMF-KykAQCLesNQwjVVtBbhm2wNRi43ZCdm14wCTzdetUpXIaKhX_0mIgMQ92Cay1fKHAj0EZX4wUerUF-l4lVjd1ADelzHAinnhklRDnHUh_hpasA
+  token: eyJraWQiOiJhdXRoLWtleS0xIiwiYWxnIjoiUlMyNTYifQ.eyJyb2xlcyI6WyJFTVBMT1lFRSIsIkFETUlOIiwiUkVBREVSIl0sInVzZXJVVUlEIjoiYWUxYTdhZGYtYTUzOS00YjRlLWE3MWQtNDIwZWU4ZTJiNGVjIiwidXNlcm5hbWUiOiJhZG1pbiIsInN1YiI6ImFlMWE3YWRmLWE1MzktNGI0ZS1hNzFkLTQyMGVlOGUyYjRlYyIsImlhdCI6MTc2NzcyNDc4NiwiZXhwIjoxNzY3NzI1Njg2LCJpc3MiOiJiMmctYXV0aC1zZXJ2aWNlIiwiYXVkIjpbImIyZy1taWNyb3NlcnZpY2VzIl19.LF-FU672eXFC2-y1thwAZbeoRAsBxWz5pZUyg6lj5CSg8oO5A8Gkt1UQr4gNLkFyqE11a_ojbJm7XezBVo-ZnaEI7yo5mQkxindrn63rowudaX0ERTlHdNqvV1PPlFlEl3RO3oA4IRDr4QhCRF17T3m9gEfTSGPBTtBxN9bJY1O6_cftzo8Va0ZJRFDK6C-SVFoyKgMo-7FQmYyOQCm2YBeQGS3d8BdJgMpfwXjUOXqtLxlhpYh4tKcX3Anw55PnuHeRWizcNHqiE_Z9-OZowD_Q5ajRDFlK1dSEoH7KoNSBL04-Q4LJDnc40NOd27pcoK0bg0ttBIh7EnSr_DwXVg
 authenticationType: bearer
 body:
   text: |-
     {
-      "title": "Il grande romanzo ",
-      "edition": "Linea Rossa",
-      "author": "Mario Rossi",
+      "title": "1985",
+      "edition": "Blu",
+      "author": "George Orwell",
       "description": "Una storia avvincente tra storia e fantasia",
-      "publisher": "Edizioni Esempio",
-      "publicationDate": "2026-01-05",
+      "publisher": "Pizzoli",
+      "publicationDate": "2011-07-14",
       "categoryIds": [
-        "c7678ac0-d0e2-44a0-9101-322193705d61",
-        "15fcdee6-623d-4323-b925-bbc66af3d3db"
+        "c268f87d-1c72-4474-90a5-951f064537f1",
+        "4352fd1d-83a8-4abf-9b8d-2ba7cc4aaeb0"
       ]
     }
 bodyType: application/json

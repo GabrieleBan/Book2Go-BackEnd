@@ -2,14 +2,14 @@ type: http_request
 model: http_request
 id: rq_kTfUwnaMWc
 createdAt: 2025-11-27T21:28:27.814096400
-updatedAt: 2025-12-16T22:20:59.395712400
+updatedAt: 2026-01-06T16:56:05.547349700
 workspaceId: wk_94bVhSAcpy
 folderId: fl_qYLLc5Jiv3
 authentication:
-  token: eyJhbGciOiJSUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwidXNlclVVSUQiOiI4ZGI2MWIxMS1jMmVlLTRmYzYtOGNjMi1lZGU1NTRhNzNjMzUiLCJyb2xlcyI6WyJSRUFERVIiLCJBRE1JTiIsIkVNUExPWUVFIl0sInN1YiI6IjhkYjYxYjExLWMyZWUtNGZjNi04Y2MyLWVkZTU1NGE3M2MzNSIsImlhdCI6MTc2NTkyMzY0MiwiZXhwIjoxNzY1OTI0NTQyLCJpc3MiOiJiMmctYXV0aC1zZXJ2aWNlIiwiYXVkIjpbImIyZy1taWNyb3NlcnZpY2VzIl19.BcA5k1ppxG4w1igNgnJfWpSCkW9_tyh6WrmnsTPjU5uhSVMCwGENa5K2JgB-XZUUBBVf9U3930QO_-3zU7sdNQXpmtLB8zU-cpGo1zSTfBCSkljsv3qcfzC8ydI9rKDbr7FFcN0vlpP6TkwU9zJiZTWalUiLEuepqqr_bxUIFhtssmme9uApqMCrEzxvHSgw52psxXulpfFOL8vWQW-6tKaJlCoDrPKvEybmnEmhmxm7K9XTgagtXVrRxBiB0XvgqtIFUVAWbGKnV4FESS21w6GCuROq6kSt2-AhswWFdBJ2t7sHcyaa0RiJ4g-l7RrVFFosay0GBAZ3H1kDWoyffQ
+  token: eyJraWQiOiJhdXRoLWtleS0xIiwiYWxnIjoiUlMyNTYifQ.eyJyb2xlcyI6WyJFTVBMT1lFRSIsIkFETUlOIiwiUkVBREVSIl0sInVzZXJVVUlEIjoiYWUxYTdhZGYtYTUzOS00YjRlLWE3MWQtNDIwZWU4ZTJiNGVjIiwidXNlcm5hbWUiOiJhZG1pbiIsInN1YiI6ImFlMWE3YWRmLWE1MzktNGI0ZS1hNzFkLTQyMGVlOGUyYjRlYyIsImlhdCI6MTc2NzcxODU1NywiZXhwIjoxNzY3NzE5NDU3LCJpc3MiOiJiMmctYXV0aC1zZXJ2aWNlIiwiYXVkIjpbImIyZy1taWNyb3NlcnZpY2VzIl19.Eop0WFVlnLnq9-FdQoTKBWxMAZEPV1nFILY0QrudxIDDgKpGmXfkdO5uJChInbiWKwY2iZyUJPD_KafOamT7pNITbNZxxD-jDk0FXOhHxHLdfnvDXROAxGfjWHPsnaqvlkQ-t6rmVoAongG3ND2eg78Er6TILyekWn4e2cTkiBbPO5BoGYtE7GOGUmaWbWJ1pJF2lHLPOU-MLYDMEfV0jlw5Dw1jath4oPtJ783aAcFFxgtNvfftQskYwGdQti9FVOZiT8LR3vsh_0ihBszpMEM-1gQ6CEQiZ9cKisXH9EaiFO5ALgGFnyYVjMv4hZAQVpxRhS6045m6IS6pH3Sgaw
 authenticationType: bearer
 body:
-  text: "{\n    \n  \"description\" : \"\",\n  \"durationDays\" : 30,\n  \"maxRenewals\" : 1,\n  \"minRequiredTier\" : \"SUB_TIER2\"\n}"
+  text: "{\n    \n  \"description\" : \"\",\n  \"durationDays\" : 30,\n  \"maxRenewals\" : 1,\n  \"minRequiredTier\" : \"UNSUBSCRIBED\"\n}"
 bodyType: application/json
 description: ''
 headers:
@@ -20,5 +20,5 @@ headers:
 method: POST
 name: Add Lending Option
 sortPriority: 2000.0
-url: http://localhost:8099/lendable-formats/a89c392a-3e91-4ed7-8c09-f17f845c7fd8/options
+url: http://localhost:8099/lendable-formats/a1e8d271-0b0e-46ef-912c-83bba9e6887e/options
 urlParameters: []

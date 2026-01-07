@@ -1,0 +1,85 @@
+spring:
+  application:
+    name: notification-service
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/b2g_db}
+    username: ${SPRING_DATASOURCE_USERNAME:user}
+    password: ${SPRING_DATASOURCE_PASSWORD:password}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      initialization-fail-timeout: -1
+      connection-timeout: 30000
+      validation-timeout: 5000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  mail:
+    host: ${SPRING_MAIL_HOST:mailhog}
+    port: ${SPRING_MAIL_PORT:1025}
+    username: ${SPRING_MAIL_USERNAME:}
+    password: ${SPRING_MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+        debug: true
+
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST:rabbitmq}
+    port: ${SPRING_RABBITMQ_PORT:5672}
+    username: ${SPRING_RABBITMQ_USERNAME:guest}
+    password: ${SPRING_RABBITMQ_PASSWORD:guest}
+    publisher-confirm-type: correlated
+    publisher-returns: true
+
+authService:
+  internal:
+    url: ${AUTH_SERVICE_INTERNAL_URL:http://auth-service:8090/internal}
+  jwks:
+    url: ${AUTH_SERVICE_JWKS_URL:http://auth-service:8090/auth/.well-known/jwks.json}
+
+server:
+  port: ${SERVER_PORT:8092}
+
+app:
+  rabbitmq:
+    service:
+      prefix: ${APP_RABBITMQ_SERVICE_PREFIX:notification}
+    queue:
+      name:
+        suffix: ${APP_RABBITMQ_QUEUE_NAME_SUFFIX:notification}
+      user-signup: ${APP_RABBITMQ_QUEUE_USER_SIGNUP:notification.user.signup}
+    exchange: ${APP_RABBITMQ_EXCHANGE:b2g.topic.exchange}
+    routing-key:
+      signup-ticket: ${APP_RABBITMQ_ROUTINGKEY_SIGNUP_TICKET:rk.user.registration}
+    binding-key:
+      lend:
+        created: ${APP_RABBITMQ_BINDINGKEY_LEND_CREATED:lend.created}
+        failed: ${APP_RABBITMQ_BINDINGKEY_LEND_FAILED:lend.failed}
+        request:
+          created: ${APP_RABBITMQ_BINDINGKEY_LEND_REQUEST_CREATED:lend.request.created}
+        ready: ${APP_RABBITMQ_BINDINGKEY_LEND_READY:lend.ready}
+        requested:
+          paymentcheck: ${APP_RABBITMQ_BINDINGKEY_LEND_REQUESTED_PAYCHECK:lend.paymentcheck.*}
+          addresscheck: ${APP_RABBITMQ_BINDINGKEY_LEND_REQUESTED_ADDRESSCHECK:lend.addresscheck.*}
+        ended: ${APP_RABBITMQ_BINDINGKEY_LEND_ENDED:lend.ended}
+
+  confirmation:
+    base-url: ${APP_CONFIRMATION_BASE_URL:http://auth-service:8090}
+
+logging:
+  level:
+    com.b2g.catalogservice: DEBUG
+    org.springframework.security: DEBUG

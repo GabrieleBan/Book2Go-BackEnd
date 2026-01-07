@@ -39,8 +39,8 @@ public class BookFormat {
     @Column(nullable = false)
     private FormatType formatType;
 
-    @NotBlank(message = "ISBN cannot be blank")
-    @Size(min = 10, max = 17, message = "ISBN must be between 10 and 17 characters")
+
+    @Column(unique = true )
     String isbn;
 
     @Embedded

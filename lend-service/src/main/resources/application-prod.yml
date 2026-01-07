@@ -1,0 +1,84 @@
+server:
+  port: ${SERVER_PORT:8099}
+
+spring:
+  application:
+    name: lend-service
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/b2g_rental}
+    username: ${SPRING_DATASOURCE_USERNAME:user}
+    password: ${SPRING_DATASOURCE_PASSWORD:password}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      initialization-fail-timeout: -1
+      connection-timeout: 30000
+      validation-timeout: 5000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST:rabbitmq}
+    port: ${SPRING_RABBITMQ_PORT:5672}
+    username: ${SPRING_RABBITMQ_USERNAME:guest}
+    password: ${SPRING_RABBITMQ_PASSWORD:guest}
+    publisher-confirm-type: correlated
+    publisher-returns: true
+
+authService:
+  internal:
+    url: ${AUTH_SERVICE_INTERNAL_URL:http://auth-service:8090}
+  jwks:
+    url: ${AUTH_SERVICE_JWKS_URL:http://auth-service:8090/auth/.well-known/jwks.json}
+
+catalogService:
+  internal:
+    url: ${CATALOG_SERVICE_INTERNAL_URL:http://catalog-service:8091/books/}
+
+inventoryService:
+  internal:
+    url: ${INVENTORY_SERVICE_INTERNAL_URL:http://inventory-service:8095/inventory/}
+
+subscriptionService:
+  internal:
+    url: ${SUBSCRIPTION_SERVICE_INTERNAL_URL:http://reader-service:8098/subscriptions/readerUUID}
+
+jwt:
+  public-key:
+    cache:
+      seconds: ${JWT_PUBLIC_KEY_CACHE:300}
+
+app:
+  rabbitmq:
+    exchange: ${APP_RABBITMQ_EXCHANGE:b2g.topic.exchange}
+    queue:
+      name: ${APP_RABBITMQ_QUEUE_NAME:rental}
+    routingkey:
+      lend:
+        request:
+          created: ${APP_ROUTINGKEY_LEND_REQUEST_CREATED:lend.request.created}
+        ready: ${APP_ROUTINGKEY_LEND_READY:lend.ready}
+        created: ${APP_ROUTINGKEY_LEND_CREATED:lend.created}
+        failed: ${APP_ROUTINGKEY_LEND_FAILED:lend.failed}
+        ended: ${APP_ROUTINGKEY_LEND_ENDED:lend.ended}
+      reservation:
+        created: ${APP_ROUTINGKEY_RESERVATION_CREATED:reservation.created}
+        failed: ${APP_ROUTINGKEY_RESERVATION_FAILED:reservation.failed}
+    bindingkey:
+      book:
+        reserved: ${APP_BINDINGKEY_BOOK_RESERVED:lend.book.reserved}
+
+logging:
+  level:
+    com.b2g.catalogservice: DEBUG
+    org.springframework.security: DEBUG
+

@@ -1,18 +1,21 @@
+server:
+  port: ${SERVER_PORT:8091}
+
 spring:
   application:
     name: catalog-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/b2g_catalog
-    username: user
-    password: password
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/b2g_catalog}
+    username: ${SPRING_DATASOURCE_USERNAME:user}
+    password: ${SPRING_DATASOURCE_PASSWORD:password}
     driver-class-name: org.postgresql.Driver
     hikari:
-      initialization-fail-timeout: -1
-      connection-timeout: 30000
-      validation-timeout: 5000
-      idle-timeout: 600000
-      max-lifetime: 1800000
+      initialization-fail-timeout: ${SPRING_HIKARI_INIT_FAIL:-1}
+      connection-timeout: ${SPRING_HIKARI_CONN_TIMEOUT:30000}
+      validation-timeout: ${SPRING_HIKARI_VALID_TIMEOUT:5000}
+      idle-timeout: ${SPRING_HIKARI_IDLE_TIMEOUT:600000}
+      max-lifetime: ${SPRING_HIKARI_MAX_LIFETIME:1800000}
 
   jpa:
     hibernate:
@@ -24,52 +27,41 @@ spring:
         format_sql: true
 
   rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
+    host: ${SPRING_RABBITMQ_HOST:rabbitmq}
+    port: ${SPRING_RABBITMQ_PORT:5672}
+    username: ${SPRING_RABBITMQ_USERNAME:guest}
+    password: ${SPRING_RABBITMQ_PASSWORD:guest}
     publisher-confirm-type: correlated
     publisher-returns: true
 
-app:
-  rabbitmq:
-    exchange: b2g.topic.exchange
-    queue:
-      name: catalog
-    routingkey:
-      book:
-        creation: book.created
-      format:
-        created: book.format.created
-    bindinkey:
-
-      availability:
-        all: book.availability.*
-        available: book.availability.available
-        low: book.availability.low
-        out: book.availability.out
-        not_available: book.availability.not_available
-
-server:
-  port: 8091
-
-#authentication
 authService:
-  jwks:
-    url: http://localhost:8090/auth/.well-known/jwks.json
   internal:
-    url: http://localhost:8090
-
-
+    url: ${AUTH_SERVICE_INTERNAL_URL:http://auth-service:8090}
+  jwks:
+    url: ${AUTH_SERVICE_JWKS_URL:http://auth-service:8090/auth/.well-known/jwks.json}
 
 jwt:
   public-key:
     cache:
-      seconds: 300
-# non piu usato
-#rentalService:
-#  internal:
-#    url: http://localhost:8099/rental/internal
+      seconds: ${JWT_PUBLIC_KEY_CACHE:300}
+
+app:
+  rabbitmq:
+    exchange: ${APP_RABBITMQ_EXCHANGE:b2g.topic.exchange}
+    queue:
+      name: ${APP_RABBITMQ_QUEUE:catalog}
+    routingkey:
+      book:
+        creation: ${APP_RK_BOOK_CREATION:book.created}
+      format:
+        created: ${APP_RK_FORMAT_CREATED:book.format.created}
+    bindinkey:
+      availability:
+        all: ${APP_RK_AVAILABILITY_ALL:book.availability.*}
+        available: ${APP_RK_AVAILABILITY_AVAILABLE:book.availability.available}
+        low: ${APP_RK_AVAILABILITY_LOW:book.availability.low}
+        out: ${APP_RK_AVAILABILITY_OUT:book.availability.out}
+        not_available: ${APP_RK_AVAILABILITY_NOT_AVAILABLE:book.availability.not_available}
 
 logging:
   level:

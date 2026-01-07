@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -42,6 +43,8 @@ GET /.well-known/jwks.json → expose public keys for JWT validation (if using a
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthApplicationService authService;
+    @Value("${frontend.redirect}")
+    private  String frontendUrl;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody SignupRequest request) {
@@ -80,44 +83,45 @@ public class AuthController {
 //        // Utilizzo il metodo loginOauth2 del service
 //        return authService.loginOauth2(authentication);
 //    }
-    @GetMapping("/oauth2/callback")
-    public ResponseEntity<String> oauth2Callback(
-            OAuth2AuthenticationToken authentication,
-            HttpServletRequest request
-    ) {
-        // Invalidate OAuth2 session (stateless architecture)
-        HttpSession oauth2Session = request.getSession(false);
-        if (oauth2Session != null) {
-            oauth2Session.invalidate();
-        }
-
-        // Generate tokens
-        TokenResponse tokenResponse = authService.loginOauth2(authentication).getBody();
-
-        // HTML that posts both tokens back to opener
-        String html = """
-        <html>
-          <body>
-            <script>
-              window.opener.postMessage(
-                {
-                  accessToken: '%s',
-                  refreshToken: '%s'
-                },
-                'http://localhost:5173'
-              );
-            </script>
-          </body>
-        </html>
-        """.formatted(
-                tokenResponse.getAccessToken(),
-                tokenResponse.getRefreshToken()
-        );
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.TEXT_HTML);
-        return new ResponseEntity<>(html, headers, HttpStatus.OK);
+@GetMapping("/oauth2/callback")
+public ResponseEntity<String> oauth2Callback(
+        OAuth2AuthenticationToken authentication,
+        HttpServletRequest request
+) {
+    // Invalidate OAuth2 session (stateless architecture)
+    HttpSession oauth2Session = request.getSession(false);
+    if (oauth2Session != null) {
+        oauth2Session.invalidate();
     }
+
+    // Generate tokens
+    TokenResponse tokenResponse = authService.loginOauth2(authentication).getBody();
+
+    // HTML that posts both tokens back to opener
+    String html = """
+    <html>
+      <body>
+        <script>
+          window.opener.postMessage(
+            {
+              accessToken: '%s',
+              refreshToken: '%s'
+            },
+            '%s'
+          );
+        </script>
+      </body>
+    </html>
+    """.formatted(
+            tokenResponse.getAccessToken(),
+            tokenResponse.getRefreshToken(),
+            frontendUrl
+    );
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.TEXT_HTML);
+    return new ResponseEntity<>(html, headers, HttpStatus.OK);
+}
 
 
 

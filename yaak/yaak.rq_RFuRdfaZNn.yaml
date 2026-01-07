@@ -2,7 +2,7 @@ type: http_request
 model: http_request
 id: rq_RFuRdfaZNn
 createdAt: 2025-08-27T17:56:31.900481
-updatedAt: 2026-01-05T19:05:55.109515500
+updatedAt: 2026-01-06T16:29:45.838346200
 workspaceId: wk_94bVhSAcpy
 folderId: fl_gQ2VqcuSam
 authentication: {}
@@ -16,53 +16,57 @@ name: Get Books
 sortPriority: 0.0
 url: http://localhost:8091/books/
 urlParameters:
-- enabled: true
+- enabled: false
   name: title
   value: Il grande romanz
   id: MeYWVFRKdb
-- enabled: true
+- enabled: false
   name: author
   value: eeeezzxe
   id: gYpgWQmMaN
-- enabled: true
+- enabled: false
   name: publisher
   value: Edizioni Esempio
   id: gnGF38dbk4
-- enabled: true
+- enabled: false
   name: categoryIds
   value: |-
     15fcdee6-623d-4323-b925-bbc66af3d3db,
     c7678ac0-d0e2-44a0-9101-322193705d61
   id: VvTtdsdzw9
-- enabled: true
+- enabled: false
   name: formatType
   value: PAPERBACK
   id: k0KbjwtaA3
 - enabled: true
   name: minPrice
-  value: '10.0'
+  value: '0'
   id: C8trxqdG5I
 - enabled: true
   name: maxPrice
-  value: '50.0'
+  value: '1000'
   id: BDMhX9ziFh
-- enabled: true
+- enabled: false
   name: page
   value: '0'
   id: mHSgdvZNgf
-- enabled: true
+- enabled: false
   name: size
   value: '20'
   id: rucEaMijMX
-- enabled: true
+- enabled: false
   name: sort
   value: title,asc
   id: ZV3Yz4ID9E
-- enabled: true
+- enabled: false
   name: minRating
   value: '0'
   id: 8dihvAGwsv
+- enabled: false
+  name: categoryIds
+  value: ''
+  id: tT4GfWssbt
 - enabled: true
   name: ''
   value: ''
-  id: 93pKpWHr95
+  id: AIU9576P5n

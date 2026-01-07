@@ -19,7 +19,7 @@ import java.util.UUID;
 @Component
 public class CatalogBookFormatListener {
 
-    @Value("${app.rabbit.bindingkey.book.format.created}")
+    @Value("${app.rabbitmq.bindingkey.book.format.created}")
     private String bookFormatCreatedKey;
 
     private final InventoryApplicationService inventoryService;

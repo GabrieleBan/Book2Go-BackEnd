@@ -2,7 +2,7 @@ type: http_request
 model: http_request
 id: rq_2t9HoijE92
 createdAt: 2025-11-27T20:32:45.743718300
-updatedAt: 2026-01-05T19:19:01.700477500
+updatedAt: 2026-01-06T22:27:48.555978800
 workspaceId: wk_94bVhSAcpy
 folderId: fl_qYLLc5Jiv3
 authentication:
@@ -23,14 +23,10 @@ sortPriority: 0.0
 url: http://localhost:8099/lendable-formats/a1e8d271-0b0e-46ef-912c-83bba9e6887e
 urlParameters:
 - enabled: false
-  name: bookId
-  value: 95db9fb3-7985-4269-b569-026f5caaa862
-  id: t7GDj4A2aZ
-- enabled: false
   name: formatId
   value: a1e8d271-0b0e-46ef-912c-83bba9e6887e
   id: xAbbFwzQ9R
 - enabled: true
   name: ''
   value: ''
-  id: 4Pk4SVCsjn
+  id: hWAaeHNuVk

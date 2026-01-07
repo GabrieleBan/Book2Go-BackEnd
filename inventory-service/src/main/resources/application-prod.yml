@@ -1,0 +1,60 @@
+server:
+  port: ${SERVER_PORT:8095}
+
+spring:
+  application:
+    name: inventory-service
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/b2g_library}
+    username: ${SPRING_DATASOURCE_USERNAME:user}
+    password: ${SPRING_DATASOURCE_PASSWORD:password}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST:rabbitmq}
+    port: ${SPRING_RABBITMQ_PORT:5672}
+    username: ${SPRING_RABBITMQ_USERNAME:guest}
+    password: ${SPRING_RABBITMQ_PASSWORD:guest}
+    publisher-confirm-type: correlated
+    publisher-returns: true
+
+authService:
+  internal:
+    url: ${AUTH_SERVICE_INTERNAL_URL:http://auth-service:8090}
+  jwks:
+    url: ${AUTH_SERVICE_JWKS_URL:http://auth-service:8090/auth/.well-known/jwks.json}
+
+jwt:
+  public-key:
+    cache:
+      seconds: ${JWT_PUBLIC_KEY_CACHE:300}
+
+app:
+  rabbitmq:
+    exchange: ${APP_RABBITMQ_EXCHANGE:b2g.topic.exchange}
+    bindingkey:
+      book:
+        format:
+          created: ${APP_BINDINGKEY_BOOK_FORMAT_CREATED:book.format.created}
+      lend:
+        request:
+          created: ${APP_BINDINGKEY_LEND_REQUEST_CREATED:lend.request.created}
+    routingkey:
+      lend:
+        book:
+          reserved: ${APP_ROUTINGKEY_LEND_BOOK_RESERVED:lend.book.reserved}
+      availability:
+        available: ${APP_ROUTINGKEY_AVAILABILITY_AVAILABLE:book.availability.available}
+        low: ${APP_ROUTINGKEY_AVAILABILITY_LOW:book.availability.low}
+        out: ${APP_ROUTINGKEY_AVAILABILITY_OUT:book.availability.out}
+        not_available: ${APP_ROUTINGKEY_AVAILABILITY_NOT_AVAILABLE:book.availability.not_available}

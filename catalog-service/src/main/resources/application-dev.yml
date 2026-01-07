@@ -1,0 +1,78 @@
+spring:
+  application:
+    name: catalog-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/b2g_catalog
+    username: user
+    password: password
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      initialization-fail-timeout: -1
+      connection-timeout: 30000
+      validation-timeout: 5000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    publisher-confirm-type: correlated
+    publisher-returns: true
+
+app:
+  rabbitmq:
+    exchange: b2g.topic.exchange
+    queue:
+      name: catalog
+    routingkey:
+      book:
+        creation: book.created
+      format:
+        created: book.format.created
+    bindinkey:
+
+      availability:
+        all: book.availability.*
+        available: book.availability.available
+        low: book.availability.low
+        out: book.availability.out
+        not_available: book.availability.not_available
+
+server:
+  port: 8091
+
+#authentication
+authService:
+  jwks:
+    url: http://localhost:8090/auth/.well-known/jwks.json
+  internal:
+    url: http://localhost:8090
+
+
+
+jwt:
+  public-key:
+    cache:
+      seconds: 300
+# non piu usato
+#rentalService:
+#  internal:
+#    url: http://localhost:8099/rental/internal
+
+logging:
+  level:
+    com.b2g.catalogservice: DEBUG
+    org.springframework.security: DEBUG
+

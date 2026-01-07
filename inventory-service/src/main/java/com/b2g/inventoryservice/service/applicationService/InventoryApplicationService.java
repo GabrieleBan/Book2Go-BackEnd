@@ -17,8 +17,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -138,5 +141,24 @@ public class InventoryApplicationService {
             referenceBookRepository.save(book);
             inventoryAvailabilityEventPublisher.publishAvailabilityChanged(book);
         }
+    }
+
+    public Set<RetailStock> getAllStocksForBook(UUID bookId) {
+        if(!referenceBookRepository.existsById(bookId)) {
+            throw new StockException("Libro non gestito dall' inventario");
+        }
+        return new HashSet<>(stockRepository.findById_BookId(bookId));
+    }
+
+    public RetailStock getStock(UUID libraryId, UUID bookId) {
+        if(!referenceBookRepository.existsById(bookId)) {
+            throw new StockException("Libro non gestito dall' inventario");
+        }
+        StockId id = new StockId(bookId, libraryId);
+        RetailStock stock = stockRepository.findById(id).orElse(null);
+        if(stock == null) {
+            throw new StockQuantityException("Libro non ancora o non più gestito in questa libreria");
+        }
+        return stock;
     }
 }

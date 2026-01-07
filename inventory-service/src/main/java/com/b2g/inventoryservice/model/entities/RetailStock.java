@@ -2,6 +2,7 @@ package com.b2g.inventoryservice.model.entities;
 
 
 import com.b2g.inventoryservice.exceptions.StockException;
+import com.b2g.inventoryservice.exceptions.StockQuantityException;
 import com.b2g.inventoryservice.model.valueObjects.StockId;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -34,17 +35,14 @@ public class RetailStock {
     }
 
     public int increase(int qty) {
-        if (qty < 0) throw new StockException("Cannot increase quantity less than zero");
+        if (qty < 0) throw new StockQuantityException("Cannot increase quantity less than zero");
         quantity += qty;
         return quantity;
     }
 
     public int decrease(int qty) {
-        if (qty < 0) throw new StockException("Cannot decrease quantity less than zero");
-        if (quantity <= 0) {
-            throw new StockException("No stock available in this library");
-        }
-        if (quantity-qty < 0) {throw new StockException("Cannot decrese below zero");}
+        if (qty < 0) throw new StockQuantityException("Cannot decrease quantity less than zero");
+        if (quantity-qty < 0) {throw new StockQuantityException("Cannot decrese below zero");}
         quantity-=qty;
 
         return quantity;

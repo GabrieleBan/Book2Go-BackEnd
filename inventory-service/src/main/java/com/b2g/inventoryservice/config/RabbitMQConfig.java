@@ -18,7 +18,7 @@ public class RabbitMQConfig {
     @Value("${app.rabbitmq.bindingkey.lend.request.created}")
     private String lendRequestedAtLibraryKey;
 
-    @Value("${app.rabbit.bindingkey.book.format.created}")
+    @Value("${app.rabbitmq.bindingkey.book.format.created}")
     private String formatCreatedInCatalogKey;
 
 

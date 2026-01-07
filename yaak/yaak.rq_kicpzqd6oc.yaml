@@ -2,11 +2,11 @@ type: http_request
 model: http_request
 id: rq_kicpzqd6oc
 createdAt: 2025-11-18T18:28:09.170530100
-updatedAt: 2025-12-15T16:55:09.090157400
+updatedAt: 2026-01-06T22:24:57.489378100
 workspaceId: wk_94bVhSAcpy
 folderId: fl_cCZgPgtyUM
 authentication:
-  token: eyJhbGciOiJSUzI1NiJ9.eyJyb2xlcyI6WyJSRUFERVIiLCJFTVBMT1lFRSIsIkFETUlOIl0sInVzZXJVVUlEIjoiOGRiNjFiMTEtYzJlZS00ZmM2LThjYzItZWRlNTU0YTczYzM1IiwidXNlcm5hbWUiOiJhZG1pbiIsInN1YiI6IjhkYjYxYjExLWMyZWUtNGZjNi04Y2MyLWVkZTU1NGE3M2MzNSIsImlhdCI6MTc2NTgxNzM0MywiZXhwIjoxNzY1ODE4MjQzLCJpc3MiOiJiMmctYXV0aC1zZXJ2aWNlIiwiYXVkIjpbImIyZy1taWNyb3NlcnZpY2VzIl19.OKnHsLGly3T4GPa2z9Jw2rCipXih85OS8RO3_c4PNMJkKXdumrWG5BkntoAJAYYDHtpDUlmBDGpiz-Z8Gc5qBocuGm8JwnGPlRm6sfo4WpnSwHe564lN764Tnyu1YvZx4jJeWLATGqNLELnjOLHkEj_ocq_4-ifTCy269GXuErcF24u4TcyR6l64MY0LYeTZEeeNjZhVbHEjY7eiZJvu8QLX1IUVeLOIApysbpw_mRpqyGzwwAfX4lhZm1_q6kg24hX7ydZoqn8X6CVm_H6FDs5ruiKuhJE4_0-BS1z4JtRunjCe3wTFHg05RZ5TOpX23oVElHAPSfgRDB4BuEQJeA
+  token: eyJraWQiOiJhdXRoLWtleS0xIiwiYWxnIjoiUlMyNTYifQ.eyJyb2xlcyI6WyJFTVBMT1lFRSIsIlJFQURFUiIsIkFETUlOIl0sInVzZXJVVUlEIjoiYWUxYTdhZGYtYTUzOS00YjRlLWE3MWQtNDIwZWU4ZTJiNGVjIiwidXNlcm5hbWUiOiJhZG1pbiIsInN1YiI6ImFlMWE3YWRmLWE1MzktNGI0ZS1hNzFkLTQyMGVlOGUyYjRlYyIsImlhdCI6MTc2NzczODIzNiwiZXhwIjoxNzY3NzM5MTM2LCJpc3MiOiJiMmctYXV0aC1zZXJ2aWNlIiwiYXVkIjpbImIyZy1taWNyb3NlcnZpY2VzIl19.aisYTRQU_3PdoekK2NdNQ2xNrmz71UJCDPgkLiFB5lZZenUCAAAldeHURa0C6O0PthbFDuf9cwiNOab4n93uwCR0Ob9qc4X3yfJ2VrN6D3ES7MTMROJ4Whm3QktKD7qGZWJdKldvlyR_cYDCY5YMcmpm-1BQ4ItsnDFrX_LUE_3lOqjotmX_-J4oTz0YIkfiBf0t9UfXJVOKqUvtGS9oDOkzVEevIC4FSht2kIz0Mvq4MB1AMBpBWKeIThWdT-xgt9zKhLRa6rdi9mNhpqe9DfPK3qrs9Tut6-8sIc11hQ25KUcStgfPBwjFrXjHAnVjwLrd_wPUaYc2_yHogIvLtg
 authenticationType: bearer
 body: {}
 bodyType: null
@@ -16,10 +16,14 @@ headers:
   name: Authorization
   value: ''
   id: fQFJYXmNyR
+- enabled: false
+  name: ''
+  value: ''
+  id: If5Ei7i5TQ
 - enabled: true
   name: ''
   value: ''
-  id: k2J02cADem
+  id: yEqSShBXbx
 method: GET
 name: GetPersonalizedReccomendation
 sortPriority: -1763488006333.0

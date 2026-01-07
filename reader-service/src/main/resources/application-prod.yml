@@ -1,0 +1,78 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  application:
+    name: reader-service
+
+  server:
+    port: ${SERVER_PORT:8098}
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/b2g_readers}
+    username: ${SPRING_DATASOURCE_USERNAME:user}
+    password: ${SPRING_DATASOURCE_PASSWORD:password}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      initialization-fail-timeout: -1
+      connection-timeout: 30000
+      validation-timeout: 5000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST:rabbitmq}
+    port: ${SPRING_RABBITMQ_PORT:5672}
+    username: ${SPRING_RABBITMQ_USERNAME:guest}
+    password: ${SPRING_RABBITMQ_PASSWORD:guest}
+    publisher-confirm-type: correlated
+
+authService:
+  internal:
+    url: ${AUTH_SERVICE_INTERNAL_URL:http://auth-service:8090}
+  jwks:
+    url: ${AUTH_SERVICE_JWKS_URL:http://auth-service:8090/auth/.well-known/jwks.json}
+
+jwt:
+  public-key:
+    cache:
+      seconds: ${JWT_PUBLIC_KEY_CACHE_SECONDS:300}
+
+app:
+  rabbitmq:
+    exchange: ${APP_RABBITMQ_EXCHANGE:b2g.topic.exchange}
+    service:
+      prefix: ${APP_RABBITMQ_SERVICE_PREFIX:readers}
+    routing-key:
+      review:
+        authorized: ${APP_RABBITMQ_ROUTINGKEY_REVIEW_AUTHORIZED:review.authorized}
+        rejected: ${APP_RABBITMQ_ROUTINGKEY_REVIEW_REJECTED:review.rejected}
+      user:
+        confirmed: ${APP_RABBITMQ_ROUTINGKEY_USER_CONFIRMED:rk.user.confirmed}
+    binding-key:
+      lend:
+        created: ${APP_RABBITMQ_BINDINGKEY_LEND_CREATED:lend.created}
+        failed: ${APP_RABBITMQ_BINDINGKEY_LEND_FAILED:lend.failed}
+        ended: ${APP_RABBITMQ_BINDINGKEY_LEND_ENDED:lend.ended}
+      review:
+        authrequested: ${APP_RABBITMQ_BINDINGKEY_REVIEW_AUTHREQUESTED:review.authorization.requested}
+
+
+
+minio:
+  url: ${MINIO_URL:http://minio:9000}
+  access-key: ${MINIO_ACCESS_KEY:admin}
+  secret-key: ${MINIO_SECRET_KEY:admin123}
+  bucket: ${MINIO_BUCKET:cover-images}
+
+

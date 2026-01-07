@@ -1,0 +1,48 @@
+spring:
+  application:
+    name: recommendation-service
+
+  server:
+    port: ${SERVER_PORT:8096}
+
+  neo4j:
+    uri: ${SPRING_NEO4J_URI:bolt://neo4j:7687}
+    authentication:
+      username: ${SPRING_NEO4J_USERNAME:neo4j}
+      password: ${SPRING_NEO4J_PASSWORD:guest12345}
+    pool:
+      max-connection-pool-size: ${SPRING_NEO4J_POOL_MAX_CONNECTION:100}
+      max-connection-lifetime: ${SPRING_NEO4J_POOL_MAX_LIFETIME:1800000}
+      connection-acquisition-timeout: ${SPRING_NEO4J_POOL_ACQ_TIMEOUT:5000}
+
+  data:
+    neo4j:
+      database: ${SPRING_NEO4J_DATABASE:neo4j}
+
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST:rabbitmq}
+    port: ${SPRING_RABBITMQ_PORT:5672}
+    username: ${SPRING_RABBITMQ_USERNAME:guest}
+    password: ${SPRING_RABBITMQ_PASSWORD:guest}
+    dynamic: true
+    publisher-confirm-type: correlated
+    publisher-returns: true
+
+authService:
+  internal:
+    url: ${AUTH_SERVICE_INTERNAL_URL:http://auth-service:8090/internal}
+
+app:
+  rabbitmq:
+    exchange: ${APP_RABBITMQ_EXCHANGE:b2g.topic.exchange}
+    service:
+      prefix: ${APP_RABBITMQ_SERVICE_PREFIX:recommendation}
+    bindingkey:
+      book:
+        creation: ${APP_RABBITMQ_BINDINGKEY_BOOK_CREATION:book.created}
+
+logging:
+  level:
+    org.springframework.amqp: DEBUG
+    org.springframework.amqp.rabbit: DEBUG
+

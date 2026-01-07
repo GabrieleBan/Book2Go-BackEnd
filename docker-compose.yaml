@@ -70,6 +70,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: password
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
+      FRONTEND_REDIRECT: http://book2go:5173
     depends_on:
       - postgres
       - rabbitmq
@@ -93,6 +94,8 @@ services:
       SPRING_DATASOURCE_PASSWORD: password
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
+      AUTH_SERVICE_INTERNAL_URL: http://auth-service:8090
+      AUTH_SERVICE_JWKS_URL: http://auth-service:8090/auth/.well-known/jwks.json
     depends_on:
       - postgres
       - rabbitmq
@@ -100,14 +103,40 @@ services:
       - "8091:8091"
     networks:
       - b2g-net
+  inventory-service:
+    build:
+      context: .
+      dockerfile: inventory-service/Dockerfile
+    container_name: inventory-service
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/b2g_library
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      AUTH_SERVICE_INTERNAL_URL: http://auth-service:8090
+      AUTH_SERVICE_JWKS_URL: http://auth-service:8090/auth/.well-known/jwks.json
+    depends_on:
+      - postgres
+      - rabbitmq
+      - auth-service
+    ports:
+      - "8095:8095"
+    networks:
+      - b2g-net
 
   client-frontend-service:
     image: gabrieleban/my-module:latest
     container_name: client-frontend-service
     ports:
-      - "5173:80"
+      - "5173:5173"
     networks:
       - b2g-net
+    environment:
+      - HOST=book2go
+    extra_hosts:
+      - "book2go:127.0.0.2"
 
 
   notification-service:
@@ -125,6 +154,7 @@ services:
       SPRING_RABBITMQ_PORT: 5672
       SPRING_MAIL_HOST: mailhog
       SPRING_MAIL_PORT: 1025
+      AUTH_SERVICE_JWKS_URL: http://auth-service:8090/auth/.well-known/jwks.json
     depends_on:
       - postgres
       - rabbitmq
@@ -142,12 +172,17 @@ services:
     image: gabrieleban/reader-service:latest
     container_name: reader-service
     environment:
+      SERVER_PORT: 8098
+      SPRING_SERVER_PORT: 8098
       SPRING_PROFILES_ACTIVE: prod
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/b2g_readers
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: password
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
+      MINIO_URL: http://minio:9000
+      AUTH_SERVICE_JWKS_URL: http://auth-service:8090/auth/.well-known/jwks.json
+      AUTH_SERVICE_INTERNAL_URL: http://auth-service:8090
     depends_on:
       - postgres
       - rabbitmq
@@ -164,6 +199,8 @@ services:
     image: gabrieleban/recommendation-service:latest
     container_name: recommendation-service
     environment:
+      SERVER_PORT: 8096
+      SPRING_SERVER_PORT: 8096
       SPRING_PROFILES_ACTIVE: prod
       SPRING_NEO4J_URI: bolt://neo4j:7687
       SPRING_NEO4J_USERNAME: neo4j
@@ -173,6 +210,8 @@ services:
       SPRING_RABBITMQ_USERNAME: guest
       SPRING_RABBITMQ_PASSWORD: guest
       SPRING_AUTOCONFIGURE_EXCLUDE: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+      AUTH_SERVICE_JWKS_URL: http://auth-service:8090/auth/.well-known/jwks.json
+      AUTH_SERVICE_INTERNAL_URL: http://auth-service:8090/internal
     depends_on:
       - neo4j
       - rabbitmq
@@ -182,12 +221,12 @@ services:
     networks:
       - b2g-net
 
-  rental-service:
+  lend-service:
     build:
       context: .
-      dockerfile: rental-service/Dockerfile
-    image: gabrieleban/rental-service:latest
-    container_name: rental-service
+      dockerfile: lend-service/Dockerfile
+    image: gabrieleban/lend-service:latest
+    container_name: lend-service
     environment:
       SPRING_PROFILES_ACTIVE: prod
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/b2g_rental
@@ -197,13 +236,18 @@ services:
       SPRING_RABBITMQ_PORT: 5672
       SPRING_RABBITMQ_USERNAME: guest
       SPRING_RABBITMQ_PASSWORD: guest
-      AUTHSERVICE_INTERNAL_URL: http://auth-service:8090/internal
-      READERSERVICE_INTERNAL_URL: http://reader-service:8098/readers/readerUUID/check/subscription
+      AUTH_SERVICE_INTERNAL_URL: http://auth-service:8090
+      AUTH_SERVICE_JWKS_URL: http://auth-service:8090/auth/.well-known/jwks.json
+      CATALOG_SERVICE_INTERNAL_URL: http://catalog-service:8091
+      INVENTORY_SERVICE_INTERNAL_URL: http://inventory-service:8095
+      SUBSCRIPTION_SERVICE_INTERNAL_URL: http://reader-service:8098/subscriptions/readerUUID
     depends_on:
       - postgres
       - rabbitmq
       - auth-service
       - reader-service
+      - catalog-service
+      - inventory-service
     ports:
       - "8099:8099"
     networks:
