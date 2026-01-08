@@ -13,6 +13,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleAvailability(AvailabilityException ex) {
         return build(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
+    @ExceptionHandler(ReservationRequestStateException.class)
+    public ResponseEntity<ErrorResponse> handleAvailability(ReservationRequestStateException ex) {
+        return build(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
 
     @ExceptionHandler(BookShopNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleBookShopNotFound(BookShopNotFoundException ex) {

@@ -3,6 +3,7 @@ package com.b2g.lendservice.model.entities;
 import com.b2g.commons.LendState;
 import com.b2g.commons.SubscriptionType;
 import com.b2g.lendservice.Exceptions.LendingStateLifeCycleException;
+import com.b2g.lendservice.model.vo.LendableCopy;
 import com.b2g.lendservice.model.vo.LendingOption;
 import com.b2g.lendservice.model.vo.LendingPeriod;
 import jakarta.persistence.*;
@@ -97,22 +98,6 @@ public class Lending {
         LocalDate today = LocalDate.now();
         this.period = new LendingPeriod(today, today.plusDays(usedOption.getDurationDays()));
     }
-
-//    public void markAsProcessing() {
-//        this.state = LendState.PROCESSING;
-//    }
-
-//    public void markAsAwaiting() {
-//        this.state = LendState.AWAITING;
-//    }
-//
-//    public void conclude() {
-//        this.state = LendState.CONCLUDED;
-//    }
-//
-//    public void fail() {
-//        this.state = LendState.FAILED;
-//    }
 
     public void assignCopy(LendableCopy copy) {
         if(state != LendState.PROCESSING && state != LendState.AWAITING) {

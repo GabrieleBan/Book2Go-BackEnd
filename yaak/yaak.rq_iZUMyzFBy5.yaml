@@ -1,0 +1,36 @@
+type: http_request
+model: http_request
+id: rq_iZUMyzFBy5
+createdAt: 2026-01-06T20:36:52.799257400
+updatedAt: 2026-01-07T04:20:34.906771800
+workspaceId: wk_94bVhSAcpy
+folderId: fl_dkipB2zZxo
+authentication:
+  token: eyJraWQiOiJhdXRoLWtleS0xIiwiYWxnIjoiUlMyNTYifQ.eyJ1c2VybmFtZSI6ImFkbWluIiwidXNlclVVSUQiOiJhZTFhN2FkZi1hNTM5LTRiNGUtYTcxZC00MjBlZThlMmI0ZWMiLCJyb2xlcyI6WyJFTVBMT1lFRSIsIkFETUlOIiwiUkVBREVSIl0sInN1YiI6ImFlMWE3YWRmLWE1MzktNGI0ZS1hNzFkLTQyMGVlOGUyYjRlYyIsImlhdCI6MTc2Nzc1OTU3OCwiZXhwIjoxNzY3NzYwNDc4LCJpc3MiOiJiMmctYXV0aC1zZXJ2aWNlIiwiYXVkIjpbImIyZy1taWNyb3NlcnZpY2VzIl19.gEZ3Try0PhA1buVtwL4vUMZLHSExzNqVm5hI6vOjqHGIck5BJTm-zExUbLfYM-jQDtkRmOyA9rE4CM0bjtaRAm7_ItwLkxUhj4ayK6tTXcaszwCpMAM0mbGz2reFJKmCUYSFIf_2WqmwcmGSd35KrAoWz9jr4A00SX7-4ZUukYCcCDBsMmU329hqvPhTF4frYdSgTq-Tn9ykmjpd6DUTZjDSKPVeCLaZrtXUjEDh1bcKJOt8mjn_-MehLKOWQhTls5eHu_w-8O6mMcRnUTBMhotyGQxUsdSJI7yJyJYVC5YvOrK5LJeH4L5aZL-B0fAKq-SHG7pZyFCI95ZNh3t4gg
+authenticationType: bearer
+body:
+  form:
+  - enabled: true
+    file: C:\Users\gabri\Desktop\Taass progetto\presentazione\immaginilibri\41uWrhGJkgL._SY445_SX342_PQ99_.jpg
+    id: UuVqB090eh
+    name: file
+  - enabled: true
+    id: S2yjj7NErn
+    name: ''
+    value: ''
+bodyType: multipart/form-data
+description: ''
+headers:
+- enabled: false
+  name: Content-Type
+  value: multipart/form-data
+  id: Edt692NNeP
+- enabled: true
+  name: ''
+  value: ''
+  id: JzZAFrqPp3
+method: POST
+name: Post image
+sortPriority: 1500.0004
+url: http://localhost:8098/content/ad4d1479-a927-42d3-8abd-9798ea6b1274/cover-image
+urlParameters: []

@@ -4,7 +4,7 @@ import com.b2g.commons.FormatType;
 import com.b2g.lendservice.Exceptions.LendingOptionNotFoundException;
 import com.b2g.lendservice.dto.LendingOptionDTO;
 import com.b2g.lendservice.model.entities.LendableBook;
-import com.b2g.lendservice.model.entities.LendableCopy;
+import com.b2g.lendservice.model.vo.LendableCopy;
 import com.b2g.lendservice.model.vo.LendingOption;
 import org.springframework.stereotype.Service;
 

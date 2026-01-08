@@ -1,5 +1,6 @@
 package com.b2g.reviewservice.service;
 
+import com.b2g.commons.ReaderBookPossessionResultDTO;
 import com.b2g.commons.ReviewConfirmationDTO;
 import com.b2g.reviewservice.dto.RequestCreateReviewDTO;
 
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Slf4j
@@ -99,15 +101,45 @@ public class ReviewService {
 
 
 
-    protected void confirmReview(ReviewConfirmationDTO confirmedReview) {
-        reviewRepository.findById(confirmedReview.getReviewId()).ifPresent(review -> {
-            if (confirmedReview.isConfirmed()) {
-                review.setCanBeShown(true);
-                reviewRepository.save(review);
-                notifyReviewAction(review,"created");
-            } else {
-                reviewRepository.delete(review);
-            }
-        });
+    public void handleReaderPossessionResult(
+            ReaderBookPossessionResultDTO message) {
+
+        if (message.getStartDate() == null) {
+            rejectReview(message.getReviewId(),
+                    "User never owned the book");
+            return;
+        }
+
+        if (LocalDate.now().isBefore(
+                message.getStartDate().plusDays(1))) {
+
+            rejectReview(message.getReviewId(),
+                    "At least 1 day of possession required");
+            return;
+        }
+
+        approveReview(message.getReviewId());
     }
+
+    private void rejectReview(Long reviewId, String s) {
+        Review review = reviewRepository.findById(reviewId).orElse(null);
+        if (review == null) {
+            log.error("review not found");
+            return;
+        }
+        log.error("rejected review {} because {}",review,s);
+        reviewRepository.delete(review);
+    }
+
+    private void approveReview(Long reviewId) {
+        Review review = reviewRepository.findById(reviewId).orElse(null);
+        if (review == null) {
+            log.error("review not found");
+            return;
+        }
+        review.setCanBeShown(true);
+        reviewRepository.save(review);
+
+    }
+
 }

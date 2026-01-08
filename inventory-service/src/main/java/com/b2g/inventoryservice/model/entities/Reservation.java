@@ -40,9 +40,7 @@ public class Reservation {
         return new Reservation(copyId);
     }
 
-    // =====================
-    // DOMAIN METHODS
-    // =====================
+
     public void markInUse(LibraryCopy copy) {
         if (state != ReservationState.CONFIRMED) {
             throw new ReservationException("Reservation must be CONFIRMED to start use");

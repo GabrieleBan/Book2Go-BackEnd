@@ -1,0 +1,26 @@
+type: http_request
+model: http_request
+id: rq_q3SrhqhUtT
+createdAt: 2026-01-07T13:40:40.689336100
+updatedAt: 2026-01-07T13:42:01.147093900
+workspaceId: wk_94bVhSAcpy
+folderId: fl_jhet5jX7mC
+authentication: {}
+authenticationType: none
+body:
+  text: |-
+    {
+      "quantity": -1
+    }
+bodyType: null
+description: ''
+headers:
+- enabled: true
+  name: ''
+  value: ''
+  id: fUDeT8WJwS
+method: GET
+name: getStockAvailabilityAtLibrary
+sortPriority: 2000.0019
+url: http://localhost:8095/inventory/stocks/libraries/00000000-0000-0000-0000-000000000002/books/0f02e79d-6326-409a-9158-f5f5c85c8b13
+urlParameters: []

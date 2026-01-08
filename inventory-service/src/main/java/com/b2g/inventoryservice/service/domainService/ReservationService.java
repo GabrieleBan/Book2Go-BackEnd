@@ -17,11 +17,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ReservationService {
 
-    private final ReservationRequestRepository requestRepository;
-    private final ReservationRepository reservationRepository;
-    private final LibraryCopyRepository copyRepository;
-
-
     public ReservationRequest createRequest(UUID libraryId, UUID bookId) {
         ReservationRequest request = ReservationRequest.create(libraryId, bookId);
         return request;
@@ -30,9 +25,9 @@ public class ReservationService {
 
     @Transactional
     public Reservation assignCopy(ReservationRequest request, LibraryCopy copy) {
-        if (request.getState() != ReservationRequestState.REQUESTED) {
-            throw new IllegalStateException("Request is not in REQUESTED state");
-        }
+//        if (request.getState() != ReservationRequestState.REQUESTED) {
+//            throw new IllegalStateException("Request is not in REQUESTED state");
+//        }
 
         if (copy == null) {
             throw new IllegalStateException("Copy not found");

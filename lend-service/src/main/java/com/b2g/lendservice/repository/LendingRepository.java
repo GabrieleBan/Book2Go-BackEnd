@@ -1,7 +1,7 @@
 package com.b2g.lendservice.repository;
 
 import com.b2g.commons.LendState;
-import com.b2g.lendservice.model.entities.LendableCopy;
+import com.b2g.lendservice.model.vo.LendableCopy;
 import com.b2g.lendservice.model.entities.Lending;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

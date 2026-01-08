@@ -8,6 +8,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Setter
 @Getter
 public class ReviewConfirmationDTO {
 //    usare questo oggetto per leggere risposta
@@ -15,7 +16,6 @@ public class ReviewConfirmationDTO {
     private UUID userId;
     private UUID bookId;
     private Date pubblicationDate;
-    @Setter
     private boolean confirmed;
     private String reason;
 }

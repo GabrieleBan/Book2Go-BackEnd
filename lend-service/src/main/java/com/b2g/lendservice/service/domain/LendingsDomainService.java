@@ -3,10 +3,9 @@ package com.b2g.lendservice.service.domain;
 import com.b2g.lendservice.dto.LendingRequest;
 import com.b2g.lendservice.model.entities.LendableBook;
 import com.b2g.lendservice.model.entities.Lending;
-import com.b2g.lendservice.model.entities.LendableCopy;
+import com.b2g.lendservice.model.vo.LendableCopy;
 import com.b2g.lendservice.model.entities.Reader;
 import com.b2g.lendservice.model.vo.LendingOption;
-import com.b2g.lendservice.model.vo.LendingPeriod;
 import com.b2g.lendservice.model.vo.UserSubscriptionData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,14 +13,12 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 
-import com.b2g.commons.FormatType;
 import com.b2g.lendservice.Exceptions.LendableBookException;
 import com.b2g.lendservice.Exceptions.LendableCopyException;
 import com.b2g.lendservice.Exceptions.LendingException;
 import com.b2g.lendservice.Exceptions.TooManyLendsException;
 import com.b2g.lendservice.dto.LendableCopyEntrustRequest;
 
-import java.time.LocalDate;
 import java.util.*;
 
 @Slf4j

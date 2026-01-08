@@ -1,7 +1,7 @@
 package com.b2g.lendservice.service.infrastructure;
 
 
-import com.b2g.lendservice.model.entities.LendableCopy;
+import com.b2g.lendservice.model.vo.LendableCopy;
 import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

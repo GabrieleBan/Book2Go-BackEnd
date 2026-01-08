@@ -1,7 +1,7 @@
 package com.b2g.lendservice.controller;
 
 import com.b2g.lendservice.annotation.RequireRole;
-import com.b2g.lendservice.model.entities.LendableCopy;
+import com.b2g.lendservice.model.vo.LendableCopy;
 import com.b2g.lendservice.service.application.LendingsApplicationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -4,7 +4,7 @@ import com.b2g.commons.LendState;
 import com.b2g.lendservice.dto.LendableCopyEntrustRequest;
 import com.b2g.lendservice.dto.LendingRequest;
 import com.b2g.lendservice.model.entities.LendableBook;
-import com.b2g.lendservice.model.entities.LendableCopy;
+import com.b2g.lendservice.model.vo.LendableCopy;
 import com.b2g.lendservice.model.entities.Lending;
 import com.b2g.lendservice.model.entities.Reader;
 import com.b2g.lendservice.model.vo.UserSubscriptionData;

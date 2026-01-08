@@ -4,7 +4,7 @@ import com.b2g.lendservice.Exceptions.BookAlreadyExistsException;
 import com.b2g.lendservice.Exceptions.LendableBookException;
 import com.b2g.lendservice.dto.LendingOptionDTO;
 import com.b2g.lendservice.model.entities.LendableBook;
-import com.b2g.lendservice.model.entities.LendableCopy;
+import com.b2g.lendservice.model.vo.LendableCopy;
 import com.b2g.lendservice.model.vo.LendingOption;
 import com.b2g.lendservice.repository.LendableBookRepository;
 import com.b2g.lendservice.service.domain.BookDomainService;

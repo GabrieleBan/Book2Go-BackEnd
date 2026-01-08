@@ -2,7 +2,7 @@ package com.b2g.lendservice.controller;
 
 import com.b2g.commons.LendState;
 import com.b2g.lendservice.annotation.RequireRole;
-import com.b2g.lendservice.model.entities.LendableCopy;
+import com.b2g.lendservice.model.vo.LendableCopy;
 import com.b2g.lendservice.model.entities.Lending;
 import com.b2g.lendservice.service.application.LendingsApplicationService;
 import jakarta.validation.constraints.NotNull;

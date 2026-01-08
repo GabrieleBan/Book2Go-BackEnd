@@ -46,6 +46,7 @@ public class LendableBook {
                 .max(Comparator.comparing(LendingOption::getMinRequiredTierName))
                 .isPresent();
     }
+
     public void addOption(LendingOption option) {
         boolean alreadyExists = options.stream()
                 .anyMatch(o -> o.getMinRequiredTier().equals(option.getMinRequiredTier()));

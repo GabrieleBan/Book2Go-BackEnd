@@ -1,0 +1,31 @@
+type: http_request
+model: http_request
+id: rq_GRQxjzW3SS
+createdAt: 2026-01-06T20:52:41.600102100
+updatedAt: 2026-01-06T20:56:11.565996
+workspaceId: wk_94bVhSAcpy
+folderId: fl_dkipB2zZxo
+authentication: {}
+authenticationType: none
+body:
+  form:
+  - enabled: true
+    file: C:\Users\gabri\Desktop\Taass progetto\presentazione\immaginilibri\41uWrhGJkgL._SY445_SX342_PQ99_.jpg
+    id: UuVqB090eh
+    name: file
+  - enabled: true
+    id: S2yjj7NErn
+    name: ''
+    value: ''
+bodyType: null
+description: ''
+headers:
+- enabled: true
+  name: ''
+  value: ''
+  id: JzZAFrqPp3
+method: GET
+name: get image
+sortPriority: 1500.0014
+url: http://localhost:8098/content/ad4d1479-a927-42d3-8abd-9798ea6b1274/cover-image
+urlParameters: []

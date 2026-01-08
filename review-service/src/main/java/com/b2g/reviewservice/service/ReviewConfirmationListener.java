@@ -1,7 +1,7 @@
 package com.b2g.reviewservice.service;
 
 
-import com.b2g.commons.ReviewConfirmationDTO;
+import com.b2g.commons.ReaderBookPossessionResultDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -26,7 +26,7 @@ public class ReviewConfirmationListener {
 
 
     @RabbitListener(queues = "${app.rabbitmq.service.prefix}" + ".authorization.queue")
-    public void handleReviewEvents(ReviewConfirmationDTO confirmedReview,
+    public void handleReviewEvents(ReaderBookPossessionResultDTO confirmedReview,
                                    @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey) {
 
         log.info("Routing key usata: {}", routingKey);
@@ -34,7 +34,7 @@ public class ReviewConfirmationListener {
 
         if (routingKey.equals(reviewAuthorizedBindingKey) || routingKey.equals(reviewRejectedBindingKey)) {
             log.info("Ricevuto messaggio di conferma review: {}", confirmedReview);
-            reviewService.confirmReview(confirmedReview);
+            reviewService.handleReaderPossessionResult(confirmedReview);
         } else {
             log.warn("Routing key non gestita: {}", routingKey);
         }

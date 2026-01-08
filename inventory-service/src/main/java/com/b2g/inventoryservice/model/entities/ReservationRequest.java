@@ -2,6 +2,7 @@ package com.b2g.inventoryservice.model.entities;
 
 
 import com.b2g.inventoryservice.exceptions.ReservationRequestException;
+import com.b2g.inventoryservice.exceptions.ReservationRequestStateException;
 import com.b2g.inventoryservice.model.valueObjects.ReservationRequestState;
 import jakarta.persistence.*;
 import lombok.*;
@@ -39,19 +40,17 @@ public class ReservationRequest {
         return new ReservationRequest(libraryId, bookId);
     }
 
-    // =====================
-    // DOMAIN METHODS
-    // =====================
+
     public void reject() {
         if (state != ReservationRequestState.REQUESTED) {
-            throw new IllegalStateException("Request cannot be rejected");
+            throw new ReservationRequestStateException("Request cannot be rejected");
         }
         state = ReservationRequestState.REJECTED;
     }
 
     public void expire() {
         if (state != ReservationRequestState.REQUESTED) {
-            throw new IllegalStateException("Only requested requests can expire");
+            throw new ReservationRequestStateException("Only requested requests can expire");
         }
         state = ReservationRequestState.EXPIRED;
     }
@@ -60,18 +59,18 @@ public class ReservationRequest {
         if (state == ReservationRequestState.ASSIGNED) {
             return;}
         if (state != ReservationRequestState.REQUESTED) {
-            throw new IllegalStateException("Only requested requests can be assigned");
+            throw new ReservationRequestStateException("Only requested requests can be assigned");
         }
         this.state = ReservationRequestState.ASSIGNED;
     }
 
     public Reservation assignTo(LibraryCopy copy) {
         if (state != ReservationRequestState.REQUESTED) {
-            throw new IllegalStateException("Request not assignable");
+            throw new ReservationRequestStateException("Request not assignable");
         }
 
         if (!copy.getId().getBookId().equals(bookId)) {
-            throw new ReservationRequestException("Copy does not match requested book");
+            throw new ReservationRequestStateException("Copy does not match requested book");
         }
 
 
