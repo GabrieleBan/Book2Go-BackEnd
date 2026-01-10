@@ -1,9 +1,11 @@
 package com.b2g.inventoryservice.service.applicationService;
 
+import com.b2g.inventoryservice.dto.createLibraryCopyFromStockdto;
 import com.b2g.inventoryservice.exceptions.*;
 import com.b2g.inventoryservice.model.entities.*;
 
 import com.b2g.inventoryservice.model.valueObjects.AvailabilityState;
+import com.b2g.inventoryservice.model.valueObjects.CopyId;
 import com.b2g.inventoryservice.model.valueObjects.ReservationState;
 import com.b2g.inventoryservice.model.valueObjects.StockId;
 import com.b2g.inventoryservice.repository.*;
@@ -160,5 +162,16 @@ public class InventoryApplicationService {
             throw new StockQuantityException("Libro non ancora o non più gestito in questa libreria");
         }
         return stock;
+    }
+    @Transactional
+    public LibraryCopy createLibraryCopyFromStock(createLibraryCopyFromStockdto request) {
+        StockId id=new StockId(request.getBookId(), request.getLibraryId());
+        RetailStock stock= stockRepository.findById(id).orElse(null);
+        if(stock == null) {throw new StockException("Libro non gestito dall' inventario di questa libreria");  }
+        inventoryService.changeStockQuantity(stock,-1);
+        Integer copyNumber= copyRepository.findMaxCopyNumberByBookId(request.getBookId());
+        LibraryCopy copy= LibraryCopy.create(new CopyId(request.getBookId(),copyNumber+1),request.getLibraryId(),request.getCopyCondition());
+        stockRepository.save(stock);
+        return copyRepository.save(copy);
     }
 }

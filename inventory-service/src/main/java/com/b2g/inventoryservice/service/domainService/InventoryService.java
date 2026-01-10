@@ -22,7 +22,7 @@ public class InventoryService {
     private final ReferenceBookRepository referenceBookRepository;
 
     public void addLibraryCopy(LibraryCopy libraryCopy) {}
-    public void addLibraryCopyFromStock(LibraryCopy libraryCopy, RetailStock retailStock) {}
+
     public boolean isAvailable(RetailStock stock) {
         return stock.isAvailable();
     }

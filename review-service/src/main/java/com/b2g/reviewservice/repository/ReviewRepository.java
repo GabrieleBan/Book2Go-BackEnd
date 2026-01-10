@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
-    List<Review> findReviewsByBookId(UUID isbn);
+    List<Review> findReviewsByBookId(UUID bookId);
 
     Review findByReviewerIdAndBookId(UUID reviewerId, UUID bookId);
 

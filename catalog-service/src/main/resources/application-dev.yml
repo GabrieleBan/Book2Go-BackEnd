@@ -42,7 +42,7 @@ app:
       format:
         created: book.format.created
     bindinkey:
-
+      rating.updated: book.rating.updated
       availability:
         all: book.availability.*
         available: book.availability.available

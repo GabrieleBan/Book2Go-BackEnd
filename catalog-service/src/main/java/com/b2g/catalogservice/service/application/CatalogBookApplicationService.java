@@ -8,6 +8,7 @@ import com.b2g.catalogservice.repository.CategoryRepository;
 import com.b2g.catalogservice.service.domain.CatalogBookDomainService;
 import com.b2g.catalogservice.exceptions.CatalogBookNotFoundException;
 import com.b2g.catalogservice.service.infrastructure.CatalogEventPublisher;
+import com.b2g.commons.BookRatingUpdateEvent;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -145,4 +146,11 @@ public class CatalogBookApplicationService {
         return page.map(BookSummaryDTO::fromCatalogBook);
     }
 
+    public void updateRating(BookRatingUpdateEvent event) {
+        CatalogBook book = bookRepository.findById(event.getBookId()).orElse(null);
+        if (book == null) { log.error("Libro non trovato"); ;return;}
+        book.setRating(event.getRating());
+        book.setNumberOfRatings(book.getNumberOfRatings());
+        bookRepository.save(book);
+    }
 }

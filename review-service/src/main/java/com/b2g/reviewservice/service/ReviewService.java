@@ -1,10 +1,12 @@
 package com.b2g.reviewservice.service;
 
+import com.b2g.commons.BookRatingUpdateEvent;
 import com.b2g.commons.ReaderBookPossessionResultDTO;
 import com.b2g.commons.ReviewConfirmationDTO;
 import com.b2g.reviewservice.dto.RequestCreateReviewDTO;
 
 import com.b2g.reviewservice.dto.ReviewDTO;
+import com.b2g.reviewservice.exceptions.RatingValueException;
 import com.b2g.reviewservice.model.Review;
 import com.b2g.reviewservice.repository.ReviewRepository;
 import jakarta.validation.Valid;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -40,7 +43,7 @@ public class ReviewService {
         String action;
 
         if (overall < 0 || overall > 5) {
-            throw new IllegalArgumentException("overall score must be between 0 and 5");
+            throw new RatingValueException("overall score must be between 0 and 5");
         }
 
         Review existingReview = reviewRepository.findByReviewerIdAndBookId(reviewerId, reviewDTO.bookId());
@@ -111,7 +114,7 @@ public class ReviewService {
         }
 
         if (LocalDate.now().isBefore(
-                message.getStartDate().plusDays(1))) {
+                message.getStartDate().plusDays(0))) {
 
             rejectReview(message.getReviewId(),
                     "At least 1 day of possession required");
@@ -139,7 +142,27 @@ public class ReviewService {
         }
         review.setCanBeShown(true);
         reviewRepository.save(review);
-
+        notifyReviewAction(review, "created");
+        checkIfNeedsToBeUpdatedInCatalog(review.getBookId());
     }
 
+    private void checkIfNeedsToBeUpdatedInCatalog(UUID bookId ) {
+        List<Review> reviews=reviewRepository.findReviewsByBookId(bookId);
+        int totalReviews=reviews.size();
+        float totalScore=0;
+        for (Review review : reviews) {
+            totalScore += review.getOverallScore();
+        }
+        float overallScore=totalScore/totalReviews;
+        notifyRatingUpdate(bookId,overallScore,totalReviews);
+    }
+
+    @Value("${app.rabbitmq.routing-key.rating.updated}")
+    private String reviewRatingUpdatedKey;
+    private void notifyRatingUpdate(UUID bookId,float rating,int totalReviews) {
+        String routingKey = reviewRatingUpdatedKey ;
+        BookRatingUpdateEvent message = new BookRatingUpdateEvent(bookId,rating,totalReviews);
+        log.info("notifying rating update {}",message);
+        rabbitTemplate.convertAndSend(topicExchange, routingKey, message);
+    }
 }

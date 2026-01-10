@@ -28,15 +28,15 @@ public class LibraryCopy {
 
     protected LibraryCopy() {}
 
-    private LibraryCopy(CopyId id,UUID libraryId) {
+    private LibraryCopy(CopyId id,UUID libraryId,CopyCondition condition) {
         this.id = id;
         this.useState = AvailabilityState.FREE;
-        this.condition = CopyCondition.PERFECT;
+        this.condition = condition;
         this.libraryId = libraryId;
     }
 
-    public static LibraryCopy create(CopyId id, UUID libraryId) {
-        return new LibraryCopy(id, libraryId);
+    public static LibraryCopy create(CopyId id, UUID libraryId,CopyCondition condition) {
+        return new LibraryCopy(id, libraryId,condition);
     }
 
     // =====================

@@ -125,7 +125,7 @@ public class ReaderController {
 
 
     }
-
+//non più qui
     @GetMapping("/{readerId}/check/subscription")
     public ResponseEntity<?> getReaderSubscriptionType(@PathVariable UUID readerId) {
         try {

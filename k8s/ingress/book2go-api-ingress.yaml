@@ -5,10 +5,9 @@ metadata:
   namespace: book2go
   annotations:
     nginx.ingress.kubernetes.io/use-regex: "true"
-    # Riscrive /api/<servizio>/qualcosa -> /<servizio>/qualcosa
+    # Riscrive www.book2go.com/api/qualcosa -> /qualcosa
     nginx.ingress.kubernetes.io/rewrite-target: /$1$2
 
-    #protegge chiamate interne dedicate ai servizi
     nginx.ingress.kubernetes.io/server-snippet: |
       location ^~ /internal {
         deny all;
@@ -17,9 +16,10 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: localhost
+    - host: www.book2go.com
       http:
         paths:
+          #AUTH
           - path: /api/(auth)(/.*|$)
             pathType: ImplementationSpecific
             backend:
@@ -27,3 +27,64 @@ spec:
                 name: auth-service
                 port:
                   number: 8090
+#CATALOG
+          - path: /api/(books|categories|catalog)(/.*|$)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: catalog-service
+                port:
+                  number: 8091
+  # INVENTORY
+          - path: /api/(inventory|stocks)(/.*|$)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: inventory-service
+                port:
+                  number: 8095
+
+  # NOTIFICATIONS
+          - path: /api/(notifications)(/.*|$)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: notification-service
+                port:
+                  number: 8092
+
+  # READERS / SUBSCRIPTIONS
+          - path: /api/(readers|subscriptions|content)(/.*|$)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: reader-service
+                port:
+                  number: 8098
+
+  # RECOMMENDATIONS
+          - path: /api/(recommendations)(/.*|$)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: recommendation-service
+                port:
+                  number: 8096
+
+  # LEND
+          - path: /api/(lendings|lendable-formats|lendable-copies)(/.*|$)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: lend-service
+                port:
+                  number: 8099
+
+  # REVIEWS
+          - path: /api/(reviews)(/.*|$)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: review-service
+                port:
+                  number: 8097

@@ -140,21 +140,34 @@ services:
 
 
   notification-service:
+    secrets:
+      - mail_username
+      - mail_password
     build:
       context: .
       dockerfile: notification-service/Dockerfile
     image: gabrieleban/notification-service:latest
     container_name: notification-service
     environment:
+
+      SPRING_MAIL_HOST: smtp.gmail.com
+      SPRING_MAIL_PORT: 587
+      SPRING_MAIL_USERNAME: ${SPRING_MAIL_USERNAME}
+      SPRING_MAIL_PASSWORD: ${SPRING_MAIL_PASSWORD}
+      SPRING_MAIL_SMTP_AUTH: "true"
+      SPRING_MAIL_STARTTLS_ENABLE: "true"
+      SPRING_MAIL_STARTTLS_REQUIRED: "true"
+      SPRING_MAIL_DEFAULT_ENCODING: "UTF-8"
       SPRING_PROFILES_ACTIVE: prod
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/b2g_db
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: password
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
-      SPRING_MAIL_HOST: mailhog
-      SPRING_MAIL_PORT: 1025
+#      SPRING_MAIL_HOST: mailhog
+#      SPRING_MAIL_PORT: 1025
       AUTH_SERVICE_JWKS_URL: http://auth-service:8090/auth/.well-known/jwks.json
+
     depends_on:
       - postgres
       - rabbitmq
@@ -302,3 +315,9 @@ volumes:
 networks:
   b2g-net:
     driver: bridge
+
+secrets:
+  mail_username:
+    external: true
+  mail_password:
+    external: true

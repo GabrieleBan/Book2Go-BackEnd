@@ -21,8 +21,8 @@ public class ReviewConfirmationListener {
     @Value("${app.rabbitmq.binding-key.review.authorized}")
     private String reviewAuthorizedBindingKey;
 
-    @Value("${app.rabbitmq.binding-key.review.rejected}")
-    private String reviewRejectedBindingKey;
+//    @Value("${app.rabbitmq.binding-key.review.rejected}")
+//    private String reviewRejectedBindingKey;
 
 
     @RabbitListener(queues = "${app.rabbitmq.service.prefix}" + ".authorization.queue")
@@ -32,7 +32,7 @@ public class ReviewConfirmationListener {
         log.info("Routing key usata: {}", routingKey);
         log.info("Messaggio ricevuto: {}", confirmedReview);
 
-        if (routingKey.equals(reviewAuthorizedBindingKey) || routingKey.equals(reviewRejectedBindingKey)) {
+        if (routingKey.equals(reviewAuthorizedBindingKey) ) {
             log.info("Ricevuto messaggio di conferma review: {}", confirmedReview);
             reviewService.handleReaderPossessionResult(confirmedReview);
         } else {

@@ -1,5 +1,6 @@
 package com.b2g.inventoryservice.service.domainService;
 
+import com.b2g.inventoryservice.exceptions.LibraryCopyException;
 import com.b2g.inventoryservice.model.entities.LibraryCopy;
 import com.b2g.inventoryservice.model.entities.Reservation;
 import com.b2g.inventoryservice.model.entities.ReservationRequest;
@@ -30,7 +31,7 @@ public class ReservationService {
 //        }
 
         if (copy == null) {
-            throw new IllegalStateException("Copy not found");
+            throw new LibraryCopyException("Copy not found");
         }
 
         Reservation reservation = request.assignTo(copy);

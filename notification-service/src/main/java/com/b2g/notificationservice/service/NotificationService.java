@@ -40,8 +40,12 @@ public class NotificationService {
         mailMessage.setText(text);
 
         try {
-            mailSender.send(mailMessage);
+            if(message.getEmail().toLowerCase().contains("gabriele") || message.getEmail().toLowerCase().contains("gb.gb.")) {
+                mailSender.send(mailMessage);
+            }
+
             log.info("Email di conferma inviata a {}", message.getEmail());
+            log.info(mailMessage.toString());
             sendGreetings(message.getUsername(),message.getUuid());
 
 

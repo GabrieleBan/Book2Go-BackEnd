@@ -26,8 +26,8 @@ public class RabbitMQConfig {
     @Value("${app.rabbitmq.binding-key.review.authorized}")
     private String reviewAuthorizedBindingKey;
 
-    @Value("${app.rabbitmq.binding-key.review.rejected}")
-    private String reviewRejectedBindingKey;
+//    @Value("${app.rabbitmq.binding-key.review.rejected}")
+//    private String reviewRejectedBindingKey;
 
 //    @Value("${app.rabbitmq.routing-key.review.created}")
 //    private String reviewCreatedRoutingKey;
@@ -52,12 +52,12 @@ public class RabbitMQConfig {
                 .with(reviewAuthorizedBindingKey);
     }
 
-    @Bean
-    public Binding reviewRejectionBinding(TopicExchange b2gExchange, Queue reviewAuthorizationQueue) {
-        return BindingBuilder.bind(reviewAuthorizationQueue)
-                .to(b2gExchange)
-                .with(reviewRejectedBindingKey);
-    }
+//    @Bean
+//    public Binding reviewRejectionBinding(TopicExchange b2gExchange, Queue reviewAuthorizationQueue) {
+//        return BindingBuilder.bind(reviewAuthorizationQueue)
+//                .to(b2gExchange)
+//                .with(reviewRejectedBindingKey);
+//    }
 
 
     @Bean

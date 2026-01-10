@@ -20,6 +20,9 @@ public class RabbitMQConfig {
     private String exchangeName;
     @Value("${app.rabbitmq.queue.name}")
     private String catalogQueueName;
+    @Value("${app.rabbitmq.bindinkey.rating.updated}")
+    private String ratingUpdatedBindingKey;
+
 
     @Value("${app.rabbitmq.bindinkey.availability.all}")
     private String availabilityAllKey;
@@ -32,6 +35,22 @@ public class RabbitMQConfig {
     @Bean
     public Queue catalogAvailabilityQueue() {
         return new Queue(catalogQueueName + ".availability.queue", true);
+    }
+
+    @Bean
+    public Queue catalogRatingUpdatedQueue() {
+        return new Queue(catalogQueueName + ".rating.queue", true);
+    }
+    @Bean
+    public Binding catalogRatingBinding(
+            Queue catalogRatingUpdatedQueue,
+            Exchange catalogExchange
+    ) {
+        return BindingBuilder
+                .bind(catalogRatingUpdatedQueue)
+                .to(catalogExchange)
+                .with(ratingUpdatedBindingKey)
+                .noargs();
     }
 
     @Bean

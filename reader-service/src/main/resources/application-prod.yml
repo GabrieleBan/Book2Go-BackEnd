@@ -55,7 +55,7 @@ app:
       prefix: ${APP_RABBITMQ_SERVICE_PREFIX:readers}
     routing-key:
       review:
-        authorized: ${APP_RABBITMQ_ROUTINGKEY_REVIEW_AUTHORIZED:review.authorized}
+        authorized: ${APP_RABBITMQ_ROUTINGKEY_REVIEW_AUTHORIZED:review.reader.ownership.checked}
         rejected: ${APP_RABBITMQ_ROUTINGKEY_REVIEW_REJECTED:review.rejected}
       user:
         confirmed: ${APP_RABBITMQ_ROUTINGKEY_USER_CONFIRMED:rk.user.confirmed}
@@ -65,7 +65,7 @@ app:
         failed: ${APP_RABBITMQ_BINDINGKEY_LEND_FAILED:lend.failed}
         ended: ${APP_RABBITMQ_BINDINGKEY_LEND_ENDED:lend.ended}
       review:
-        authrequested: ${APP_RABBITMQ_BINDINGKEY_REVIEW_AUTHREQUESTED:review.authorization.requested}
+        authrequested: ${APP_RABBITMQ_BINDINGKEY_REVIEW_AUTHREQUESTED:reader.ownership.requested}
 
 
 
