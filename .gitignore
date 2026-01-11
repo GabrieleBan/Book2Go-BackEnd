@@ -3,3 +3,4 @@ keys/
 dev-keys/
 .DS_Store
 .env
+k8s/secret/

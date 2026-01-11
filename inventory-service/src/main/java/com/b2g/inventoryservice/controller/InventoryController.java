@@ -18,6 +18,7 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequestMapping("/inventory")
+@CrossOrigin("http://localhost:5173")
 @RequiredArgsConstructor
 public class InventoryController {
     private final InventoryApplicationService inventoryApplicationService;

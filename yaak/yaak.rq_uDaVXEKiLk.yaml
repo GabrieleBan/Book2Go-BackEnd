@@ -2,7 +2,7 @@ type: http_request
 model: http_request
 id: rq_uDaVXEKiLk
 createdAt: 2026-01-05T14:35:29.879005400
-updatedAt: 2026-01-05T15:28:50.834750800
+updatedAt: 2026-01-11T14:31:22.105039100
 workspaceId: wk_94bVhSAcpy
 folderId: fl_gQ2VqcuSam
 authentication: {}
@@ -14,7 +14,7 @@ headers: []
 method: GET
 name: Get Format
 sortPriority: 0.002
-url: http://localhost:8091/books/formats/a1e8d271-0b0e-46ef-912c-83bba9e6887e
+url: http://localhost:8091/books/formats/43feef5d-f5ec-483d-85c7-ee103cdddffa
 urlParameters:
 - enabled: false
   name: categoryIds

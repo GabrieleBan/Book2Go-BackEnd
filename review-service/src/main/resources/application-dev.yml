@@ -1,0 +1,53 @@
+spring:
+  application:
+    name: review-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/b2g_reviews
+    username: user
+    password: password
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      initialization-fail-timeout: -1
+      connection-timeout: 30000
+      validation-timeout: 5000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+# Server Configuration
+server:
+  port: 8097
+
+# authentication
+authService:
+  internal:
+    url: http://localhost:8090/internal
+
+# RabbitMq Configurations
+app:
+  rabbitmq:
+    exchange: b2g.topic.exchange
+    service:
+      prefix: review
+    binding-key:
+      review:
+        authorized: ${APP_RABBITMQ_BINDINGKEY_REVIEW_AUTHORIZED:review.reader.ownership.checked}
+      # review.rejected: ${APP_RABBITMQ_BINDINGKEY_REVIEW_REJECTED:review.rejected} # commented out
+    routing-key:
+      review:
+        authorization:
+          requested: ${APP_RABBITMQ_ROUTINGKEY_REVIEW_AUTH_REQUESTED:reader.ownership.requested}
+      rating:
+        updated: book.rating.updated

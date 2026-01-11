@@ -2,11 +2,13 @@ type: http_request
 model: http_request
 id: rq_fAwuduYnbo
 createdAt: 2026-01-07T13:33:53.395940500
-updatedAt: 2026-01-07T14:29:19.782480600
+updatedAt: 2026-01-11T06:11:38.682903200
 workspaceId: wk_94bVhSAcpy
 folderId: fl_jhet5jX7mC
-authentication: {}
-authenticationType: none
+authentication:
+  disabled: true
+  token: eyJraWQiOiJhdXRoLWtleS0xIiwiYWxnIjoiUlMyNTYifQ.eyJ1c2VybmFtZSI6ImFkbWluIiwicm9sZXMiOlsiUkVBREVSIiwiQURNSU4iLCJFTVBMT1lFRSJdLCJ1c2VyVVVJRCI6ImFlMWE3YWRmLWE1MzktNGI0ZS1hNzFkLTQyMGVlOGUyYjRlYyIsInN1YiI6ImFlMWE3YWRmLWE1MzktNGI0ZS1hNzFkLTQyMGVlOGUyYjRlYyIsImlhdCI6MTc2ODEwOTIzNCwiZXhwIjoxNzY4MTEwMTM0LCJpc3MiOiJiMmctYXV0aC1zZXJ2aWNlIiwiYXVkIjpbImIyZy1taWNyb3NlcnZpY2VzIl19.PlVa_h-M7OKCbN4ImdrweqoFkTSvzrcSvVDPyS9q9CW1IYH7MoYJQ3V1mAMwHCC6yjuvoeVqbpJnBMUBRBntvMBcQ-YzMRvDTzZTQiL9e8-nzOvAJgIvtt8n41iGyszJ9YLse7bjnd-UtMjQ3FJKs86tsuO6e6ogJUyR35ud3GIIzy74Ws5eCD0uS1JgBM9VgDrIsAu9EP1uzheM72Fj55FhUqEOdLnvAQAkrKfuN_i1KYs0Ouk2nY8Sme-Wfbk_Deva5Gze33kXiQmtDsnT-sIxlC80BXMiaAjNXGutFdntxthCAILld7p3_lPzP8IZkbEIIwEcI_jazNpsxmwcsg
+authenticationType: bearer
 body:
   text: |-
     {
@@ -16,11 +18,15 @@ bodyType: null
 description: ''
 headers:
 - enabled: true
+  name: Content-Type
+  value: application/json
+  id: Q4wQBBGvWc
+- enabled: true
   name: ''
   value: ''
-  id: fUDeT8WJwS
+  id: IwRCaRyJHw
 method: GET
 name: getStockAvailability
 sortPriority: 2000.0009
-url: http://localhost:8098/inventory/stocks/books/0f02e79d-6326-409a-9158-f5f5c85c8b13
+url: http://localhost:8095/inventory/stocks/books/0f02e79d-6326-409a-9158-f5f5c85c8b13
 urlParameters: []

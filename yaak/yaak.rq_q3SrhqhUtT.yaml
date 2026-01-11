@@ -2,11 +2,13 @@ type: http_request
 model: http_request
 id: rq_q3SrhqhUtT
 createdAt: 2026-01-07T13:40:40.689336100
-updatedAt: 2026-01-07T13:42:01.147093900
+updatedAt: 2026-01-11T05:24:58.655363800
 workspaceId: wk_94bVhSAcpy
 folderId: fl_jhet5jX7mC
-authentication: {}
-authenticationType: none
+authentication:
+  disabled: true
+  token: eyJraWQiOiJhdXRoLWtleS0xIiwiYWxnIjoiUlMyNTYifQ.eyJ1c2VybmFtZSI6ImFkbWluIiwicm9sZXMiOlsiUkVBREVSIiwiQURNSU4iLCJFTVBMT1lFRSJdLCJ1c2VyVVVJRCI6ImFlMWE3YWRmLWE1MzktNGI0ZS1hNzFkLTQyMGVlOGUyYjRlYyIsInN1YiI6ImFlMWE3YWRmLWE1MzktNGI0ZS1hNzFkLTQyMGVlOGUyYjRlYyIsImlhdCI6MTc2ODEwNjkyMywiZXhwIjoxNzY4MTA3ODIzLCJpc3MiOiJiMmctYXV0aC1zZXJ2aWNlIiwiYXVkIjpbImIyZy1taWNyb3NlcnZpY2VzIl19.YbtLd0EtVJXXMDSMtgtxcI79sKw-C1iOAT0R5nPRZdi2zlFrKGwgsqiiEvWmOPmPWuUp3YWi6MLxV_vZfTDTLSRl8GNeA1uOiO5B0jycx5w2aEKgn6eHvjCa6A_FK3L-BIYD6jPJzQy2ydO59Gn1nxGOan_3AkS6Y8mi_Bw1zvkevUUY_-12_KTciL7EklRyue4O4np_TW9becprxxfwkgqpRHmyRhyYnHgi0fc6tQSl7o2ffJup9eFf9SnzF-GotpTX4GbwisIT2PCKwnAd2FjaK1xIL2Y5HRJdZQ7vdn4cRZrG6o_HhipbVvtoQdoMVuQOfobJPi4iMnEeh7aniw
+authenticationType: bearer
 body:
   text: |-
     {
@@ -22,5 +24,5 @@ headers:
 method: GET
 name: getStockAvailabilityAtLibrary
 sortPriority: 2000.0019
-url: http://localhost:8095/inventory/stocks/libraries/00000000-0000-0000-0000-000000000002/books/0f02e79d-6326-409a-9158-f5f5c85c8b13
+url: http://localhost:8095/inventory/stocks/libraries/00000000-0000-0000-0000-000000000001/books/0f02e79d-6326-409a-9158-f5f5c85c8b13
 urlParameters: []

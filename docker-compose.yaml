@@ -108,6 +108,7 @@ services:
       context: .
       dockerfile: inventory-service/Dockerfile
     container_name: inventory-service
+    image: gabrieleban/inventory-service:latest
     environment:
       SPRING_PROFILES_ACTIVE: prod
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/b2g_library
@@ -130,7 +131,7 @@ services:
     image: gabrieleban/my-module:latest
     container_name: client-frontend-service
     ports:
-      - "5173:5173"
+      - "5174:5173"
     networks:
       - b2g-net
     environment:
@@ -140,21 +141,22 @@ services:
 
 
   notification-service:
-    secrets:
-      - mail_username
-      - mail_password
+
     build:
       context: .
       dockerfile: notification-service/Dockerfile
     image: gabrieleban/notification-service:latest
     container_name: notification-service
+    env_file:
+      - .env
     environment:
-
-      SPRING_MAIL_HOST: smtp.gmail.com
-      SPRING_MAIL_PORT: 587
+#      SPRING_MAIL_HOST: smtp.gmail.com
+#      SPRING_MAIL_PORT: 587
+      SPRING_MAIL_HOST: mailhog
+      SPRING_MAIL_PORT: 1025
       SPRING_MAIL_USERNAME: ${SPRING_MAIL_USERNAME}
       SPRING_MAIL_PASSWORD: ${SPRING_MAIL_PASSWORD}
-      SPRING_MAIL_SMTP_AUTH: "true"
+      SPRING_MAIL_SMTP_AUTH: "false"
       SPRING_MAIL_STARTTLS_ENABLE: "true"
       SPRING_MAIL_STARTTLS_REQUIRED: "true"
       SPRING_MAIL_DEFAULT_ENCODING: "UTF-8"
@@ -164,8 +166,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: password
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
-#      SPRING_MAIL_HOST: mailhog
-#      SPRING_MAIL_PORT: 1025
+
       AUTH_SERVICE_JWKS_URL: http://auth-service:8090/auth/.well-known/jwks.json
 
     depends_on:
@@ -249,11 +250,11 @@ services:
       SPRING_RABBITMQ_PORT: 5672
       SPRING_RABBITMQ_USERNAME: guest
       SPRING_RABBITMQ_PASSWORD: guest
-      AUTH_SERVICE_INTERNAL_URL: http://auth-service:8090
-      AUTH_SERVICE_JWKS_URL: http://auth-service:8090/auth/.well-known/jwks.json
-      CATALOG_SERVICE_INTERNAL_URL: http://catalog-service:8091
-      INVENTORY_SERVICE_INTERNAL_URL: http://inventory-service:8095
-      SUBSCRIPTION_SERVICE_INTERNAL_URL: http://reader-service:8098/subscriptions/readerUUID
+#      AUTH_SERVICE_INTERNAL_URL: http://auth-service:8090
+#      AUTH_SERVICE_JWKS_URL: http://auth-service:8090/auth/.well-known/jwks.json
+#      CATALOG_SERVICE_INTERNAL_URL: http://catalog-service:8091/books
+#      INVENTORY_SERVICE_INTERNAL_URL: http://inventory-service:8095
+#      SUBSCRIPTION_SERVICE_INTERNAL_URL: http://reader-service:8098/subscriptions/readerUUID
     depends_on:
       - postgres
       - rabbitmq
@@ -315,9 +316,3 @@ volumes:
 networks:
   b2g-net:
     driver: bridge
-
-secrets:
-  mail_username:
-    external: true
-  mail_password:
-    external: true

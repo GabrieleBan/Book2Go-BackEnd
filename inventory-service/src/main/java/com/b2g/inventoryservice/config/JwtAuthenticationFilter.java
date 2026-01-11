@@ -69,37 +69,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
-        String path = request.getRequestURI();
-
-        List<String> publicPaths = List.of(
-        );
-        System.out.println(path);
-        boolean b = publicPaths.stream().anyMatch(publicPath -> pathMatches(publicPath, path));
-        System.out.println(b);
-        return b;
-    }
-
-
-
-    private boolean pathMatches(String pattern, String path) {
-
-        // Case: "/auth/**" → deve avere QUALCOSA dopo la slash
-        if (pattern.endsWith("/**")) {
-            String base = pattern.substring(0, pattern.length() - 3); // "/auth"
-            if (!path.startsWith(base)) return false;
-
-            String remaining = path.substring(base.length()); // es. "/xyz", "/" oppure ""
-            return remaining.length() > 1;                    // deve essere più di "/"
-        }
-
-        // Case: "/auth/" → matcha solo il prefisso esatto
-        if (pattern.endsWith("/")) {
-            return path.startsWith(pattern);
-        }
-
-        // Exact match: "/login"
-        return path.equals(pattern);
-    }
 }

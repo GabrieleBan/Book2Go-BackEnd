@@ -4,11 +4,17 @@
     <file url="file://$PROJECT_DIR$/auth-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/catalog-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/inventory-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/inventory-service/src/main/resources/application-dev.yml" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/lend-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lend-service/src/main/resources/application-dev.yml" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/notification-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/reader-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/reader-service/src/main/resources/application-dev.yml" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/recommendation-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/recommendation-service/src/main/resources/application-dev.yml" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/review-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/review-service/src/main/resources/application-dev.yml" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/review-service/src/main/resources/application-prod.yml" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/shared/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/shared/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/topic-service/src/main/java" charset="UTF-8" />

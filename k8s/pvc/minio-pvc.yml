@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: pgdata-pvc
+  name: minio-data-pvc
   namespace: book2go
 spec:
   accessModes:

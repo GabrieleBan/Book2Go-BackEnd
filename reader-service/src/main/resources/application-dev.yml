@@ -1,0 +1,75 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  application:
+    name: reader-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/b2g_readers
+    username: user
+    password: password
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      initialization-fail-timeout: -1
+      connection-timeout: 30000
+      validation-timeout: 5000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    publisher-confirm-type: correlated
+
+# Server Configuration
+server:
+  port: 8098
+
+
+# authentication
+authService:
+  internal:
+    url: http://localhost:8090
+  jwks:
+    url: http://localhost:8090/auth/.well-known/jwks.json
+
+jwt:
+  public-key:
+    cache:
+      seconds: 300
+
+# RabbitMq Configurations
+app:
+  rabbitmq:
+    exchange: b2g.topic.exchange
+    service:
+      prefix: readers
+    routing-key:
+      user:
+        confirmed: rk.user.confirmed
+      review:
+        authorized: review.reader.ownership.checked
+    binding-key:
+      lend:
+        created: lend.created
+        failed: lend.failed
+        ended: lend.ended
+      review:
+        authrequested: reader.ownership.requested
+
+# mock content
+minio:
+  url: http://localhost:9000
+  access-key: admin
+  secret-key: admin123
+  bucket: cover-images

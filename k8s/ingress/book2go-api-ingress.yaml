@@ -36,7 +36,7 @@ spec:
                 port:
                   number: 8091
   # INVENTORY
-          - path: /api/(inventory|stocks)(/.*|$)
+          - path: /api/(inventory|stocks|library-copy)(/.*|$)
             pathType: ImplementationSpecific
             backend:
               service:

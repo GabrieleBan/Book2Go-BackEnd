@@ -6,7 +6,7 @@ spring:
     name: inventory-service
 
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/b2g_library}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/b2g_library}
     username: ${SPRING_DATASOURCE_USERNAME:user}
     password: ${SPRING_DATASOURCE_PASSWORD:password}
     driver-class-name: org.postgresql.Driver

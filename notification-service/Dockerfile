@@ -11,6 +11,7 @@ RUN ./mvnw clean package -DskipTests
 
 FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
+RUN apt-get update && apt-get install -y ca-certificates && update-ca-certificates
 COPY --from=notification-build /app/notification-service/target/*.jar app.jar
 EXPOSE 8092
 CMD ["java", "-jar", "app.jar"]

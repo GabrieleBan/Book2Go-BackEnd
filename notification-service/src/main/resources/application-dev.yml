@@ -1,0 +1,80 @@
+spring:
+  application:
+    name: notification-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/b2g_db
+    username: user
+    password: password
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      initialization-fail-timeout: -1
+      connection-timeout: 30000
+      validation-timeout: 5000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  mail:
+    host: localhost
+    port: 1025
+    username: ""
+    password: ""
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+        debug: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+# Server Configuration
+server:
+  port: 8092
+
+# authentication
+authService:
+  internal:
+    url: http://localhost:8090/internal
+
+# Logging
+logging:
+  level:
+    com.b2g.catalogservice: DEBUG
+    org.springframework.security: DEBUG
+
+# rabbitMq configurations
+app:
+  rabbitmq:
+    service:
+      prefix: notification
+    queue:
+      name:
+        suffix: notification
+      user-signup: notification.user.signup
+    exchange: b2g.topic.exchange
+    routing-key:
+      signup-ticket: rk.user.registration
+    binding-key:
+      lend:
+        created: lend.created
+        failed: lend.failed
+        request:
+          created: lend.request.created
+        ready: lend.ready
+        requested:
+          paymentcheck: lend.paymentcheck.*
+          addresscheck: lend.addresscheck.*
+        ended: lend.ended
+  confirmation:
+    base-url: http://localhost:8090
