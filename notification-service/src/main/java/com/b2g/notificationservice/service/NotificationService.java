@@ -35,6 +35,7 @@ public class NotificationService {
                 message.getUsername(), confirmationLink);
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setFrom("gb.gb.2001.gb@gmail.com");
         mailMessage.setTo(message.getEmail());
         mailMessage.setSubject(subject);
         mailMessage.setText(text);

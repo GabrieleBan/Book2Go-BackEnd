@@ -13,7 +13,21 @@ services:
       - ./init-db:/docker-entrypoint-initdb.d
     networks:
       - b2g-net
-
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - b2g-net
+    environment:
+      MP_SMTP_FORWARD_HOST: smtp.gmail.com
+      MP_SMTP_FORWARD_PORT: 587
+      MP_SMTP_FORWARD_USERNAME: ${SPRING_MAIL_USERNAME}
+      MP_SMTP_FORWARD_PASSWORD: ${SPRING_MAIL_PASSWORD}
+      MP_SMTP_FORWARD_TLS: "false"
+      MP_SMTP_FORWARD_STARTTLS: "true"
+      MP_SMTP_FORWARD_TO: test@example.com
   rabbitmq:
     image: rabbitmq:3.11-management
     container_name: rabbitmq_container
@@ -28,14 +42,14 @@ services:
     networks:
       - b2g-net
 
-  mailhog:
-    image: mailhog/mailhog:latest
-    container_name: mailhog_container
-    ports:
-      - "1025:1025"     # SMTP server (per Spring Boot)
-      - "8025:8025"     # Web UI (visita http://localhost:8025)
-    networks:
-      - b2g-net
+#  mailhog:
+#    image: mailhog/mailhog:latest
+#    container_name: mailhog_container
+#    ports:
+#      - "1025:1025"     # SMTP server (per Spring Boot)
+#      - "8025:8025"     # Web UI (visita http://localhost:8025)
+#    networks:
+#      - b2g-net
 
 
 
@@ -131,7 +145,7 @@ services:
     image: gabrieleban/my-module:latest
     container_name: client-frontend-service
     ports:
-      - "5174:5173"
+      - "127.0.0.2:5173:5173"
     networks:
       - b2g-net
     environment:
@@ -140,8 +154,51 @@ services:
       - "book2go:127.0.0.2"
 
 
+#  notification-service:
+#
+#    build:
+#      context: .
+#      dockerfile: notification-service/Dockerfile
+#    image: gabrieleban/notification-service:latest
+#    container_name: notification-service
+#    env_file:
+#      - .env
+#    environment:
+##      SPRING_MAIL_HOST: smtp.gmail.com
+##      SPRING_MAIL_PORT: 587
+##      SPRING_MAIL_HOST: mailhog
+##      SPRING_MAIL_PORT: 1025
+#      SPRING_MAIL_HOST: mailpit
+#      SPRING_MAIL_PORT: 1025
+#
+##      SPRING_MAIL_USERNAME: ${SPRING_MAIL_USERNAME}
+##      SPRING_MAIL_PASSWORD: ${SPRING_MAIL_PASSWORD}
+##      SPRING_MAIL_SMTP_AUTH: "true"
+##      SPRING_MAIL_STARTTLS_ENABLE: "true"
+##      SPRING_MAIL_STARTTLS_REQUIRED: "true"
+#      SPRING_MAIL_SMTP_AUTH: "false"
+#      SPRING_MAIL_STARTTLS_ENABLE: "false"
+#      SPRING_MAIL_STARTTLS_REQUIRED: "false"
+#      SPRING_MAIL_DEFAULT_ENCODING: "UTF-8"
+#      SPRING_PROFILES_ACTIVE: prod
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/b2g_db
+#      SPRING_DATASOURCE_USERNAME: user
+#      SPRING_DATASOURCE_PASSWORD: password
+#      SPRING_RABBITMQ_HOST: rabbitmq
+#      SPRING_RABBITMQ_PORT: 5672
+#
+#      AUTH_SERVICE_JWKS_URL: http://auth-service:8090/auth/.well-known/jwks.json
+#
+#    depends_on:
+#      - postgres
+#      - rabbitmq
+#      - mailpit
+#      - auth-service
+#    ports:
+#      - "8092:8092"
+#    networks:
+#      - b2g-net
   notification-service:
-
     build:
       context: .
       dockerfile: notification-service/Dockerfile
@@ -150,16 +207,17 @@ services:
     env_file:
       - .env
     environment:
-#      SPRING_MAIL_HOST: smtp.gmail.com
-#      SPRING_MAIL_PORT: 587
-      SPRING_MAIL_HOST: mailhog
-      SPRING_MAIL_PORT: 1025
-      SPRING_MAIL_USERNAME: ${SPRING_MAIL_USERNAME}
-      SPRING_MAIL_PASSWORD: ${SPRING_MAIL_PASSWORD}
-      SPRING_MAIL_SMTP_AUTH: "false"
+      # SMTP Gmail per invio diretto
+      SPRING_MAIL_HOST: smtp.gmail.com
+      SPRING_MAIL_PORT: 587                 # STARTTLS
+      SPRING_MAIL_USERNAME: ${SPRING_MAIL_USERNAME}  # il tuo account Gmail
+      SPRING_MAIL_PASSWORD: ${SPRING_MAIL_PASSWORD}  # app password Gmail
+      SPRING_MAIL_FROM: "gb.gb.2001.gb@gmail.com"      # mittente valido
+      SPRING_MAIL_SMTP_AUTH: "true"
       SPRING_MAIL_STARTTLS_ENABLE: "true"
       SPRING_MAIL_STARTTLS_REQUIRED: "true"
       SPRING_MAIL_DEFAULT_ENCODING: "UTF-8"
+
       SPRING_PROFILES_ACTIVE: prod
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/b2g_db
       SPRING_DATASOURCE_USERNAME: user
@@ -172,13 +230,11 @@ services:
     depends_on:
       - postgres
       - rabbitmq
-      - mailhog
       - auth-service
     ports:
       - "8092:8092"
     networks:
       - b2g-net
-
   reader-service:
     build:
       context: .
