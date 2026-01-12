@@ -36,14 +36,6 @@ spec:
               port: 5672
             initialDelaySeconds: 10
             periodSeconds: 5
-      #     livenessProbe:
-      #       exec: # Controlla lo stato del nodo RabbitMQ
-      #         command:
-      #           - rabbitmq-diagnostics
-      #           - status
-      #       initialDelaySeconds: 60
-      #       periodSeconds: 30
-      #       timeoutSeconds: 20
       volumes:
         - name: rabbitmq-data
           persistentVolumeClaim:

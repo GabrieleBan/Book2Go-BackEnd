@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recommendation-service
+  namespace: book2go
+  labels:
+    app: recommendation-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: recommendation-service
+  template:
+    metadata:
+      labels:
+        app: recommendation-service
+    spec:
+      containers:
+        - name: recommendation-service
+          image: gabrieleban/recommendation-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8096
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+            - name: SPRING_NEO4J_URI
+              value: "bolt://neo4j:7687"
+            - name: SPRING_NEO4J_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: NEO4J_USER
+            - name: SPRING_NEO4J_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: NEO4J_PASSWORD
+            - name: SPRING_RABBITMQ_HOST
+              value: "rabbitmq"
+            - name: SPRING_RABBITMQ_PORT
+              value: "5672"
+            - name: SPRING_RABBITMQ_USERNAME
+              value: "guest"
+            - name: SPRING_RABBITMQ_PASSWORD
+              value: "guest"
+            - name: SPRING_AUTOCONFIGURE_EXCLUDE
+              value: "org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration"
+            - name: AUTH_SERVICE_INTERNAL_URL
+              value: "http://auth-service:8090/internal"
+            - name: AUTH_SERVICE_JWKS_URL
+              value: "http://auth-service:8090/auth/.well-known/jwks.json"

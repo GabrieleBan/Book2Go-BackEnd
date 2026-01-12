@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-service-service
+  name: auth-service
   namespace: book2go
   labels:
     app: auth-service
@@ -17,15 +17,15 @@ spec:
     spec:
       containers:
         - name: auth-service
-          image: auth-service:latest # La nostra immagine locale
-          imagePullPolicy: IfNotPresent # Fondamentale per usare l'immagine locale
+          image: gabrieleban/auth-service:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8090
           env:
             - name: SERVER_PORT # Già presente nel Dockerfile, ma può essere sovrascritto qui
               value: "8090"
             - name: SPRING_PROFILES_ACTIVE
-              value: "dev"
+              value: "prod"
             - name: SPRING_DATASOURCE_URL
               value: "jdbc:postgresql://postgres:5432/b2g_db"
             - name: SPRING_DATASOURCE_USERNAME

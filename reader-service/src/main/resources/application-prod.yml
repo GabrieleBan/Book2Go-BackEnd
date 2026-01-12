@@ -1,3 +1,5 @@
+server:
+  port: ${SERVER_PORT:8098}
 spring:
   servlet:
     multipart:
@@ -6,8 +8,7 @@ spring:
   application:
     name: reader-service
 
-  server:
-    port: ${SERVER_PORT:8098}
+
 
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/b2g_readers}

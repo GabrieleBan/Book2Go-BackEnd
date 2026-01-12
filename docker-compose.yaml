@@ -250,11 +250,6 @@ services:
       SPRING_RABBITMQ_PORT: 5672
       SPRING_RABBITMQ_USERNAME: guest
       SPRING_RABBITMQ_PASSWORD: guest
-#      AUTH_SERVICE_INTERNAL_URL: http://auth-service:8090
-#      AUTH_SERVICE_JWKS_URL: http://auth-service:8090/auth/.well-known/jwks.json
-#      CATALOG_SERVICE_INTERNAL_URL: http://catalog-service:8091/books
-#      INVENTORY_SERVICE_INTERNAL_URL: http://inventory-service:8095
-#      SUBSCRIPTION_SERVICE_INTERNAL_URL: http://reader-service:8098/subscriptions/readerUUID
     depends_on:
       - postgres
       - rabbitmq
