@@ -77,6 +77,8 @@ services:
       dockerfile: auth-service/Dockerfile
     image: gabrieleban/auth-service:latest
     container_name: auth-service
+    env_file:
+      - .env
     environment:
       SPRING_PROFILES_ACTIVE: prod
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/b2g_db

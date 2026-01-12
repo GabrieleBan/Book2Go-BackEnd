@@ -44,8 +44,8 @@ spec:
                 - user
                 - -d
                 - b2g_db
-            initialDelaySeconds: 15
-            periodSeconds: 10
+            initialDelaySeconds: 45
+            periodSeconds: 100
           livenessProbe:
             exec:
               command:

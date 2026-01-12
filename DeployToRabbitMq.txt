@@ -17,3 +17,4 @@ kubectl get pods
 kubectl logs -f <nome-pod>
 kubectl scale deployment auth-service-service catalog-service inventory-service lend-service notification-service reader-service recommendation-service review-service --replicas=1
 kubectl port-forward svc/postgres 5432:5432 -n book2go
+kubectl scale deployment auth-service-service catalog-service inventory-service lend-service reader-service  --replicas=1

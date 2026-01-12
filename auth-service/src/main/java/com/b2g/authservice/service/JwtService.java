@@ -22,7 +22,7 @@ import java.util.Set;
 public class JwtService {
 
     @Getter
-    private PublicKey publicKey; // Expose to other microservices
+    private PublicKey publicKey; // da esporre ad altri microservizi
 
     private PrivateKey privateKey;
 
