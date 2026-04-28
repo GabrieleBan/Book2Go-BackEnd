@@ -1,3 +1,12 @@
+
+Back-end con struttura a microservizi dell'organizzazione "Book2Go" che gestisce una catena di librerie e fornisce online servizi quali ad esempio : acquisto, prestito, prenotazione ad eventi di libri in vari formati (digitali, fisici, audio, pdf ... ).
+
+Nella cartella presentazione è possibile trovare una presentazione riassuntiva del businness e dei microservi con la struttura globale, inoltre è riportata anche la documentazione DDD (Domain Driven Design), la documentazione relativa alle comunicazioni e il mockup. 
+
+Come strumento di comunicazione i serivizi si basano su API Rest e RabbitMQ (uno dei microservizi).
+Per il build + containerization usiamo Docker mentre per deploy è presente sia l'opzione con docker-compose che utilizzando Kubernetes.
+
+Di seguito i passi necessari per il deploy:
 # Deploy Services Guide
 
 ## 1. Costruisci le immagini Docker per ogni servizio
